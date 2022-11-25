@@ -1,0 +1,21 @@
+## Work in progress, configurations for DEV/Local
+
+server.port=${port:8080}
+
+spring.application.name=Skyline Hitech Online Service Portal
+
+spring.jpa.hibernate.ddl-auto=none
+##JPA configuration defaults to local DEV with auto table creation
+spring.datasource.url=jdbc:mariadb://47.98.180.157:3306/skylinehitech_sp
+spring.datasource.username=root
+spring.datasource.password=123456
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+spring.jpa.properties.hibernate.hbm2ddl.auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+spring.jpa.show-sql=true
+
+## DEV local to disable security
+security.ignored=/**
+spring.security.enabled=false
+security.basic.enabled=false
+management.security.enabled=false

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>DataTables | Gentelella</title>
+
+    <!-- Bootstrap -->
+    <link th:href="@{/frontend_depandence/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link th:href="@{/frontend_depandence/css/font-awesome.min.css}" rel="stylesheet">
+    <!-- NProgress -->
+    <link th:href="@{/frontend_depandence/css/nprogress.css}" rel="stylesheet">
+    <!-- iCheck -->
+    <link th:href="@{/frontend_depandence/css/iCheck/skins/flat/green.css}" rel="stylesheet">
+    <!-- Datatables -->
+    <link th:href="@{/frontend_depandence/css/dataTables.bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/buttons.bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/fixedHeader.bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/responsive.bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/scroller.bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link th:href="@{/frontend_depandence/css/custom.min.css}" rel="stylesheet">
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>UAM</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile clearfix">
+              <div class="profile_pic">
+                <img src="/frontend_depandence/images/img.jpg" alt="..." class="img-circle profile_img">
+              </div>
+              <div class="profile_info">
+                <span>Welcome,</span>
+                <h2><span sec:authentication="name"></span></h2>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+              <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                  <div class="menu_section">
+                      <h3>General</h3>
+                      <ul class="nav side-menu">
+                        <li><a><i class="fa fa-table"></i>User Access Manage<span class="fa fa-chevron-down"></span></a>
+                              <ul class="nav child_menu">
+                                  <li><a th:href="@{/user/listPage}">User Management</a></li>
+                                  <li><a th:href="@{/role/listPage}">Role Management</a></li>
+                                  <li><a th:href="@{/userRoles/listPage}">User Role Management</a></li>
+                              </ul>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+            <!-- /sidebar menu -->
+
+            <!-- /menu footer buttons -->
+            <div class="sidebar-footer hidden-small">
+              <a data-toggle="tooltip" data-placement="top" title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Lock">
+                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="Logout" href="/">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+              </a>
+            </div>
+            <!-- /menu footer buttons -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <img src="/frontend_depandence/images/img.jpg" alt=""><span sec:authentication="name"></span>
+                    <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right">
+                    <li><a href="javascript:;">Profile</a></li>
+                    <li>
+                      <a href="javascript:;">
+                        <span class="badge bg-red pull-right">50%</span>
+                        <span>Settings</span>
+                      </a>
+                    </li>
+                    <li><a href="javascript:;">Help</a></li>
+                    <li><a href="/"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                  </ul>
+                </li>
+
+                <li role="presentation" class="dropdown">
+                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-envelope-o"></i>
+                    <span class="badge bg-green">6</span>
+                  </a>
+                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                    <li>
+                      <a>
+                        <span class="image"><img src="/frontend_depandence/images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="image"><img src="/frontend_depandence/images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="image"><img src="/frontend_depandence/images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a>
+                        <span class="image"><img src="/frontend_depandence/images/img.jpg" alt="Profile Image" /></span>
+                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="text-center">
+                        <a>
+                          <strong>See All Alerts</strong>
+                          <i class="fa fa-angle-right"></i>
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Roles Manager</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="dropdown-toggle" href="/role/role_create">ADD</a>
+                      </li>
+                      <!--<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Add</a>
+                          </li>
+                          <li><a href="#">Modify</a>
+                          </li>
+                          <li><a href="#">Delete</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>-->
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action">
+                      <thead>
+                        <tr>
+                          <th>id</th>
+                          <th>name</th>
+                          <th>level</th>
+                          <th>authority</th>
+                          <th>status</th>
+                          <th>edit</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr th:each="role:${allRoles}">
+                          <td th:text="${{role.id}}"/>
+                          <td th:text="${{role.name}}"/>
+                          <td th:text="${{role.level}}"/>
+                          <td th:text="${{role.authority}}"/>
+                          <td th:text="${{role.status}}"/>
+                          <td>
+                            <button type="button" class="btn btn-link" th:onclick="javascrtpt:window.location.href='toUpdate/[[${role.id}]]';">EDIT</button>
+                            <button type="button" class="btn btn-link" th:onclick="javascrtpt:window.location.href='delete/[[${role.id}]]';">DELETE</button>
+                          </td>
+                        </tr>
+                      </tbody>
+
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          <!--<div class="pull-right">
+            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          </div>
+          <div class="clearfix"></div>-->
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="/frontend_depandence/js/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/frontend_depandence/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="/frontend_depandence/js/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/frontend_depandence/js/nprogress.js"></script>
+    <!-- iCheck -->
+    <script src="/frontend_depandence/js/icheck.min.js"></script>
+    <!-- Datatables -->
+    <script src="/frontend_depandence/js/jquery.dataTables.min.js"></script>
+    <script src="/frontend_depandence/js/dataTables.bootstrap.min.js"></script>
+    <script src="/frontend_depandence/js/dataTables.buttons.min.js"></script>
+    <script src="/frontend_depandence/js/buttons.bootstrap.min.js"></script>
+    <script src="/frontend_depandence/js/buttons.flash.min.js"></script>
+    <script src="/frontend_depandence/js/buttons.html5.min.js"></script>
+    <script src="/frontend_depandence/js/buttons.print.min.js"></script>
+    <script src="/frontend_depandence/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/frontend_depandence/js/dataTables.keyTable.min.js"></script>
+    <script src="/frontend_depandence/js/dataTables.responsive.min.js"></script>
+    <script src="/frontend_depandence/js/responsive.bootstrap.js"></script>
+    <script src="/frontend_depandence/js/dataTables.scroller.min.js"></script>
+    <script src="/frontend_depandence/js/jszip.min.js"></script>
+    <script src="/frontend_depandence/js/pdfmake.min.js"></script>
+    <script src="/frontend_depandence/js/vfs_fonts.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="/frontend_depandence/js/custom.min.js"></script>
+
+  </body>
+</html>

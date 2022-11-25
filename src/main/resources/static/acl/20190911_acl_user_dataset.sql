@@ -1,0 +1,2 @@
+INSERT INTO acl_user (id, title, name, email, authType, password, SAML, status) VALUES (1, 'Manager', 'Michael', 'Michaelli423@hotmail.com', 'Manager', '123', null, '1');
+INSERT INTO acl_user (id, title, name, email, authType, password, SAML, status) VALUES (2, 'Employee', 'Billy', 'billy@hotmail.com', 'Employee', '123', null, '1');

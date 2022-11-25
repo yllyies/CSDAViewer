@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.agilent.csda.acl.mapper.RoleMapper">
+  <resultMap id="BaseResultMap" type="com.agilent.csda.acl.model.Role">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="authority" jdbcType="VARCHAR" property="authority" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, level, authority, status
+  </sql>
+  <insert id="insert" parameterType="com.agilent.csda.acl.model.Role">
+    insert into acl_role (id, name, level,
+    authority, status)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER},
+    #{authority,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.agilent.csda.acl.model.Role">
+    insert into acl_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="authority != null">
+        authority,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="authority != null">
+        #{authority,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from acl_role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from acl_role
+  </select>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.agilent.csda.acl.model.Role">
+    update acl_role
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="authority != null">
+        authority = #{authority,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.agilent.csda.acl.model.Role">
+    update acl_role
+    set name = #{name,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      authority = #{authority,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from acl_role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+</mapper>
