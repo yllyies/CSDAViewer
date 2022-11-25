@@ -1,4 +1,4 @@
-package com.agilent.csda.acl.domain;
+package com.agilent.csda.acl.dao;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>
+public interface UserDao extends JpaRepository<User, Long>
 {
 	List<User> findByName(String name);
 	List<User> findByEmail(String email);

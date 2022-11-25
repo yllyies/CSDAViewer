@@ -2,8 +2,6 @@ package com.agilent.csda.acl.controller;
 
 
 import com.agilent.csda.acl.model.User;
-import com.agilent.csda.acl.model.UserRole;
-import com.agilent.csda.acl.service.UserRolesService;
 import com.agilent.csda.acl.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,8 +25,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRolesService userRolesService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -51,11 +47,6 @@ public class UserController {
         } else {
             LOGGER.debug("addUser failed :id={}", user.getId());
         }
-        // default grant
-        UserRole userRoles = new UserRole();
-        userRoles.setAclUserId(userService.doFindByName(user.getName()).getId());
-        userRoles.setAclRoleId(2L);
-        userRolesService.doCreate(userRoles);
         return "redirect:/login";
     }
 

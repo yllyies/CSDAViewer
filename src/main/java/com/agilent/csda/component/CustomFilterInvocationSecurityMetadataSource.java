@@ -1,7 +1,6 @@
 package com.agilent.csda.component;
 
 import com.agilent.csda.acl.model.Role;
-import com.agilent.csda.acl.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -23,8 +22,7 @@ import java.util.List;
 @Component("customFilterInvocationSecurityMetadataSource")
 public class CustomFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
-    @Autowired
-    private RoleService roleService;
+
 
     private static HashMap<String, Collection<ConfigAttribute>> map = null;
 
@@ -33,14 +31,7 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
      */
     private void getResourcePermission() {
         map = new HashMap<>();
-        List<Role> roles = roleService.doFindAll();
 
-        for (Role role : roles) {
-            ConfigAttribute configAttribute = new SecurityConfig(role.getAuthority());
-            List<ConfigAttribute> urlRoles = new ArrayList<>();
-            urlRoles.add(configAttribute);
-            map.put("/to" + role.getName(), urlRoles);
-        }
     }
 
     /**

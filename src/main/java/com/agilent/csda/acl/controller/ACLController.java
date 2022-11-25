@@ -40,11 +40,6 @@ public class ACLController {
         return "login";
     }
 
-//    @RequestMapping(value = {"/index"}, method = RequestMethod.GET)
-//    public String index() {
-//        return "index";
-//    }
-
     @ApiOperation("index")
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView list() {

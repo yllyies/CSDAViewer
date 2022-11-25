@@ -1,9 +1,8 @@
 package com.agilent.csda.acl.service.impl;
 
-import com.agilent.csda.acl.service.UserRolesService;
+import com.agilent.csda.acl.dao.UserDao;
 import com.github.pagehelper.PageHelper;
 import com.agilent.csda.acl.dto.UserRolesDto;
-import com.agilent.csda.acl.mapper.UserMapper;
 import com.agilent.csda.acl.model.Role;
 import com.agilent.csda.acl.model.User;
 import com.agilent.csda.acl.service.UserService;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,58 +27,60 @@ import java.util.List;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Resource
-    private UserMapper userMapper;
+    private UserDao userDao;
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRolesService userRolesService;
 
     @Override
     public int doCreate(User user) {
         user.setId(1L);
         user.setSaml("1");
         user.setStatus("1");
-        return userMapper.insert(user);
+        userDao.save(user);
+        return 1;
     }
 
     @Override
     public List<User> doFindAll() {
-        return userMapper.selectAll();
+        return userDao.findAll();
     }
 
     @Override
     public List<User> doFindPage(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        return userMapper.selectAll();
+        return userDao.findAll();
     }
 
     @Override
     public User doFindByName(String userName) {
-        return userMapper.selectByUserName(userName);
+        return userDao.findByName(userName).get(0);
     }
 
     @Override
     public User doFindById(Long id) {
-        return userMapper.selectByPrimaryKey(id);
+        return userDao.findById(id).get();
     }
 
     @Override
     public int doUpdate(User user) {
-        return userMapper.updateByPrimaryKeySelective(user);
+        userDao.save(user);
+        return 1;
     }
 
     @Override
     public int doDelete(Long userId) {
-        // delete user role relationship
-        userRolesService.doDelete(userId);
-        return userMapper.deleteByPrimaryKey(userId);
+        userDao.deleteById(userId);
+        return 1;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.doFindByName(username);
         if (user != null) {
-            UserRolesDto userRolesDto = userRolesService.doFindByUserId(user.getId());
+            UserRolesDto userRolesDto = new UserRolesDto();
+            Role role1 = new Role();
+            role1.setAuthority("1");
+            userRolesDto.setAclRoleList(Arrays.asList(role1));
             userRolesDto.setAclUserName(user.getName());
             userRolesDto.setAclUser(user);
             if (userRolesDto == null) {

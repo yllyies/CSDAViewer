@@ -19,7 +19,6 @@ import java.util.List;
 @Controller
 @RequestMapping("menu")
 public class MenuController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RoleController.class);
 
     @ApiOperation("list")
     @RequestMapping(value = "/list", method = RequestMethod.GET)

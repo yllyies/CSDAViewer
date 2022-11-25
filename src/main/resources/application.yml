@@ -1,4 +1,12 @@
 ## Keep as back reference
+#  spring.datasource.url=jdbc:mariadb://47.98.180.157:3306/skylinehitech_sp
+#  spring.datasource.username=root
+#  spring.datasource.password=123456
+#  spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+#  spring.jpa.properties.hibernate.hbm2ddl.auto=update
+#  spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+#  spring.jpa.show-sql=true
+
 spring:
   profiles:
     active: dev
@@ -13,6 +21,14 @@ spring:
       test-while-idle: true
       test-on-return: false
       validation-query: select 1
+  jpa:
+    database: mysql
+    show-sql: true
+    properties:
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      databasePlatform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: validate
 
   thymeleaf:
     mode: HTML5
@@ -22,12 +38,6 @@ spring:
     cache: false
     prefix: classpath:/templates/
     suffix: .html
-mybatis:
-  mapper-locations:
-    - classpath:mapper/*.xml
-    - classpath*:com/agilent/**/mapper/*.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # jwt key config
 jwt:

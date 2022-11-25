@@ -7,7 +7,6 @@ import com.agilent.csda.acl.model.User;
  */
 public class UserInfoContext {
     private static ThreadLocal<User> userInfo = new ThreadLocal<User>();
-    public static String KEY_USERINFO_IN_HTTP_HEADER = "X-AUTO-FP-USERINFO";
 
     public UserInfoContext() {
     }
