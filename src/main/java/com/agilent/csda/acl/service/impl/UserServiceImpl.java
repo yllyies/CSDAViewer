@@ -3,7 +3,6 @@ package com.agilent.csda.acl.service.impl;
 import com.agilent.csda.acl.dao.UserDao;
 import com.github.pagehelper.PageHelper;
 import com.agilent.csda.acl.dto.UserRolesDto;
-import com.agilent.csda.acl.model.Role;
 import com.agilent.csda.acl.model.User;
 import com.agilent.csda.acl.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +31,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private UserService userService;
 
     @Override
-    public int doCreate(User user) {
-        user.setId(1L);
-        user.setSaml("1");
-        user.setStatus("1");
-        userDao.save(user);
-        return 1;
-    }
-
-    @Override
     public List<User> doFindAll() {
         return userDao.findAll();
     }
@@ -62,34 +52,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public int doUpdate(User user) {
-        userDao.save(user);
-        return 1;
-    }
-
-    @Override
-    public int doDelete(Long userId) {
-        userDao.deleteById(userId);
-        return 1;
-    }
-
-    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.doFindByName(username);
         if (user != null) {
             UserRolesDto userRolesDto = new UserRolesDto();
-            Role role1 = new Role();
-            role1.setAuthority("1");
-            userRolesDto.setAclRoleList(Arrays.asList(role1));
             userRolesDto.setAclUserName(user.getName());
             userRolesDto.setAclUser(user);
+            List<String> userRoles = new ArrayList<String>();
+            userRoles.add("ROLE_ADMIN");
             if (userRolesDto == null) {
                 throw new UsernameNotFoundException(String.format("用户'%s'不存在", username));
             }
             List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-            for (Role role : userRolesDto.getAclRoleList()) {
-                //封装用户信息和角色信息到SecurityContextHolder全局缓存中
-                grantedAuthorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+            for (String roleName : userRoles) {
+                //将角色也添加到权限之中
+                grantedAuthorities.add(new SimpleGrantedAuthority(roleName));
+//            grantedAuthorities.add(new SimpleGrantedAuthority("appLogs:read"));
+//            grantedAuthorities.add(new SimpleGrantedAuthority(String.format("%s:%s", "appUsers", "read")));
+//            grantedAuthorities.add(new SimpleGrantedAuthority(String.format("%s:%s", "industry", "read")));
             }
             return userRolesDto;
         } else {

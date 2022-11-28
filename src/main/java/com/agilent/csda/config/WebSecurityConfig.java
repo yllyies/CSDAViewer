@@ -1,74 +1,44 @@
 package com.agilent.csda.config;
 
 import com.agilent.csda.acl.service.impl.UserServiceImpl;
-import com.agilent.csda.component.CustomUsernamePasswordAuthenticationConfig;
 import com.agilent.csda.common.ConfigConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.sql.DataSource;
 
 /**
  * Spring Security Config
  */
-@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true) // 启用方法安全设置
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
-
     @Autowired
     private UserServiceImpl userServiceImpl;
-
-    @Autowired
-    private CustomUsernamePasswordAuthenticationConfig customUsernamePasswordAuthenticationConfig;
-
-    /**
-     * 用户认证配置
-     */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        /**
-         * 指定用户认证时，默认从哪里获取认证用户信息
-         */
-        auth.userDetailsService(userServiceImpl);
-    }
 
     /**
      * Http安全配置
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .apply(customUsernamePasswordAuthenticationConfig)
-                .and()
-                .formLogin()
-                .loginPage(ConfigConstant.REQUEST_LOGIN_PAGE_URL)
+        http.cors().and().csrf().disable();
+
+        http.formLogin().loginPage(ConfigConstant.REQUEST_LOGIN_PAGE_URL)
                 .loginProcessingUrl(ConfigConstant.LOGIN_FORM_SUBMIT_URL)
                 .defaultSuccessUrl(ConfigConstant.DEFAULT_LOGIN_SUCCESSFUL_REQUEST_URL, ConfigConstant.ALWAYS_USE_DEFAULT_LOGIN_SUCCESSFUL_REQUEST_URL)
                 .permitAll()
-                .and()
-//            .logout()
-//                .logoutUrl(ConfigConstant.LOGOUT_URL)
-//                .logoutSuccessUrl(ConfigConstant.LOGOUT_SUCCESSFUL_REQUEST_URL)
-//                .logoutRequestMatcher(getLogoutRequestMatchers())
-//                .permitAll()
-//                .and()
-                .rememberMe()
-                .tokenRepository(getPersistentTokenRepository())
-                .tokenValiditySeconds(ConfigConstant.REMEMBER_ME_SECOND)
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, // access static resource without authorize
@@ -92,6 +62,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest()
                 .authenticated();
+        //session管理,失效后跳转
+        http.sessionManagement().invalidSessionUrl("/login");
+        //单用户登录，如果有一个登录了，同一个用户在其他地方登录将前一个剔除下线
+        //http.sessionManagement().maximumSessions(1).expiredSessionStrategy(expiredSessionStrategy());
+        //单用户登录，如果有一个登录了，同一个用户在其他地方不能登录
+//        http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true);
+        //退出时情况cookies
+        http.logout().deleteCookies("JESSIONID");
+        //解决中文乱码问题
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        //
+        http.addFilterBefore(filter, CsrfFilter.class);
+
     }
 
     /**
@@ -105,32 +90,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * 指定保存用户登录“记住我”功能的Token的方法：
-     * 默认是使用InMemoryTokenRepositoryImpl将Token放在内存中，
-     * 如果使用JdbcTokenRepositoryImpl，会创建persistent_logins数据库表，并将Token保存到该表中。
-     */
     @Bean
-    public PersistentTokenRepository getPersistentTokenRepository() {
-        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
-        jdbcTokenRepository.setDataSource(dataSource);
-        /**
-         * 系统启动时自动创建表，只需要在第一次启动系统时创建即可，因此这行代码只在需要创建表时才启用
-         */
-//        jdbcTokenRepository.setCreateTableOnStartup(true);
-        return jdbcTokenRepository;
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider bean = new DaoAuthenticationProvider();
+        //返回错误信息提示，而不是Bad Credential
+        bean.setHideUserNotFoundExceptions(true);
+        //覆盖UserDetailsService类
+        bean.setUserDetailsService(userServiceImpl);
+        //覆盖默认的密码验证类
+        bean.setPasswordEncoder(passwordEncoder());
+        return bean;
     }
 
-    /**
-     * 自定义退出登录的RequestMatcher
-     */
-    private OrRequestMatcher getLogoutRequestMatchers() {
-        /**
-         * 用户退出登录时，匹配GET请求/logout和POST请求/logout，使得这两种请求都执行退出登录操作
-         * 默认情况（未禁用跨域请求伪造，且自定义用户登录页面）下，只对POST请求/logout才执行退出登录操作
-         */
-        AntPathRequestMatcher getLogoutRequestMatcher = new AntPathRequestMatcher(ConfigConstant.LOGOUT_URL, "GET");
-        AntPathRequestMatcher postLogoutRequestMatcher = new AntPathRequestMatcher(ConfigConstant.LOGOUT_URL, "POST");
-        return new OrRequestMatcher(getLogoutRequestMatcher, postLogoutRequestMatcher);
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(this.daoAuthenticationProvider());
     }
 }

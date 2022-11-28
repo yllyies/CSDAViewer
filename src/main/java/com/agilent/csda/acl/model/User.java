@@ -15,62 +15,30 @@ import javax.persistence.Table;
 @Table(name = "ACL_USER")
 public class User implements Serializable
 {
-    /**
-     *
-     */
-    private static final long	serialVersionUID	= 1L;
+    private static final long serialVersionUID = -6772264893677242544L;
 
     @Id
     @Column(nullable = false)
-    private Long				id;
+    private Integer id;
 
     @Column(nullable = false)
-    private String				title;
+    private String name;
 
     @Column(nullable = false)
-    private String				name;
+    private String email;
 
     @Column(nullable = false)
-    private String				email;
+    private String password;
 
     @Column(nullable = false)
-    private String				authtype;
+    private String status;
 
-    @Column(nullable = false)
-    private String				password;
-
-    @Column(nullable = false)
-    private String				saml;
-
-    @Column(nullable = false)
-    private String				status;
-
-    @ManyToMany
-    @JoinTable(
-            name = "ACL_USER_ROLE",
-            joinColumns = @JoinColumn(name = "acl_user_id"),
-            inverseJoinColumns = @JoinColumn(name = "acl_role_id")
-    )
-    private Set<Role>			roles;
-
-    public Long getId()
-    {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
     }
 
     public String getName()
@@ -93,16 +61,6 @@ public class User implements Serializable
         this.email = email;
     }
 
-    public String getAuthtype()
-    {
-        return authtype;
-    }
-
-    public void setAuthtype(String authtype)
-    {
-        this.authtype = authtype;
-    }
-
     public String getPassword()
     {
         return password;
@@ -113,16 +71,6 @@ public class User implements Serializable
         this.password = password;
     }
 
-    public String getSaml()
-    {
-        return saml;
-    }
-
-    public void setSaml(String saml)
-    {
-        this.saml = saml;
-    }
-
     public String getStatus()
     {
         return status;
@@ -131,15 +79,5 @@ public class User implements Serializable
     public void setStatus(String status)
     {
         this.status = status;
-    }
-
-    public Set<Role> getRoles()
-    {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles)
-    {
-        this.roles = roles;
     }
 }

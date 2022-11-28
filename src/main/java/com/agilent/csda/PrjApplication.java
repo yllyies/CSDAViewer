@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 @ComponentScan("com.agilent.csda.*")
 @SpringBootApplication
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class PrjApplication {
     public static void main(String[] args) {
         SpringApplication.run(PrjApplication.class, args);

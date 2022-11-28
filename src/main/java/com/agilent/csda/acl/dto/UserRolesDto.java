@@ -1,14 +1,15 @@
 package com.agilent.csda.acl.dto;
 
-import com.agilent.csda.acl.model.Role;
 import com.agilent.csda.acl.model.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,9 +31,6 @@ public class UserRolesDto implements UserDetails {
 
     @ApiModelProperty(value = "Role ID List")
     private List<Long> aclRoleIdList;
-
-    @ApiModelProperty(value = "Role Model List")
-    private List<Role> aclRoleList;
 
     public Long getAclUserId() {
         return aclUserId;
@@ -66,25 +64,14 @@ public class UserRolesDto implements UserDetails {
         this.aclRoleIdList = aclRoleIdList;
     }
 
-    public List<Role> getAclRoleList() {
-        return aclRoleList;
-    }
-
-    public void setAclRoleList(List<Role> aclRoleList) {
-        this.aclRoleList = aclRoleList;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return aclRoleList.stream()
-                .filter(permission -> permission.getAuthority() != null)
-                .map(permission -> new SimpleGrantedAuthority(permission.getAuthority()))
-                .collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     @Override
     public String getPassword() {
-        return aclUser.getPassword();
+        return new BCryptPasswordEncoder().encode(aclUser.getPassword());
     }
 
     @Override

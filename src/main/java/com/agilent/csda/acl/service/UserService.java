@@ -6,11 +6,9 @@ import java.util.List;
 
 /**
  * @author lifang
- * @since 2019-08-29
+ * @since 2022-11-28
  */
 public interface UserService {
-
-    int doCreate(User user);
 
     List<User> doFindAll();
 
@@ -19,10 +17,4 @@ public interface UserService {
     User doFindByName(String userName);
 
     User doFindById(Long id);
-
-    int doUpdate(User user);
-
-    int doDelete(Long userId);
-
-
 }

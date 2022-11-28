@@ -1,6 +1,8 @@
 package com.agilent.csda.acl.controller;
 
 
+import cn.hutool.core.util.StrUtil;
+import com.agilent.csda.acl.model.Rslt;
 import com.agilent.csda.acl.model.User;
 import com.agilent.csda.acl.service.UserService;
 import com.agilent.csda.common.UserInfoContext;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Api(tags = "ACLController")
@@ -43,8 +46,7 @@ public class ACLController {
     @ApiOperation("index")
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView list() {
-        List<String> menuList = Arrays.asList("Lab GC Room", "Lab LC Room");
-        return new ModelAndView("/index", "menuList", menuList);
+        return new ModelAndView("/index");
     }
 
     @RequestMapping(value = "user/user_list", method = RequestMethod.GET)
@@ -77,13 +79,6 @@ public class ACLController {
     @RequestMapping(value = "role/role_update", method = RequestMethod.GET)
     public String roleUpdate() {
         return "role/role_update";
-    }
-
-    @ApiOperation("menu/labroom_list")
-    @RequestMapping(value = "menu/labroom_list", method = RequestMethod.GET)
-    public ModelAndView labroomList() {
-        List<String> menuList = Arrays.asList("Lab GC Room", "Lab LC Room");
-        return new ModelAndView("labroom/labroom_list", "menuList", menuList);
     }
 
     @RequestMapping(value = "check", method = RequestMethod.POST)
