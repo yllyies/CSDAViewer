@@ -1,30 +1,22 @@
 function init_charts_lf() {
-
-    console.log('run_charts  typeof [' + typeof (Chart) + ']');
-
     if( typeof (Chart) === 'undefined'){ return; }
-
-    console.log('init_charts_lf');
-
-
     Chart.defaults.global.legend = {
         enabled: false
     };
+
     // Bar chart
     if ($('#mybarChart1').length ){
-
       var ctx = document.getElementById("mybarChart1");
       var mybarChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ["4/1/20", "4/10/20", "4/20/20", "5/1/20", "5/10/20", "5/20/20", "6/1/20", "6/10/20"],
+          labels: labels,
           datasets: [{
             label: '# unit ',
             backgroundColor: "#10A1D2",
-            data: [1.30, 2.20, 2.5, 2.7, 2.6, 2.7, 2.6, 3.75]
+            data: dateset
           }]
         },
-
         options: {
           scales: {
             yAxes: [{
@@ -42,7 +34,7 @@ function init_charts_lf() {
       var lineChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ["4/1/20", "4/10/20", "4/20/20", "5/1/20", "5/10/20", "5/20/20", "6/1/20", "6/10/20"],
+          labels: labels,
           datasets: [{
             label: "My First dataset",
 //            backgroundColor: "rgba(38, 185, 154, 0.31)",
@@ -52,7 +44,7 @@ function init_charts_lf() {
             pointHoverBackgroundColor: "#fff",
             pointHoverBorderColor: "rgba(220,220,220,1)",
             pointBorderWidth: 1,
-            data: [1.30, 2.20, 2.5, 2.7, 2.6, 2.7, 2.6, 3.75]
+            data: dateset
           }]
         },
       });
@@ -63,13 +55,9 @@ function init_charts_lf() {
 
       var ctx = document.getElementById("canvasDoughnut1");
       var data = {
-        labels: [
-          "Dark Grey",
-          "Green Color",
-          "Blue Color"
-        ],
+        labels: labels,
         datasets: [{
-          data: [13, 22, 65],
+          data: dateset,
           backgroundColor: [
             "#455C73",
             "#26B99A",

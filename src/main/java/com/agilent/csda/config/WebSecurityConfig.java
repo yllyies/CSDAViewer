@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/v2/api-docs/**"
                 )
                 .permitAll()
-                .antMatchers("/", "/login", "/check", "/user/**") // access login or register without authorize
+                .antMatchers("/", "/login", "/check", "/analysis/**", "/instrument/**") // access login or register without authorize
                 .permitAll()
                 .anyRequest()
                 .authenticated();

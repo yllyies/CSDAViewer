@@ -1,9 +1,13 @@
 package com.agilent.csda.acl.model;
 
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -32,8 +36,9 @@ public class Rslt implements Serializable
     @Column
     private String creator;
 
-    @Column
-    private String created;
+    @Column(name = "created_date")
+    @JsonFormat(pattern = "MM/dd/yyyy")
+    private Timestamp createdDate;
 
     @Column
     private Boolean isSqxRslt;
@@ -57,6 +62,15 @@ public class Rslt implements Serializable
     @OneToMany(targetEntity = Dx.class, fetch = FetchType.EAGER)
     @JoinTable(name = "dx", joinColumns = {@JoinColumn(name = "parent_node_id")}, inverseJoinColumns = {@JoinColumn(name ="node_id")})
     private List<Dx> dxList;
+
+    /** 前端展示字段 */
+    @Transient
+    @JsonProperty
+    private Integer totalTime;
+
+    @Transient
+    @JsonProperty
+    private String location;
 
     public BigDecimal getId() {
         return id;
@@ -98,12 +112,12 @@ public class Rslt implements Serializable
         this.creator = creator;
     }
 
-    public String getCreated() {
-        return created;
+    public Timestamp getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreated(String created) {
-        this.created = created;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Boolean getSqxRslt() {
@@ -160,5 +174,21 @@ public class Rslt implements Serializable
 
     public void setDxList(List<Dx> dxList) {
         this.dxList = dxList;
+    }
+
+    public Integer getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(Integer totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

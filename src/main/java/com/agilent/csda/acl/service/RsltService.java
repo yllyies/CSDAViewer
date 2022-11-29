@@ -1,9 +1,9 @@
 package com.agilent.csda.acl.service;
 
 import com.agilent.csda.acl.model.Rslt;
-import com.agilent.csda.acl.model.User;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author lifang
@@ -11,5 +11,24 @@ import java.util.List;
  */
 public interface RsltService {
 
-    List<Rslt> doFindAll();
+    /**
+     * 查询所有数据
+     *
+     * @return
+     */
+    Map<String, Object> doFindAll();
+
+    /**
+     * 分页查询
+     *
+     * @return
+     */
+    Page<Rslt> doFindPage(int pageNum, int pageSize);
+
+    /**
+     * 查询所有仪器信息
+     *
+     * @return
+     */
+    Map<String, Object> doFindInstruments();
 }
