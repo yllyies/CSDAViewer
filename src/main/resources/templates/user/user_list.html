@@ -11,22 +11,22 @@
     <title>DataTables | CDSA VIEWER</title>
 
     <!-- Bootstrap -->
-    <link th:href="@{/frontend_depandence/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/bootstrap.css}" rel="stylesheet">
     <!-- Font Awesome -->
-    <link th:href="@{/frontend_depandence/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/font-awesome.css}" rel="stylesheet">
     <!-- NProgress -->
     <link th:href="@{/frontend_depandence/css/nprogress.css}" rel="stylesheet">
     <!-- iCheck -->
     <link th:href="@{/frontend_depandence/css/iCheck/skins/flat/green.css}" rel="stylesheet">
     <!-- Datatables -->
-    <link th:href="@{/frontend_depandence/css/dataTables.bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/frontend_depandence/css/buttons.bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/frontend_depandence/css/fixedHeader.bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/frontend_depandence/css/responsive.bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/frontend_depandence/css/scroller.bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/dataTables.bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/buttons.bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/fixedHeader.bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/responsive.bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/scroller.bootstrap.css}" rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link th:href="@{/frontend_depandence/css/custom.min.css}" rel="stylesheet">
+    <link th:href="@{/frontend_depandence/css/custom.css}" rel="stylesheet">
   </head>
 
   <body class="nav-md">
@@ -170,11 +170,9 @@
                       <thead>
                         <tr>
                           <th>id</th>
-                          <th>title</th>
                           <th>email</th>
                           <th>name</th>
                           <th>password</th>
-                          <th>authtype</th>
                           <th>edit</th>
                         </tr>
                       </thead>
@@ -182,11 +180,9 @@
                       <tbody>
                         <tr th:each="user:${allUsers}">
                           <td th:text="${{user.id}}"/>
-                          <td th:text="${{user.title}}"/>
                           <td th:text="${{user.email}}"/>
                           <td th:text="${{user.name}}"/>
                           <td th:text="${{user.password}}"/>
-                          <td th:text="${{user.authtype}}"/>
                           <td>
                             <button type="button" class="btn btn-link" th:onclick="javascrtpt:window.location.href='toUpdate/[[${user.id}]]';">EDIT</button>
                             <button type="button" class="btn btn-link" th:onclick="javascrtpt:window.location.href='delete/[[${user.id}]]';">DELETE</button>
@@ -216,7 +212,7 @@
     </div>
 
     <!-- jQuery -->
-    <script src="/frontend_depandence/js/jquery.min.js"></script>
+    <script src="/frontend_depandence/js/jquery.js"></script>
     <!-- Bootstrap -->
     <script src="/frontend_depandence/js/bootstrap.min.js"></script>
     <!-- FastClick -->
@@ -238,12 +234,11 @@
     <script src="/frontend_depandence/js/dataTables.responsive.min.js"></script>
     <script src="/frontend_depandence/js/responsive.bootstrap.js"></script>
     <script src="/frontend_depandence/js/dataTables.scroller.min.js"></script>
-    <script src="/frontend_depandence/js/jszip.min.js"></script>
     <script src="/frontend_depandence/js/pdfmake.min.js"></script>
     <script src="/frontend_depandence/js/vfs_fonts.js"></script>
 
     <!-- Custom Theme Scripts -->
-    <script src="/frontend_depandence/js/custom.min.js"></script>
+    <script src="/frontend_depandence/js/custom.js"></script>
 
   </body>
 </html>
