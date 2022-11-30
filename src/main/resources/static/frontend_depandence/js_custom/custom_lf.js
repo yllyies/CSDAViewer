@@ -1,4 +1,4 @@
-function init_charts_lf() {
+function init_charts() {
     if( typeof (Chart) === 'undefined'){ return; }
     Chart.defaults.global.legend = {
         enabled: false
@@ -80,3 +80,62 @@ function init_charts_lf() {
 
     }
 }
+
+function init_DataTables() {
+    console.log('run_datatables');
+
+    if( typeof ($.fn.DataTable) === 'undefined'){ return; }
+    console.log('init_DataTables');
+
+    var handleDataTableButtons = function() {
+      if ($("#datatable-buttons").length) {
+        $("#datatable-buttons").DataTable({
+          dom: "Blfrtip",
+          buttons: [
+            {
+              extend: "copy",
+              className: "btn-sm"
+            },
+            {
+              extend: "csv",
+              className: "btn-sm"
+            },
+            {
+              extend: "excel",
+              className: "btn-sm"
+            },
+            {
+              extend: "pdfHtml5",
+              className: "btn-sm"
+            },
+            {
+              extend: "print",
+              className: "btn-sm"
+            },
+          ],
+          responsive: true
+        });
+      }
+    };
+
+    TableManageButtons = function() {
+      "use strict";
+      return {
+        init: function() {
+          handleDataTableButtons();
+        }
+      };
+    }();
+
+    $('#datatable-custom').DataTable({
+      autoWidth : true,
+//      fixedHeader: false,
+//      deferRender: true,
+      scrollY: 380,
+      scrollCollapse: false,
+      scroller: true
+    });
+
+    TableManageButtons.init();
+
+};

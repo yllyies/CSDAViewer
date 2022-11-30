@@ -36,6 +36,9 @@ public class Rslt implements Serializable
     @Column
     private String creator;
 
+    @Column
+    private String created;
+
     @Column(name = "created_date")
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Timestamp createdDate;
@@ -110,6 +113,14 @@ public class Rslt implements Serializable
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
     }
 
     public Timestamp getCreatedDate() {

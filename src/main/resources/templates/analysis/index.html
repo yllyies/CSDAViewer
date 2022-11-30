@@ -11,14 +11,14 @@
   <title>Analysis</title>
 
   <!-- Bootstrap -->
-  <link th:href="@{/frontend_depandence/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/frontend_depandence/css/bootstrap.css}" rel="stylesheet">
   <!-- Font Awesome -->
-  <link th:href="@{/frontend_depandence/css/font-awesome.min.css}" rel="stylesheet">
+  <link th:href="@{/frontend_depandence/css/font-awesome.css}" rel="stylesheet">
   <!-- NProgress -->
   <link th:href="@{/frontend_depandence/css/nprogress.css}" rel="stylesheet">
 
   <!-- Custom Theme Style -->
-  <link th:href="@{/frontend_depandence/css/custom.min.css}" rel="stylesheet">
+  <link th:href="@{/frontend_depandence/css/custom.css}" rel="stylesheet">
   <!-- bootstrap-daterangepicker -->
   <link th:href="@{/frontend_depandence/css/daterangepicker.css}" rel="stylesheet">
 </head>
@@ -122,47 +122,49 @@
 
         <div class="clearfix"></div>
 
-        <!--<div class="row">
+        <div class="row">
           <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
               <div class="x_title">
                 <h2>Plain Page</h2>
                 <div id="reportrange" class="nav navbar-right panel_toolbox" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                  <i class="fa fa-calendar"></i>
                   <span>December 30, 2022 - January 28, 2023</span> <b class="caret"></b>
                 </div>
                 <div class="clearfix"></div>
               </div>
               <div class="x_content">
-                <ul class="nav nav-tabs justify-content-end bar_tabs" id="myTab" role="tablist">
+                  <ul class="nav nav-tabs justify-content-end bar_tabs" id="myTab" role="tablist">
                   <li class="nav-item">
-                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home1" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                    <form name='form1' th:action="@{/analysis/query}" method="post" >
+                      <input type='hidden' name='timeUnit' value='DAY'/>
+                      <a class="nav-link active" href='javascript:document.form1.submit();'>日</a>
+                    </form>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile1" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                    <form name='form2' th:action="@{/analysis/query}" method="post" >
+                      <input type='hidden' name='timeUnit' value='WEEK'/>
+                      <a class="nav-link active" href='javascript:document.form2.submit();'>周</a>
+                    </form>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                    <form name='form3' th:action="@{/analysis/query}" method="post" >
+                      <input type='hidden' name='timeUnit' value='MONTH'/>
+                      <a class="nav-link active" href='javascript:document.form3.submit();'>月</a>
+                    </form>
+                  </li>
+                  <li class="nav-item">
+                    <form name='form4' th:action="@{/analysis/query}" method="post" >
+                      <input type='hidden' name='timeUnit' value='YEAR'/>
+                      <a class="nav-link active" href='javascript:document.form4.submit();'>年</a>
+                    </form>
                   </li>
                 </ul>
-                <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active" id="home1" role="tabpanel" aria-labelledby="home-tab">
-                    Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher
-                    synth. Cosby sweater eu banh mi, qui irure terr.
-                  </div>
-                  <div class="tab-pane fade" id="profile1" role="tabpanel" aria-labelledby="profile-tab">
-                    Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
-                    booth letterpress, commodo enim craft beer mlkshk aliquip
-                  </div>
-                  <div class="tab-pane fade" id="contact1" role="tabpanel" aria-labelledby="contact-tab">
-                    xxFood truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
-                    booth letterpress, commodo enim craft beer mlkshk
-                  </div>
-                </div>
+              </div>
               </div>
             </div>
           </div>
-        </div>-->
+        </div>
         <div class="row">
           <!--        Bar graph             -->
           <div class="col-md-6 col-sm-6  ">
@@ -275,7 +277,7 @@
                   </thead>
                   <tbody>
                   <tr th:each="item:${dataSource}">
-                    <td th:text="${item.createdDate}"></td>
+                    <td th:text="${item.created}"></td>
                     <td th:text="${item.instrumentName}"></td>
                     <td th:text="${item.project.name}"></td>
                     <td th:text="${item.totalTime}"></td>
@@ -304,25 +306,27 @@
 </div>
 
 <!-- jQuery -->
-<script src="/frontend_depandence/js/jquery.min.js"></script>
+<script src="/frontend_depandence/js/jquery.js"></script>
 <!-- Bootstrap -->
 <script src="/frontend_depandence/js/bootstrap.min.js"></script>
 <!-- FastClick -->
-<script src="/frontend_depandence/js/fastclick.js"></script>
+<!--<script src="/frontend_depandence/js/fastclick.js"></script>-->
 <!-- NProgress -->
 <script src="/frontend_depandence/js/nprogress.js"></script>
 <!-- Chart.js -->
-<script src="/frontend_depandence/js/Chart.min.js"></script>
+<script src="/frontend_depandence/js/Chart.js"></script>
 <!-- Custom Theme Scripts -->
-<script src="/frontend_depandence/js/custom.min.js"></script>
+<script src="/frontend_depandence/js/custom.js"></script>
 <!-- Custom Theme Scripts -->
 <script th:src="@{/frontend_depandence/js_custom/custom_lf.js}" th:inline="javascript"></script>
 <!-- bootstrap-daterangepicker -->
-<script src="/frontend_depandence/js/moment.min.js"></script>
+<script src="/frontend_depandence/js/moment.js"></script>
 <script src="/frontend_depandence/js/daterangepicker.js"></script>
 
+<!-- load for js scope -->
 <script th:inline="javascript">
     var graphDataset = [[${graphDataset}]];
+    <!--  Chart label and dataset  -->
     var labels = Object.keys(graphDataset);
     var dateset = Object.values(graphDataset);
 </script>

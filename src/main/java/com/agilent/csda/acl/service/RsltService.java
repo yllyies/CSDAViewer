@@ -1,5 +1,6 @@
 package com.agilent.csda.acl.service;
 
+import com.agilent.csda.acl.dto.RequestDto;
 import com.agilent.csda.acl.model.Rslt;
 import org.springframework.data.domain.Page;
 
@@ -17,6 +18,13 @@ public interface RsltService {
      * @return
      */
     Map<String, Object> doFindAll();
+
+    /**
+     * 按条件查询
+     *
+     * @return
+     */
+    Map<String, Object> doQuery(RequestDto requestDto);
 
     /**
      * 分页查询

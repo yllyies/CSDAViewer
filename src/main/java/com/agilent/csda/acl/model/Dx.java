@@ -1,11 +1,14 @@
 package com.agilent.csda.acl.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 /**
  * ALTER TABLE cdsa.rslt CHANGE IsSqxRslt Is_sqx_rslt bit(1) NULL COMMENT '是否序列结果集，可能是跟测试无关。';
@@ -43,6 +46,10 @@ public class Dx implements Serializable
 
     @Column
     private BigDecimal filePath;
+
+    @Column(name = "uploaded_date")
+    @JsonFormat(pattern = "MM/dd/yyyy")
+    private Timestamp uploadedDate;
 
     public BigDecimal getNodeId() {
         return nodeId;
@@ -114,5 +121,13 @@ public class Dx implements Serializable
 
     public void setFilePath(BigDecimal filePath) {
         this.filePath = filePath;
+    }
+
+    public Timestamp getUploadedDate() {
+        return uploadedDate;
+    }
+
+    public void setUploadedDate(Timestamp uploadedDate) {
+        this.uploadedDate = uploadedDate;
     }
 }
