@@ -2,10 +2,7 @@ package com.agilent.csda.acl.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -50,6 +47,10 @@ public class Dx implements Serializable
     @Column(name = "uploaded_date")
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Timestamp uploadedDate;
+
+    @ManyToOne(targetEntity = Rslt.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_node_id", insertable = false, updatable = false)
+    private Rslt Rslt;
 
     public BigDecimal getNodeId() {
         return nodeId;
@@ -129,5 +130,13 @@ public class Dx implements Serializable
 
     public void setUploadedDate(Timestamp uploadedDate) {
         this.uploadedDate = uploadedDate;
+    }
+
+    public Rslt getRslt() {
+        return Rslt;
+    }
+
+    public void setRslt(Rslt rslt) {
+        Rslt = rslt;
     }
 }

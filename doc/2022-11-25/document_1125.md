@@ -3,7 +3,8 @@
 ### 仪器总览
 
 1. UI图
-   ![UI1.png](assets/UI图1.png)
+
+   ![d9a54e4c7aa5dcb9365614e5b919bdd.png](assets/d9a54e4c7aa5dcb9365614e5b919bdd.png)
 2. 字段
 
 

@@ -58,11 +58,11 @@ public class Rslt implements Serializable
     @Column
     private String sequenceName;
 
-    @ManyToOne(targetEntity = Project.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Project.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @OneToMany(targetEntity = Dx.class, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Dx.class, fetch = FetchType.LAZY)
     @JoinTable(name = "dx", joinColumns = {@JoinColumn(name = "parent_node_id")}, inverseJoinColumns = {@JoinColumn(name ="node_id")})
     private List<Dx> dxList;
 

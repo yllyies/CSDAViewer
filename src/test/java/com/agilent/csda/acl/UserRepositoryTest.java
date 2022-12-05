@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import com.agilent.csda.acl.dao.UserDao;
+import com.agilent.csda.acl.repository.UserDao;
 import com.agilent.csda.acl.model.User;
 import org.junit.After;
 import org.junit.AfterClass;

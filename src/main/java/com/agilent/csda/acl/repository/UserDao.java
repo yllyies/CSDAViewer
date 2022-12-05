@@ -1,4 +1,4 @@
-package com.agilent.csda.acl.dao;
+package com.agilent.csda.acl.repository;
 
 import java.util.List;
 

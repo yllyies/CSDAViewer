@@ -1480,6 +1480,9 @@ a:hover, a:focus {
 .panel_toolbox {
   float: right;
   min-width: 70px; }
+.panel_toolbox_left {
+  float: left;
+  min-width: 70px; }
 
 .panel_toolbox > li {
   float: left;

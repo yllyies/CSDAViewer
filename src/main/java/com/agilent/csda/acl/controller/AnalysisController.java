@@ -1,6 +1,7 @@
 package com.agilent.csda.acl.controller;
 
 import com.agilent.csda.acl.dto.RequestDto;
+import com.agilent.csda.acl.service.DxService;
 import com.agilent.csda.acl.service.RsltService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +21,8 @@ public class AnalysisController {
 
     @Autowired
     private RsltService rsltService;
+    @Autowired
+    private DxService dxService;
 
     @ApiOperation("定义UI图2页主要查询接口")
     @RequestMapping(value = "list", method = RequestMethod.GET)
@@ -33,7 +36,9 @@ public class AnalysisController {
     @ApiOperation("定义UI图2：按时间粒度查询")
     @PostMapping("/query")
     public ModelAndView query(RequestDto requestDto) {
-        Map<String, Object> resultMap = rsltService.doQuery(requestDto);
+//        Map<String, Object> resultMap = rsltService.doQuery(requestDto);
+        requestDto.setViewType("InstrumentView");
+        Map<String, Object> resultMap = dxService.doQuery(requestDto);
         ModelAndView modelAndView = new ModelAndView("analysis/index");
         modelAndView.getModel().putAll(resultMap);
         return modelAndView;

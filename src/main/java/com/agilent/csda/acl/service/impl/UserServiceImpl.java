@@ -1,6 +1,6 @@
 package com.agilent.csda.acl.service.impl;
 
-import com.agilent.csda.acl.dao.UserDao;
+import com.agilent.csda.acl.repository.UserDao;
 import com.github.pagehelper.PageHelper;
 import com.agilent.csda.acl.dto.UserRolesDto;
 import com.agilent.csda.acl.model.User;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
