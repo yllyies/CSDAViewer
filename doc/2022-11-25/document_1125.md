@@ -4,7 +4,7 @@
 
 1. UI图
 
-   ![d9a54e4c7aa5dcb9365614e5b919bdd.png](assets/d9a54e4c7aa5dcb9365614e5b919bdd.png)
+   ![滚动屏UI图.png](assets/滚动屏UI图.png)
 2. 字段
 
 
