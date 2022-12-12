@@ -1,6 +1,6 @@
 package com.agilent.csda.acl.service;
 
-import com.agilent.csda.acl.dto.RequestDto;
+import com.agilent.csda.acl.dto.AnalysisRequestDto;
 import com.agilent.csda.acl.model.Dx;
 
 import java.util.Date;
@@ -25,5 +25,5 @@ public interface DxService {
      *
      * @return
      */
-    Map<String, Object> doQuery(RequestDto requestDto);
+    Map<String, Object> doQuery(AnalysisRequestDto analysisRequestDto);
 }

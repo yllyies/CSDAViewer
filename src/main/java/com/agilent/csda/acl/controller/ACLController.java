@@ -40,12 +40,12 @@ public class ACLController {
     @ApiOperation("index")
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView list() {
-        return new ModelAndView("analysis/list");
+        return new ModelAndView("instrument/list");
     }
 
-    @RequestMapping(value = "user/user_list", method = RequestMethod.GET)
+    @RequestMapping(value = "analysis/index", method = RequestMethod.GET)
     public String userList() {
-        return "user/user_list";
+        return "analysis/index";
     }
 
     @RequestMapping(value = "check", method = RequestMethod.POST)

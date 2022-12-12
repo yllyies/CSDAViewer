@@ -4971,3 +4971,25 @@ ul.notifications {
 
 .calendar-exibit .calendar-table {
   padding: 0 0 4px 0; }
+
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100% !important;
+  background: #fff;
+  height: calc(100vh);
+  overflow-y: scroll;
+}
+
+#datatable-div{
+	height:600px;
+	overflow:scroll;
+}
+#datatable-div::-webkit-scrollbar{display:none}
+
+.datatable-td{
+    text-align: center;
+    vertical-align: center;
+}

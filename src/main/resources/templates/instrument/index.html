@@ -21,7 +21,7 @@
   <!-- bootstrap-daterangepicker -->
   <link th:href="@{/frontend_depandence/css/daterangepicker.css}" rel="stylesheet">
 
-  <link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+  <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
   <link th:href="@{/frontend_depandence/css/dataTables.bootstrap.css}" rel="stylesheet">
   <link th:href="@{/frontend_depandence/css/buttons.bootstrap.css}" rel="stylesheet">
 </head>
@@ -79,38 +79,48 @@
 
     <!-- page content -->
     <div class="right_col" role="main">
+      <div class="page-title">
+        <div class="title_left">
+          <h3>仪器总览</h3>
+        </div>
+      </div>
+
       <div class="col-md-12 col-sm-12">
-        <div class="x_panel">
+        <div id="fullScreenPanel" class="x_panel">
           <div class="x_title">
-            <h2>仪器总览 <small>所有</small></h2>
-            <ul class="nav navbar-right panel_toolbox">
-              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">Settings 1</a>
-                  <a class="dropdown-item" href="#">Settings 2</a>
-                </div>
-              </li>
-              <li><a class="close-link"><i class="fa fa-close"></i></a>
-              </li>
-            </ul>
+            <h2>时间：&nbsp;&nbsp;<span id="clock"></span></h2>
             <div class="clearfix"></div>
           </div>
-          <div class="table-responsive">
-            <table id="datatable-custom" class="table table-striped jambo_table">
+          <div class="col-md-12 col-sm-6">
+            <h2>
+              <label><i class="fa fa-square" style="color:white;border: solid 0.08em #eeeeee;"></i>未连接状态：5台</label> &nbsp;&nbsp;
+              <label><i class="fa fa-square " style="color:green"></i>空闲状态：2台</label> &nbsp;&nbsp;
+              <label><i class="fa fa-square" style="color:purple"></i>预运行状态：4台</label> &nbsp;&nbsp;
+              <label><i class="fa fa-square" style="color:blue"></i>运行状态：10台</label> &nbsp;&nbsp;
+              <label><i class="fa fa-square" style="color:yellow"></i>未就绪状态：3台</label> &nbsp;&nbsp;
+              <label><i class="fa fa-square" style="color:green"></i>维护中状态：2台</label> &nbsp;&nbsp;
+              <label><i class="fa fa-square" style="color:teal"></i>休眠状态：2台</label> &nbsp;&nbsp;
+              <label><i class="fa fa-square" style="color:red"></i>错误状态：0台</label>
+              <a class="nav navbar-right panel_toolbox" title="FullScreen" href="javascript:void(0)" onclick="toggleFullscreen()">
+                <span class="glyphicon glyphicon-fullscreen"></span>
+              </a>
+            </h2>
+
+          </div>
+
+          <div class="table-responsive container" id="datatable-div">
+            <table id="datatable-custom" class="table table-striped jambo_table" >
               <thead>
               <tr>
-                <th width="10%"><u>状态</u></th>
-                <th width="10%">名称</th>
-                <th width="10%">描述</th>
-                <th width="15%">位置</th>
-                <th width="10%">控制器</th>
-                <th width="15%"><u>项目</u></th>
-                <th width="10%"><u>用户</u></th>
-                <th width="10%"><u>当前样品</u></th>
-                <th width="10%"><u>运行状态</u></th>
+                <th class="datatable-td" width="5%"><u>状态</u></th>
+                <th class="datatable-td" width="15%">名称</th>
+<!--                <th width="10%">描述</th>-->
+<!--                <th width="15%">位置</th>-->
+<!--                <th width="10%">控制器</th>-->
+                <th class="datatable-td" width="25%"><u>项目</u></th>
+                <th class="datatable-td" width="10%"><u>用户</u></th>
+                <th class="datatable-td" width="25%"><u>当前样品</u></th>
+                <th class="datatable-td" width="20%"><u>运行状态</u></th>
                 <!--<th ><u>状态</u></th>
                 <th >名称</th>
                 <th >描述</th>
@@ -124,15 +134,15 @@
               </thead>
               <tbody>
                 <tr th:each="item:${dataSource}">
-                  <td><i class="fa fa-square" style="color:green"></i></td>
+                  <td class="datatable-td"><i class="fa fa-square" style="color:green"></i></td>
                   <td th:text="${item.instrumentName}"></td>
-                  <td th:text="${item.instrumentName}"></td>
-                  <td th:text="${item.location}"></td>
-                  <td th:text="TODO"></td>
+<!--                  <td th:text="${item.instrumentName}"></td>-->
+<!--                  <td th:text="${item.location}"></td>-->
+<!--                  <td th:text="TODO"></td>-->
                   <td th:text="${item.project.name}"></td>
                   <td th:text="${item.creator}"></td>
-                  <td th:text="TODO"></td>
-                  <td th:text="TODO"></td>
+                  <td >sample1</td>
+                  <td >运行 5 / 20</td>
                 </tr>
               </tbody>
             </table>
@@ -165,9 +175,26 @@
 <script src="/frontend_depandence/js/jquery.dataTables.js"></script>
 <script src="/frontend_depandence/js/dataTables.bootstrap.js"></script>
 <script src="/frontend_depandence/js/dataTables.buttons.js"></script>
-
 <!-- iCheck -->
 <script src="/frontend_depandence/js/icheck.js"></script>
+
+<!-- load for js scope -->
+<script>
+    <!--处理请求数据-->
+
+    <!--初始化组件-->
+    $(document).ready(function() {
+      init_DataTables();
+      time();
+      setInterval("time()", 1000);
+    });
+    window.onload = function(params) {
+        setTimeout(function() {
+            autoScroll('#datatable-div','tr')  //参数1是 需要上下移动内容的父元素   参数2 是 该父元素下的每个子元素; 参考上面的html即可
+        }, 1000);
+    };
+
+</script>
 
 </body>
 </html>

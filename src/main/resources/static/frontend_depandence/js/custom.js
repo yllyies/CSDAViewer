@@ -1970,9 +1970,9 @@ if (typeof NProgress != 'undefined') {
 				console.log('init_charts');
 			
 				
-				Chart.defaults.global.legend = {
+				/*Chart.defaults.global.legend = {
 					enabled: false
-				};
+				};*/
 				
 				
 

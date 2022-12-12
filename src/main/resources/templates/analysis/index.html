@@ -54,19 +54,19 @@
                 <ul class="nav child_menu">
                   <li><a>仪器运行时间<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li class="sub_menu"><a th:href="@{/analysis/list}">选择所有</a></li>
+                      <li class="sub_menu"><a th:href="@{/analysis/query}">选择所有</a></li>
                       <li th:each="item:${instrumentNames}"><a th:if="${not #strings.isEmpty(item)}" th:text="${item}"></a></li>
                     </ul>
                   </li>
                   <li><a>项目进样统计<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li class="sub_menu"><a th:href="@{/analysis/list}">选择所有</a></li>
+                      <li class="sub_menu"><a th:href="@{/analysis/query}">选择所有</a></li>
                       <li th:each="item:${projectNames}"><a th:if="${not #strings.isEmpty(item)}" th:text="${item}"></a></li>
                     </ul>
                   </li>
                   <li><a>人员进样统计<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li class="sub_menu"><a th:href="@{/analysis/list}">选择所有</a></li>
+                      <li class="sub_menu"><a th:href="@{/analysis/query}">选择所有</a></li>
                       <li th:each="item:${creators}"><a th:if="${not #strings.isEmpty(item)}" th:text="${item}"></a></li>
                     </ul>
                   </li>
@@ -107,183 +107,118 @@
     </div>
     <!-- /top navigation -->
 
+
     <!-- page content -->
     <div class="right_col" role="main">
-        <div class="page-title">
-          <div class="title_left">
-            <h3>统计分析</h3>
-          </div>
+      <div class="page-title">
+        <div class="title_left">
+          <h3>统计分析</h3>
         </div>
+      </div>
 
-        <div class="clearfix"></div>
-
-          <div class="col-md-8 col-sm-8 col-xs-8">
-            <div class="x_panel">
-              <div class="x_title">
-                <h2>查询表单</h2>
-                <div class="clearfix"></div>
-
-                <form id="analysisForm" name='analysisForm' th:action="@{/analysis/query}" method="post" >
-<!--                仪器选择-->
-                  <div class="form-group row">
-                    <label class="control-label col-md-3 col-sm-3 ">仪器列表</label>
-                    <div class="col-md-9 col-sm-9 ">
-                      <!--      多选仪器            -->
-                      <select id="instrument_selector" multiple="multiple" >
-                        <option th:each="item:${instrumentNames}" th:value="${item}" th:text="${item}"></option>
-                      </select>
-                    </div>
-                  </div>
-  <!--                时间粒度选择：年、季度、月-->
-                  <div class="form-group row">
-                    <label class="control-label col-md-3 col-sm-3 ">时间粒度选择</label>
-                    <div class="col-md-4 col-sm-4 ">
-                      <select id="dateunit_selector" name="timeUnit">
-                        <option value="YEAR">年度</option>
-                        <option value="QUARTER" selected >季度</option>
-                        <option value="MONTH">月度</option>
-                      </select>
-                    </div>
-                    <label class="control-label col-md-3 col-sm-3 ">是否同比 &nbsp;&nbsp; <input type="checkbox" name="isLinkRelative" class="flat"></label>
-                  </div>
-                  <div class="form-group row">
-                    <label class="control-label col-md-3 col-sm-3 ">时间</label>
-                    <div class="col-md-9 col-sm-9 " id="daterange_selector_month_div">
-                      <select id="daterange_selector_month" multiple="multiple">
-                        <optgroup label="2020">
-                          <option value="2020-1">2020-1</option>
-                          <option value="2020-2">2020-2</option>
-                          <option value="2020-3">2020-3</option>
-                          <option value="2020-4">2020-4</option>
-                          <option value="2020-5">2020-5</option>
-                          <option value="2020-6">2020-6</option>
-                          <option value="2020-7">2020-7</option>
-                          <option value="2020-8">2020-8</option>
-                          <option value="2020-9">2020-9</option>
-                          <option value="2020-10">2020-10</option>
-                          <option value="2020-11">2020-11</option>
-                          <option value="2020-12">2020-12</option>
-                        </optgroup>
-                        <optgroup label="2021">
-                          <option value="2021-1">2021-1</option>
-                          <option value="2021-2">2021-2</option>
-                          <option value="2021-3">2021-3</option>
-                          <option value="2021-4">2021-4</option>
-                          <option value="2021-5">2021-5</option>
-                          <option value="2021-6">2021-6</option>
-                          <option value="2021-7">2021-7</option>
-                          <option value="2021-8">2021-8</option>
-                          <option value="2021-9">2021-9</option>
-                          <option value="2021-10">2021-10</option>
-                          <option value="2021-11">2021-11</option>
-                          <option value="2021-12">2021-12</option>
-                        </optgroup>
-                        <optgroup label="2022">
-                          <option value="2022-1">2022-1</option>
-                          <option value="2022-2">2022-2</option>
-                          <option value="2022-3">2022-3</option>
-                          <option value="2022-4">2022-4</option>
-                          <option value="2022-5">2022-5</option>
-                          <option value="2022-6">2022-6</option>
-                          <option value="2022-7">2022-7</option>
-                          <option value="2022-8">2022-8</option>
-                          <option value="2022-9">2022-9</option>
-                          <option value="2022-10">2022-10</option>
-                          <option value="2022-11">2022-11</option>
-                          <option value="2022-12">2022-12</option>
-                        </optgroup>
-                      </select>
-                    </div>
-                    <div class="col-md-9 col-sm-9 " id="daterange_selector_quarter_div">
-                      <select id="daterange_selector_quarter" multiple="multiple">
-                        <optgroup label="2020">
-                          <option value="2020-Q1">2020-Q1</option>
-                          <option value="2020-Q2">2020-Q2</option>
-                          <option value="2020-Q3">2020-Q3</option>
-                          <option value="2020-Q4">2020-Q4</option>
-                        </optgroup>
-                        <optgroup label="2021">
-                          <option value="2021-Q1">2021-Q1</option>
-                          <option value="2021-Q2">2021-Q2</option>
-                          <option value="2021-Q3">2021-Q3</option>
-                          <option value="2021-Q4">2021-Q4</option>
-                        </optgroup>
-                        <optgroup label="2022">
-                          <option value="2022-Q1">2022-Q1</option>
-                          <option value="2022-Q2">2022-Q2</option>
-                          <option value="2022-Q3">2022-Q3</option>
-                          <option value="2022-Q4">2022-Q4</option>
-                        </optgroup>
-                      </select>
-                    </div>
-                    <div class="col-md-9 col-sm-9 " id="daterange_selector_year_div">
-                      <select id="daterange_selector_year" multiple="multiple">
-                        <option value="2020">2020</option>
-                        <option value="2021">2021</option>
-                        <option value="2022">2022</option>
-                      </select>
-                    </div>
-                  </div>
-                  <input id="daterange_input" type='hidden' name='daterange' />
-                  <input id="instrument_input" type='hidden' name='instrumentNames' />
-                  <button type="submit" class="btn btn-success float-right">Submit</button>
-                </form>
+      <div class="col-md-12 col-sm-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>查询表单：&nbsp;&nbsp;</h2>
+            <div class="clearfix"></div>
+          </div>
+          <div class="col-md-12 col-sm-8 col-xs-8">
+            <form id="analysisForm" name='analysisForm' th:action="@{/analysis/query}" method="post" >
+              <!--                仪器选择-->
+              <div class="form-group row">
+                <label class="control-label col-md-2 col-sm-3 "><h2>仪器列表</h2></label>
+                <div class="col-md-9 col-sm-9 ">
+                  <!--      多选仪器            -->
+                  <select id="instrument_selector" multiple="multiple" >
+                    <option th:each="item:${instrumentNames}" th:value="${item}" th:text="${item}"></option>
+                  </select>
+                </div>
               </div>
-              <div class="x_content">
-                <ul class="nav nav-tabs justify-content-end bar_tabs" id="myTab" role="tablist">
-                  <li class="nav-item">
-                    <a class="nav-link active" id="barChart-tab" data-toggle="tab" href="#barChart" role="tab" aria-controls="barChart" aria-selected="true"><i class="fa fa-bar-chart"></i></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="lineChart-tab" data-toggle="tab" href="#lineChart" role="tab" aria-controls="lineChart" aria-selected="false"><i class="fa fa-line-chart"></i></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="pieChart-tab" data-toggle="tab" href="#pieChart" role="tab" aria-controls="pieChart" aria-selected="false"><i class="fa fa-pie-chart"></i></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="tableChart-tab" data-toggle="tab" href="#tableChart" role="tab" aria-controls="tableChart" aria-selected="false"><i class="fa fa-table"></i></a>
-                  </li>
-                </ul>
-                <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active" id="barChart" role="tabpanel" aria-labelledby="barChart-tab">
-                    <!--        Bar graph             -->
-                    <div class="col-auto ">
-                      <canvas id="mybarChart1" ></canvas>
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="lineChart" role="tabpanel" aria-labelledby="lineChart-tab">
-                    <div class="col-auto ">
-                      <canvas id="lineChart1" ></canvas>
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="pieChart" role="tabpanel" aria-labelledby="pieChart-tab">
-                    <div class="x_content">
-                      <canvas id="canvasDoughnut1"></canvas>
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="tableChart" role="tabpanel" aria-labelledby="tableChart-tab">
-                    <div class="x_content">
-                      <table class="table table-striped table-bordered bulk_action">
-                        <thead>
-                        <tr>
-                          <th>日期</th>
-                          <th>运行时间(s)</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="key,item:${graphDataset}">
-                          <td th:text="${item.current.key}"></td>
-                          <td th:text="${item.current.value}"></td>
-                        </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+              <div class="form-group row">
+                <label class="control-label col-md-2 col-sm-3 ">查询时间</label>
+                <div class="col-md-9 col-sm-9 " id="year_selector_div">
+                  <select id="year_selector" multiple="multiple">
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                  </select>
+                </div>
+              </div>
+              <!--                时间粒度选择：年、季度、月-->
+              <div class="form-group row">
+                <label class="control-label col-md-2 col-sm-3 ">时间粒度选择</label>
+                <div class="col-md-9 col-sm-9 ">
+                  <select id="dateunit_selector" name="timeUnit">
+                    <option value="YEAR">年度</option>
+                    <option value="QUARTER" selected >季度</option>
+                    <option value="MONTH">月度</option>
+                  </select>
+                </div>
+              </div>
+              <input id="daterange_input" type='hidden' name='daterange' />
+              <input id="instrument_input" type='hidden' name='instrumentNames' />
+              <button type="submit" class="btn btn-success float-right">Submit</button>
+            </form>
+          </div>
+          <div class="x_content">
+            <ul class="nav nav-tabs justify-content-end bar_tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="barChart-tab" data-toggle="tab" href="#barChart" role="tab" aria-controls="barChart" aria-selected="true"><i class="fa fa-bar-chart"></i></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="lineChart-tab" data-toggle="tab" href="#lineChart" role="tab" aria-controls="lineChart" aria-selected="false"><i class="fa fa-line-chart"></i></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pieChart-tab" data-toggle="tab" href="#pieChart" role="tab" aria-controls="pieChart" aria-selected="false"><i class="fa fa-pie-chart"></i></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="tableChart-tab" data-toggle="tab" href="#tableChart" role="tab" aria-controls="tableChart" aria-selected="false"><i class="fa fa-table"></i></a>
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="barChart" role="tabpanel" aria-labelledby="barChart-tab">
+                <!--        Bar graph             -->
+                <div class="col-auto ">
+                  <canvas id="mybarChart1" ></canvas>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="lineChart" role="tabpanel" aria-labelledby="lineChart-tab">
+                <div class="col-auto ">
+                  <canvas id="lineChart1" ></canvas>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="pieChart" role="tabpanel" aria-labelledby="pieChart-tab">
+                <div class="x_content">
+                  <canvas id="canvasDoughnut1"></canvas>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="tableChart" role="tabpanel" aria-labelledby="tableChart-tab">
+                <div class="x_content">
+                  <table class="table table-striped table-bordered bulk_action">
+                    <thead>
+                    <tr>
+                      <th>仪器名称</th>
+                      <th>时间</th>
+                      <th>运行时间(s)</th>
+                      <th>比率</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item:${tableDatasets}">
+                      <td th:text="${item?.instrumentName}"></td>
+                      <td th:text="${item?.date}"></td>
+                      <td th:text="${item?.time}"></td>
+                      <td th:text="${item?.ratio}"></td>
+                    </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
 
+        </div>
       </div>
     </div>
     <!-- /page content -->
@@ -299,13 +234,7 @@
   </div>
 </div>
 
-<!-- load for js scope -->
-<script th:inline="javascript">
 
-    var labels = [[${labels}]];
-    console.log(labels);
-    var datasets = [[${datasets}]];
-</script>
 
 <!-- jQuery -->
 <script src="/frontend_depandence/js/jquery.js"></script>
@@ -328,6 +257,31 @@
 <!-- Custom Theme Scripts -->
 <script src="/frontend_depandence/js/custom.js"></script>
 <script th:src="@{/frontend_depandence/js_custom/custom_lf.js}"></script>
+
+<!-- load for js scope -->
+<script th:inline="javascript">
+    <!--处理请求数据-->
+    var barLabels = [[${barLabels}]] ? [[${barLabels}]]: [];
+    console.log(barLabels);
+    var barDatasets = [[${barDatasets}]] ? [[${barDatasets}]]: [];
+    console.log(barDatasets);
+    var lineLabels = [[${lineLabels}]] ? [[${lineLabels}]]: [];
+    console.log(lineLabels);
+    var lineDatasets = [[${lineDatasets}]] ? [[${lineDatasets}]] : [];
+    console.log(lineDatasets);
+    var doughnutLabels = [[${doughnutLabels}]] ? [[${doughnutLabels}]]: [];
+    console.log(doughnutLabels);
+    var doughnutDatasets = [[${doughnutDatasets}]] ? [[${doughnutDatasets}]]: [];
+    console.log(doughnutDatasets);
+    var daterange = [[${daterange}]];
+    var timeUnit = [[${timeUnit}]];
+    var instrumentsSelected = [[${instrumentsSelected}]];
+    <!--初始化组件-->
+    $(document).ready(function() {
+      init_charts();
+      init_form(daterange, timeUnit, instrumentsSelected);
+    });
+</script>
 
 </body>
 </html>

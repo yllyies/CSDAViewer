@@ -14,8 +14,10 @@ public class ChartDatasetDto implements Serializable {
     @ApiModelProperty(value = "datasets-item label")
     private String label;
 
-    @ApiModelProperty(value = "datasets-item label")
+    @ApiModelProperty(value = "datasets-item backgroundColor")
     private String backgroundColor;
+    @ApiModelProperty(value = "datasets-item borderColor")
+    private String borderColor;
 
     @ApiModelProperty(value = "datasets-item label")
     private List<Long> data;
@@ -26,6 +28,13 @@ public class ChartDatasetDto implements Serializable {
     public ChartDatasetDto(String label, String backgroundColor, List<Long> data) {
         this.label = label;
         this.backgroundColor = backgroundColor;
+        this.data = data;
+    }
+
+    public ChartDatasetDto(String label, String backgroundColor, String borderColor, List<Long> data) {
+        this.label = label;
+        this.backgroundColor = backgroundColor;
+        this.borderColor = borderColor;
         this.data = data;
     }
 }
