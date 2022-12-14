@@ -14,14 +14,13 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface DxDao extends JpaRepository<Dx, BigDecimal>, JpaSpecificationExecutor<Dx>
-{
+public interface DxDao extends JpaRepository<Dx, BigDecimal>, JpaSpecificationExecutor<Dx> {
     List<Dx> findAll(@Nullable Specification<Dx> var1);
 
     /**
-     * 自定义查询条件
-     *
-     * @param params
+     * @param startDate
+     * @param endDate
+     * @param instrumentNames
      * @return
      */
     @Query(value = "select dx,rslt,p from Dx dx " +
@@ -29,7 +28,23 @@ public interface DxDao extends JpaRepository<Dx, BigDecimal>, JpaSpecificationEx
             "left join Project p on rslt.projectId = p.id " +
             "where dx.uploadedDate between :startDate and :endDate " +
             "and rslt.instrumentName in (:instrumentNames) ")
-    List<Object[]> doQueryCustom(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
-                           @Param("instrumentNames") List<String> instrumentNames);
+    List<Object[]> doQueryInstrumentNames(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
+                                          @Param("instrumentNames") List<String> instrumentNames);
+
+    @Query(value = "select dx,rslt,p from Dx dx " +
+            "left join Rslt rslt on dx.parentNodeId = rslt.nodeId " +
+            "left join Project p on rslt.projectId = p.id " +
+            "where dx.uploadedDate between :startDate and :endDate " +
+            "and p.name in (:projectNames) ")
+    List<Object[]> doQueryProjectNames(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
+                                       @Param("projectNames") List<String> projectNames);
+
+    @Query(value = "select dx,rslt,p from Dx dx " +
+            "left join Rslt rslt on dx.parentNodeId = rslt.nodeId " +
+            "left join Project p on rslt.projectId = p.id " +
+            "where dx.uploadedDate between :startDate and :endDate " +
+            "and rslt.creator in (:creatorNames) ")
+    List<Object[]> doQueryCreatorNames(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
+                                       @Param("creatorNames") List<String> creatorNames);
 
 }

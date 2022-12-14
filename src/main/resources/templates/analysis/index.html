@@ -52,23 +52,17 @@
               </li>
               <li><a><i class="fa fa-bar-chart-o"></i>统计分析<span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                  <li><a>仪器运行时间<span class="fa fa-chevron-down"></span></a>
+                  <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('instrument')|">仪器运行时间<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li class="sub_menu"><a th:href="@{/analysis/query}">选择所有</a></li>
-                      <li th:each="item:${instrumentNames}"><a th:if="${not #strings.isEmpty(item)}" th:text="${item}"></a></li>
+                      <li class="sub_menu"><a>LC</a></li>
+                      <li class="sub_menu"><a>LC MS</a></li>
+                      <li class="sub_menu"><a>GC</a></li>
+                      <li class="sub_menu"><a>GC MS</a></li>
                     </ul>
                   </li>
-                  <li><a>项目进样统计<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li class="sub_menu"><a th:href="@{/analysis/query}">选择所有</a></li>
-                      <li th:each="item:${projectNames}"><a th:if="${not #strings.isEmpty(item)}" th:text="${item}"></a></li>
-                    </ul>
-                  </li>
-                  <li><a>人员进样统计<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li class="sub_menu"><a th:href="@{/analysis/query}">选择所有</a></li>
-                      <li th:each="item:${creators}"><a th:if="${not #strings.isEmpty(item)}" th:text="${item}"></a></li>
-                    </ul>
+                  <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('project')|">项目进样统计<span class="fa fa-chevron-down"></span></a></li>
+                  <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('creator')|">人员进样统计<span class="fa fa-chevron-down"></span></a></ul>
                   </li>
                 </ul>
               </li>
@@ -125,16 +119,34 @@
           <div class="col-md-12 col-sm-8 col-xs-8">
             <form id="analysisForm" name='analysisForm' th:action="@{/analysis/query}" method="post" >
               <!--                仪器选择-->
-              <div class="form-group row">
+              <div class="form-group row" id="instrument_selector_div">
                 <label class="control-label col-md-2 col-sm-3 "><h2>仪器列表</h2></label>
                 <div class="col-md-9 col-sm-9 ">
-                  <!--      多选仪器            -->
                   <select id="instrument_selector" multiple="multiple" >
                     <option th:each="item:${instrumentNames}" th:value="${item}" th:text="${item}"></option>
                   </select>
                 </div>
               </div>
-              <div class="form-group row">
+              <!--                项目选择-->
+              <div class="form-group row" id="project_selector_div">
+                <label class="control-label col-md-2 col-sm-3 "><h2>项目列表</h2></label>
+                <div class="col-md-9 col-sm-9 ">
+                  <select id="project_selector" multiple="multiple" >
+                    <option th:each="item:${projectNames}" th:value="${item}" th:text="${item}"></option>
+                  </select>
+                </div>
+              </div>
+              <!--                人员选择-->
+              <div class="form-group row"  id="creator_selector_div">
+                <label class="control-label col-md-2 col-sm-3 "><h2>人员列表</h2></label>
+                <div class="col-md-9 col-sm-9 ">
+                  <select id="creator_selector" multiple="multiple" >
+                    <option th:each="item:${creators}" th:value="${item}" th:text="${item}"></option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row" >
                 <label class="control-label col-md-2 col-sm-3 ">查询时间</label>
                 <div class="col-md-9 col-sm-9 " id="year_selector_div">
                   <select id="year_selector" multiple="multiple">
@@ -158,9 +170,12 @@
               </div>
               <input id="daterange_input" type='hidden' name='daterange' />
               <input id="instrument_input" type='hidden' name='instrumentNames' />
+              <input id="project_input" type='hidden' name='projectNames' />
+              <input id="creator_input" type='hidden' name='creatorNames' />
               <button type="submit" class="btn btn-success float-right">Submit</button>
             </form>
           </div>
+
           <div class="x_content">
             <ul class="nav nav-tabs justify-content-end bar_tabs" id="myTab" role="tablist">
               <li class="nav-item">
@@ -275,11 +290,10 @@
     console.log(doughnutDatasets);
     var daterange = [[${daterange}]];
     var timeUnit = [[${timeUnit}]];
-    var instrumentsSelected = [[${instrumentsSelected}]];
     <!--初始化组件-->
     $(document).ready(function() {
       init_charts();
-      init_form(daterange, timeUnit, instrumentsSelected);
+      init_form(daterange, timeUnit, barLabels);
     });
 </script>
 

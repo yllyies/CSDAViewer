@@ -19,10 +19,8 @@ import com.agilent.csda.common.CodeListConstant;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
@@ -41,24 +39,6 @@ public class DxServiceImpl implements DxService {
     private RsltDao rsltDao;
 
     @Override
-    public List<Dx> doFindBetweenDate(Date startDate, Date endDate) {
-        Specification<Dx> querySpecifi = (root, criteriaQuery, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            if (startDate != null) {
-                //大于或等于传入时间
-                predicates.add(cb.greaterThanOrEqualTo(root.get("createdDate").as(Timestamp.class), startDate));
-            }
-            if (endDate != null) {
-                //小于或等于传入时间
-                predicates.add(cb.lessThanOrEqualTo(root.get("createdDate").as(Timestamp.class), endDate));
-            }
-            // and到一起的话所有条件就是且关系，or就是或关系
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-        return dxDao.findAll(querySpecifi);
-    }
-
-    @Override
     public Map<String, Object> doQuery(AnalysisRequestDto analysisRequestDto) {
         // 按照视图类型进行数据组装
         Table<String, String, Long> graphMap = HashBasedTable.create();
@@ -72,7 +52,7 @@ public class DxServiceImpl implements DxService {
 
         if (StrUtil.isBlank(analysisRequestDto.getInstrumentNames()) &&
                 StrUtil.isBlank(analysisRequestDto.getProjectNames()) &&
-                StrUtil.isBlank(analysisRequestDto.getAdminNames())) {
+                StrUtil.isBlank(analysisRequestDto.getCreatorNames())) {
             // 查询所有仪器信息
             List<Rslt> rslts = rsltDao.findAll();
             List<String> instrumentNamesAll = rslts.stream().map(Rslt::getInstrumentName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
@@ -93,6 +73,16 @@ public class DxServiceImpl implements DxService {
         }
 
         String yAxisUnit = analysisRequestDto.getYAxisUnit(); // TODO "TIME", "STITCH"
+
+        if (StrUtil.isNotBlank(analysisRequestDto.getInstrumentNames())) {
+            analysisRequestDto.setViewType("InstrumentView");
+        } else if (StrUtil.isNotBlank(analysisRequestDto.getProjectNames())) {
+            analysisRequestDto.setViewType("ProjectView");
+        } else if (StrUtil.isNotBlank(analysisRequestDto.getCreatorNames())) {
+            analysisRequestDto.setViewType("CreatorView");
+        } else {
+            analysisRequestDto.setViewType("InstrumentView");
+        }
         String timeUnit = analysisRequestDto.getTimeUnit();
         List<String> daterange = StrUtil.splitTrim(analysisRequestDto.getDaterange(), ",");
         // 仪器运行时间界面查询
@@ -101,7 +91,7 @@ public class DxServiceImpl implements DxService {
             barLabels.addAll(instrumentNames);
             DateTime startTime = DateUtil.beginOfYear(DateUtil.parse(daterange.get(0), "yyyy"));
             DateTime endTime = DateUtil.endOfYear(DateUtil.parse(daterange.get(daterange.size() - 1), "yyyy"));
-            List<Object[]> result = dxDao.doQueryCustom(startTime, endTime, instrumentNames);
+            List<Object[]> result = dxDao.doQueryInstrumentNames(startTime, endTime, instrumentNames);
             // 根据时间粒度收集需要显示的所有时间段
             processDaterangeByTimeUnit(barDatasets, startToEndMap, timeUnit, startTime, endTime, daterange.size());
             // 收集 dateset
@@ -112,7 +102,6 @@ public class DxServiceImpl implements DxService {
                 Integer collectedTime = dx.getCollectedTime();
                 for (Map.Entry<DateTime, DateTime> entry : startToEndMap.entrySet()) {
                     if (DateUtil.isIn(uploadedDate, entry.getKey(), entry.getValue())) {
-                        // 按照
                         String dateFormate = formateByTimeUnit(timeUnit, entry.getKey());
                         if (graphMap.contains(rslt.getInstrumentName(), dateFormate)) {
                             BigDecimal add = new BigDecimal(graphMap.get(rslt.getInstrumentName(), dateFormate)).add(new BigDecimal(collectedTime));
@@ -153,12 +142,116 @@ public class DxServiceImpl implements DxService {
                 lineDatasets.add(chartDatasetDto);
             }
         } else if ("ProjectView".equals(analysisRequestDto.getViewType())) {
-            String projectNames = analysisRequestDto.getProjectNames(); // "阿司匹林,核酸因子"
-            // 3. ProjectView Y轴为项目：
+            List<String> projectNames = StrUtil.splitTrim(analysisRequestDto.getProjectNames(), ",");
+            barLabels.addAll(projectNames);
+            DateTime startTime = DateUtil.beginOfYear(DateUtil.parse(daterange.get(0), "yyyy"));
+            DateTime endTime = DateUtil.endOfYear(DateUtil.parse(daterange.get(daterange.size() - 1), "yyyy"));
+            List<Object[]> result = dxDao.doQueryProjectNames(startTime, endTime, projectNames);
+            // 根据时间粒度收集需要显示的所有时间段
+            processDaterangeByTimeUnit(barDatasets, startToEndMap, timeUnit, startTime, endTime, daterange.size());
+            // 收集 dateset
+            for (Object[] objects : result) {
+                Dx dx = (Dx) objects[0];
+                Project project = (Project) objects[2];
+                Timestamp uploadedDate = dx.getUploadedDate();
+                Integer collectedTime = dx.getCollectedTime();
+                for (Map.Entry<DateTime, DateTime> entry : startToEndMap.entrySet()) {
+                    if (DateUtil.isIn(uploadedDate, entry.getKey(), entry.getValue())) {
+                        String dateFormate = formateByTimeUnit(timeUnit, entry.getKey());
+                        if (graphMap.contains(project.getName(), dateFormate)) {
+                            BigDecimal add = new BigDecimal(graphMap.get(project.getName(), dateFormate)).add(new BigDecimal(collectedTime));
+                            graphMap.put(project.getName(), dateFormate, add.longValue());
+                        } else {
+                            graphMap.put(project.getName(), dateFormate, Long.valueOf(collectedTime));
+                        }
+                        break;
+                    }
+                }
+            }
 
-        } else if ("adminView".equals(analysisRequestDto.getViewType())) {
-            String adminNames = analysisRequestDto.getAdminNames(); // "张三,李四"
+            lineLabels.addAll(startToEndMap.navigableKeySet().stream().map(time -> formateByTimeUnit(timeUnit, time)).collect(Collectors.toList()));
+
+            for (String projectName : projectNames) {
+                if (!graphMap.containsRow(projectName)) {
+                    // 填入空值占位
+                    for (ChartDatasetDto chartDatasetDto : barDatasets) {
+                        chartDatasetDto.getData().add(0L);
+                    }
+                    continue;
+                }
+                Map<String, Long> row = graphMap.row(projectName);
+                for (ChartDatasetDto chartDatasetDto : barDatasets) {
+                    chartDatasetDto.getData().add(row.getOrDefault(chartDatasetDto.getLabel(), RandomUtil.randomLong(180000, 720000)) / 3600);
+                }
+                Long sum = row.values().stream().reduce(Long::sum).isPresent() ?
+                        row.values().stream().reduce(Long::sum).get():
+                        (RandomUtil.randomLong(180000, 720000)) / 3600;
+                doughnutDatasets.add(sum);
+                // linedataset
+                ChartDatasetDto chartDatasetDto = new ChartDatasetDto(projectName, "transparent", getColor(), new ArrayList<>());
+                for (String date : lineLabels) {
+                    var time = row.getOrDefault(date, RandomUtil.randomLong(180000, 720000)) / 3600;
+                    tableDatasets.add(new TableDatasetDto(projectName, date, time, 0.0d));
+                    chartDatasetDto.getData().add(row.getOrDefault(date, time));
+                }
+                lineDatasets.add(chartDatasetDto);
+            }
+        } else if ("creatorView".equals(analysisRequestDto.getViewType())) {
             // 4. AdminView Y轴为人员：
+            List<String> creatorNames = StrUtil.splitTrim(analysisRequestDto.getCreatorNames(), ",");
+            barLabels.addAll(creatorNames);
+            DateTime startTime = DateUtil.beginOfYear(DateUtil.parse(daterange.get(0), "yyyy"));
+            DateTime endTime = DateUtil.endOfYear(DateUtil.parse(daterange.get(daterange.size() - 1), "yyyy"));
+            List<Object[]> result = dxDao.doQueryCreatorNames(startTime, endTime, creatorNames);
+            // 根据时间粒度收集需要显示的所有时间段
+            processDaterangeByTimeUnit(barDatasets, startToEndMap, timeUnit, startTime, endTime, daterange.size());
+            // 收集 dateset
+            for (Object[] objects : result) {
+                Dx dx = (Dx) objects[0];
+                Rslt rslt = (Rslt) objects[1];
+                Timestamp uploadedDate = dx.getUploadedDate();
+                Integer collectedTime = dx.getCollectedTime();
+                for (Map.Entry<DateTime, DateTime> entry : startToEndMap.entrySet()) {
+                    if (DateUtil.isIn(uploadedDate, entry.getKey(), entry.getValue())) {
+                        String dateFormate = formateByTimeUnit(timeUnit, entry.getKey());
+                        if (graphMap.contains(rslt.getCreator(), dateFormate)) {
+                            BigDecimal add = new BigDecimal(graphMap.get(rslt.getCreator(), dateFormate)).add(new BigDecimal(collectedTime));
+                            graphMap.put(rslt.getCreator(), dateFormate, add.longValue());
+                        } else {
+                            graphMap.put(rslt.getCreator(), dateFormate, Long.valueOf(collectedTime));
+                        }
+                        break;
+                    }
+                }
+            }
+
+            lineLabels.addAll(startToEndMap.navigableKeySet().stream().map(time -> formateByTimeUnit(timeUnit, time)).collect(Collectors.toList()));
+
+            for (String creator : creatorNames) {
+                if (!graphMap.containsRow(creator)) {
+                    // 填入空值占位
+                    for (ChartDatasetDto chartDatasetDto : barDatasets) {
+                        chartDatasetDto.getData().add(0L);
+                    }
+                    continue;
+                }
+                Map<String, Long> row = graphMap.row(creator);
+                for (ChartDatasetDto chartDatasetDto : barDatasets) {
+                    chartDatasetDto.getData().add(row.getOrDefault(chartDatasetDto.getLabel(), RandomUtil.randomLong(180000, 720000)) / 3600);
+                }
+                Long sum = row.values().stream().reduce(Long::sum).isPresent() ?
+                        row.values().stream().reduce(Long::sum).get():
+                        (RandomUtil.randomLong(180000, 720000)) / 3600;
+                doughnutDatasets.add(sum);
+                // linedataset
+                ChartDatasetDto chartDatasetDto = new ChartDatasetDto(creator, "transparent", getColor(), new ArrayList<>());
+                for (String date : lineLabels) {
+                    var time = row.getOrDefault(date, RandomUtil.randomLong(180000, 720000)) / 3600;
+                    tableDatasets.add(new TableDatasetDto(creator, date, time, 0.0d));
+                    chartDatasetDto.getData().add(row.getOrDefault(date, time));
+                }
+                lineDatasets.add(chartDatasetDto);
+            }
         }
         // 查询所有仪器信息
         List<Rslt> rslts = rsltDao.findAll();
@@ -177,7 +270,6 @@ public class DxServiceImpl implements DxService {
             put("doughnutLabels", barLabels);
             put("doughnutDatasets", doughnutDatasets);
             put("tableDatasets", tableDatasets);
-            put("instrumentsSelected", barLabels);
             put("daterange", daterange);
             put("timeUnit", timeUnit);
         }};

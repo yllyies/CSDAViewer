@@ -36,7 +36,6 @@ public class AnalysisController {
     @ApiOperation("定义UI图2：按时间粒度查询")
     @PostMapping("/query")
     public ModelAndView query(AnalysisRequestDto analysisRequestDto) {
-        analysisRequestDto.setViewType("InstrumentView");
         Map<String, Object> resultMap = dxService.doQuery(analysisRequestDto);
         ModelAndView modelAndView = new ModelAndView("analysis/index");
         modelAndView.getModel().putAll(resultMap);

@@ -56,7 +56,7 @@ function init_charts() {
 }
 
 function init_DataTables() {
-    $('#datatable-custom').dataTable({
+    /*$('#datatable-custom').dataTable({
       autoWidth : true,
       scrollCollapse: false,
       pagingType: "simple",
@@ -65,8 +65,19 @@ function init_DataTables() {
       info: true,
       searching: false,
       ordering: false,
+      fixedColumns: true,
       "lengthChange": false
     });
+    $('#datatable-custom2').dataTable({
+      autoWidth : true,
+      scrollCollapse: false,
+      pagingType: "simple",
+      paging: false,
+      pageLength: 12,
+      searching: false,
+      ordering: false,
+      "lengthChange": false
+    });*/
 };
 
 function time() {
@@ -165,7 +176,7 @@ function init_daterangepicker() {
     });
 }
 
-function init_form(daterange, timeUnit, instrumentsSelected) {
+function init_form(daterange, timeUnit, barLabels) {
     if ($('#year_selector').length){
         $('#year_selector').multiselect({
             includeSelectAllOption: true,
@@ -216,33 +227,73 @@ function init_form(daterange, timeUnit, instrumentsSelected) {
             allSelectedText:'全部'
 
         });
-        if (instrumentsSelected && instrumentsSelected.length) {
-            $('#instrument_selector').multiselect('select', instrumentsSelected);
+        if (barLabels && barLabels.length) {
+            $('#instrument_selector').multiselect('select', barLabels);
             $('#instrument_input').val($('#instrument_selector').val());
         }
     }
+    if ($('#project_selector').length) {
+        $('#project_selector').multiselect({
+            includeSelectAllOption: true,
+            buttonWidth: '100%',
+            dropRight: true,
+            maxHeight: 300,
+            onChange: function(option, checked) {
+                $('#project_input').val($('#project_selector').val());
+            },
+            nonSelectedText: '请选择',
+            numberDisplayed: 20,
+            enableFiltering: true,
+            allSelectedText:'全部'
 
+        });
+        if (barLabels && barLabels.length) {
+            $('#project_selector').multiselect('select', barLabels);
+            $('#project_input').val($('#project_selector').val());
+        }
+    }
+    if ($('#creator_selector').length) {
+        $('#creator_selector').multiselect({
+            includeSelectAllOption: true,
+            buttonWidth: '100%',
+            dropRight: true,
+            maxHeight: 300,
+            onChange: function(option, checked) {
+                $('#creator_input').val($('#creator_selector').val());
+            },
+            nonSelectedText: '请选择',
+            numberDisplayed: 20,
+            enableFiltering: true,
+            allSelectedText:'全部'
+
+        });
+        if (barLabels && barLabels.length) {
+            $('#creator_selector').multiselect('select', barLabels);
+            $('#creator_input').val($('#creator_selector').val());
+        }
+    }
 }
 
 function toggleFullscreen() {
-    $('#fullScreenPanel').toggleClass('fullscreen');
-    var obj = document.getElementById('datatable-div');
-    obj.style.height = obj.style.height == "800px" ? "600px" : "800px";
-}
-
-window.onload = function(params) {
-	setTimeout(function() {
-		autoScroll('#ptwarn','.warnMsg')  //参数1是 需要上下移动内容的父元素   参数2 是 该父元素下的每个子元素; 参考上面的html即可
-	}, 1000);
+    if (document.fullscreen) {
+        document.exitFullscreen();
+        var obj = document.getElementById('datatable-div');
+        obj.style.height = "500px";
+    } else {
+        var obj2 = document.getElementById('fullScreenPanel');
+        obj2.requestFullscreen();
+        var obj = document.getElementById('datatable-div');
+        obj.style.height = "calc(80vh)";fullscreen
+    }
 }
 
 // 滚动方法
 function autoScroll(father,children) {
 	let isreset = false,
 		scrollItem = $(father), //需要上下移动内容的父元素
-		scrollItemchildren = 600, //每次移动的距离
+		scrollItemchildren = 500, //每次移动的距离
 		scrollTimeTnterval = 5000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(father).scrollTop() 会慢慢变小的BUG )
-		scrollAnimateTime = 1500,  //滚动动画的持续时间, 毫秒
+		scrollAnimateTime = 500,  //滚动动画的持续时间, 毫秒
  		istoBottom = true,
 		innerHeight = $(father).innerHeight();
 	function time() {
@@ -276,6 +327,19 @@ function autoScroll(father,children) {
 		}
 	}
 	let sItval = setInterval(time, scrollTimeTnterval); //多久滚动一次
+}
+
+
+function changeForm(divName) {
+    let divIds = ["instrument", "project", "creator"];
+    for (key in divIds) {
+        if(divName && divIds[key] == divName) {
+            $("#" + divIds[key] + "_selector_div").show();
+        } else {
+            $("#" + divIds[key] + "_selector_div").hide();
+            $('#' + divIds[key] + '_selector').multiselect('deselectAll');
+        }
+    }
 }
 
 

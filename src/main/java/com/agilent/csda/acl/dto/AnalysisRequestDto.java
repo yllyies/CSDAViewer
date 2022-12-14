@@ -12,7 +12,7 @@ public class AnalysisRequestDto implements Serializable {
     private String viewType;
     private String instrumentNames;
     private String projectNames;
-    private String adminNames;
+    private String creatorNames;
     // 2.选择查询时间，查询粒度
     private String timeUnit;
     private String daterange;
