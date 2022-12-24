@@ -13,6 +13,10 @@ public class CodeListConstant {
     public static final String TIME_UNIT_YEAR = "YEAR";
     public static final String TIME_UNIT_QUARTER = "QUARTER";
     public static final String TIME_UNIT_MONTH = "MONTH";
+    /** 统计视图类型 **/
+    public static final String INSTRUMENT_VIEW = "InstrumentView";
+    public static final String PROJECT_VIEW = "ProjectView";
+    public static final String CREATOR_VIEW = "CreatorView";
 
-
+    public static final String[] COLOR_LIST = {"#FF0000", "#800080", "#FF4500", "#0000FF", "#FFA500", "#00FFFF", "#FFFF00", "#008000"};
 }

@@ -7,17 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>UAM | </title>
+    <title>登录</title>
 
     <!-- Bootstrap -->
     <link th:href="@{/frontend_depandence/css/bootstrap.css}" rel="stylesheet" type="text/css">
     <!-- Font Awesome -->
     <link th:href="@{/frontend_depandence/css/font-awesome.css}" rel="stylesheet" type="text/css">
-    <!-- NProgress -->
-    <link th:href="@{/frontend_depandence/css/nprogress.css}" rel="stylesheet" type="text/css">
+<!--    &lt;!&ndash; NProgress &ndash;&gt;-->
+<!--    <link th:href="@{/frontend_depandence/css/nprogress.css}" rel="stylesheet" type="text/css">-->
     <!-- Animate.css -->
     <link th:href="@{/frontend_depandence/css/animate.css}" rel="stylesheet" type="text/css">
-
     <!-- Custom Theme Style -->
     <link th:href="@{/frontend_depandence/css/custom.css}" rel="stylesheet" type="text/css">
   </head>
@@ -31,34 +30,33 @@
         <div class="animate form login_form">
           <section class="login_content">
             <form role="form" th:action="@{/check}" method="post">
-              <h1>Login Form</h1>
+              <h1>请登录</h1>
               <div>
-                <input type="text" name="username" class="form-control" placeholder="Username" required="" />
+                <input type="text" name="username" class="form-control" placeholder="用户名" required="" />
               </div>
               <div>
-                <input type="password" name="password" class="form-control" placeholder="Password" required="" />
+                <input type="password" name="password" class="form-control" placeholder="密码" required="" />
               </div>
               <div>
-                <button type="submit" class="btn btn-default submit">Login</button>
-                <a class="reset_pass" href="#signup">Create Account</a>
+                <button type="submit" class="btn btn-success submit">登录</button>
+<!--                <a class="reset_pass" href="#signup">Create Account</a>-->
               </div>
 
               <div class="clearfix"></div>
 
               <div class="separator">
-
                 <div class="clearfix"></div>
                 <br />
                 <div>
-                  <h1><i class="fa fa-paw"></i> CSDA Viewer </h1>
-<!--                  <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>-->
+                  <h1 > CSDA Viewer </h1>
+                  <p >欢迎使用实验室数据视图工具</p>
                 </div>
               </div>
             </form>
           </section>
         </div>
 
-        <div id="register">
+        <!--<div id="register">
           <section class="login_content">
             <form role="form" th:action="@{user/create}" class="animate form registration_form" method="post">
               <h1>Create Account</h1>
@@ -111,22 +109,18 @@
                 <div class="clearfix"></div>
                 <br />
 
-                <div>
-                  <h1><i class="fa fa-paw"></i> UAM </h1>
-                  <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
-                </div>
               </div>
             </form>
           </section>
 
-        </div>
+        </div>-->
       </div>
     </div>
 
     <!-- jQuery -->
     <script src="/frontend_depandence/js/jquery.js"></script>
     <!-- Bootstrap -->
-    <script src="/frontend_depandence/js/bootstrap.js"></script>
+    <script src="/frontend_depandence/js/bootstrap.bundle.js"></script>
     <!-- Custom Theme Scripts -->
     <script src="/frontend_depandence/js/custom.js"></script>
   </body>

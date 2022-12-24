@@ -8,7 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Instrument</title>
+  <title>仪器总览</title>
 
   <!-- Bootstrap -->
   <link th:href="@{/frontend_depandence/css/bootstrap.css}" rel="stylesheet">
@@ -20,6 +20,8 @@
   <link th:href="@{/frontend_depandence/css/custom.css}" rel="stylesheet">
   <!-- bootstrap-daterangepicker -->
   <link th:href="@{/frontend_depandence/css/daterangepicker.css}" rel="stylesheet">
+  <!-- bootstrap-progressbar -->
+<!--  <link th:href="@{/frontend_depandence/css/bootstrap-progressbar-3.3.4.css}" rel="stylesheet">-->
 
   <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
   <link th:href="@{/frontend_depandence/css/dataTables.bootstrap.css}" rel="stylesheet">
@@ -32,7 +34,7 @@
     <div class="col-md-3 left_col">
       <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
-          <img src="/frontend_depandence/images/agilent_logo.jfif" alt="..." class="img-thumbnail">
+          <img src="/frontend_depandence/images/logo_menu.png" alt="..." class="img-thumbnail_custom">
         </div>
 
         <div class="clearfix"></div>
@@ -49,7 +51,7 @@
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
           <div class="menu_section">
-            <h3>Menu</h3>
+            <h3>菜单</h3>
             <ul class="nav side-menu">
               <li><a href="#"><i class="fa fa-desktop"></i>仪器总览<span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
@@ -61,81 +63,89 @@
             </ul>
           </div>
         </div>
+        <!-- /sidebar menu -->
       </div>
     </div>
 
     <!-- top navigation -->
-    <div class="top_nav">
-      <div class="nav_menu">
-        <nav>
-          <div class="nav toggle">
-            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-          </div>
-        </nav>
+    <div class="top_nav" >
+      <div class="nav_title_custom" >
+        <img src="/frontend_depandence/images/logo_banner.png" alt="..." class="img-thumbnail_custom">
       </div>
+      <div class="clearfix"></div>
     </div>
     <!-- /top navigation -->
 
-
     <!-- page content -->
     <div class="right_col" role="main">
-      <div class="page-title">
+ <!--     <div class="page-title">
         <div class="title_left">
           <h3>仪器总览</h3>
         </div>
-      </div>
+      </div>-->
 
-      <div class="col-md-12 col-sm-12"  id="fullScreenPanel">
-        <div class="x_panel">
+      <div class="col-md-12 col-sm-12" id="fullScreenPanel">
+        <div class="x_panel" style="border:none">
           <div class="x_title">
-            <h2>时间：&nbsp;&nbsp;<span id="clock"></span></h2>
+            <h2>当前时间：&nbsp;&nbsp;<span id="clock"></span></h2>
             <ul class="nav navbar-right panel_toolbox">
-              <li><a class="nav-link" href="javascript:void(0)" onclick="toggleFullscreen()"><i class="fa fa-arrows-alt"></i></a></li>
+              <li><a href="javascript:void(0)" onclick="toggleFullscreen()"><i class="fa fa-arrows-alt fa-lg"></i></a></li>
             </ul>
             <div class="clearfix"></div>
           </div>
 
           <div class="col-md-12 col-sm-8 col-xs-8">
             <h2>
-              <label><i class="fa fa-square" style="color:white;border: solid 0.08em #eeeeee;"></i>未连接状态：5台</label> &nbsp;&nbsp;
-              <label><i class="fa fa-square " style="color:green"></i>空闲状态：2台</label> &nbsp;&nbsp;
-              <label><i class="fa fa-square" style="color:purple"></i>预运行状态：4台</label> &nbsp;&nbsp;
-              <label><i class="fa fa-square" style="color:blue"></i>运行状态：10台</label> &nbsp;&nbsp;
-              <label><i class="fa fa-square" style="color:yellow"></i>未就绪状态：3台</label> &nbsp;&nbsp;
-              <label><i class="fa fa-square" style="color:green"></i>维护中状态：2台</label> &nbsp;&nbsp;
-              <label><i class="fa fa-square" style="color:teal"></i>休眠状态：2台</label> &nbsp;&nbsp;
-              <label><i class="fa fa-square" style="color:red"></i>错误状态：0台</label>
+              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:white;border-radius: 0.25rem;border: solid 0.1rem #eeeeee;"></i>&nbsp;未连接：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:green;"></i>&nbsp;空闲中：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:blue"></i>&nbsp;运行中：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:orange"></i>&nbsp;维护中：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:red"></i>&nbsp;报错：<span style="font-weight:bold;" th:text="123"></span>台</label>
             </h2>
           </div>
           <div class="x_content">
             <div class="table-responsive">
-              <table id="datatable-custom2" class="table table-striped jambo_table" style="margin:0px" >
-                <thead>
+              <table id="instrumentTable_thead" class="table-custom table-striped jambo_table">
+                <thead style="font-size:12px">
                 <tr>
-                  <th class="datatable-td" width="5%"><u>状态</u></th>
-                  <th class="datatable-td" width="15%">名称</th>
-                  <th class="datatable-td" width="25%"><u>项目</u></th>
-                  <th class="datatable-td" width="10%"><u>用户</u></th>
-                  <th class="datatable-td" width="25%"><u>当前样品</u></th>
-                  <th class="datatable-td" width="20%"><u>运行状态</u></th>
+                  <th class="datatable-td" width="10%">仪器状态</th>
+                  <th class="datatable-td" width="10%">仪器名称</th>
+                  <th class="datatable-td" width="10%">仪器类型</th>
+                  <th class="datatable-td" width="10%">项目</th>
+                  <th class="datatable-td" width="10%">操作用户</th>
+                  <th class="datatable-td" width="10%">登录用户</th>
+                  <th class="datatable-td" width="10%">序列名称</th>
+                  <th class="datatable-td" width="10%">提交时间</th>
+                  <th class="datatable-td" width="30%">当前样品</th>
+                  <th class="datatable-td" width="10%">运行状态</th>
                 </tr>
                 </thead>
               </table>
             </div>
             <div class="table-responsive" id="datatable-div">
-            <table id="datatable-custom" class="table table-striped jambo_table" >
-              <tbody>
-              <tr th:each="item:${dataSource}">
-                <td class="datatable-td" width="5%"><i class="fa fa-square" style="color:green"></i></td>
-                <td class="datatable-td" width="15%" th:text="${item.instrumentName}"></td>
-                <td class="datatable-td" width="25%" th:text="${item.project.name}"></td>
-                <td class="datatable-td" width="10%" th:text="${item.creator}"></td>
-                <td class="datatable-td" width="25%" >sample1</td>
-                <td class="datatable-td" width="20%" >运行 5 / 20</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
+              <table id="instrumentTable_tbody" class="table-custom" >
+                <tbody  style="font-size:11px">
+                <tr th:each="item:${dataSource}">
+                  <td class="datatable-td" width="10%"><i class="fa fa-square" style="color:green"></i></td>
+                  <td class="datatable-td" width="10%" th:text="${item.instrumentName}"></td>
+                  <td class="datatable-td" width="10%">LC</td>
+                  <td class="datatable-td" width="10%" th:text="${item.project.name}"></td>
+                  <td class="datatable-td" width="10%" th:text="${item.creator}"></td>
+                  <td class="datatable-td" width="10%" th:text="${item.creator}"></td>
+                  <td class="datatable-td" width="10%" >Sequence01</td>
+                  <td class="datatable-td" width="10%" >HH:mm:ss</td>
+                  <td class="datatable-td" width="30%" >sample1</td>
+                  <td class="datatable-td" width="10%">
+                    <div class="progress">
+                      <div class="progress-bar bg-success" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                        <span>5/10</span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -144,9 +154,6 @@
 
     <!-- footer content -->
     <footer>
-      <div class="pull-right">
-        Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-      </div>
       <div class="clearfix"></div>
     </footer>
     <!-- /footer content -->
@@ -159,7 +166,7 @@
 <script src="/frontend_depandence/js/bootstrap.bundle.js"></script>
 <!-- Custom Theme Scripts -->
 <!--<script src="/frontend_depandence/js/custom.js"></script>-->
-<script src="/frontend_depandence/js_custom/custom_lf.js"></script>
+<script src="/frontend_depandence/js_custom/instrument.js"></script>
 <!-- Datatables -->
 <script src="/frontend_depandence/js/jquery.dataTables.js"></script>
 <script src="/frontend_depandence/js/dataTables.bootstrap.js"></script>
@@ -173,7 +180,6 @@
 
     <!--初始化组件-->
     $(document).ready(function() {
-      init_DataTables();
       time();
       setInterval("time()", 1000);
     });

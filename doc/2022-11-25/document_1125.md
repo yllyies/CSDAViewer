@@ -49,3 +49,14 @@
    -- 1630 IQOQ_RD-PC918_06Jan2021_001.rslt (rslt) 项目信息、仪器信息、方法、序列
    -- 1637 xxx.dx (dx)
    -- 1775 IQOQ_RD-PC918_06Jan2021_001.acaml （acaml_root）
+
+### 仪器状态列表
+
+Not Connect：white；
+Idle：Green；
+Error：Red；
+Pre-run：Purple； 
+Running：Blue；
+Not Ready：Yellow；
+Maintenance Due：Orange；
+Sleep：Teal；

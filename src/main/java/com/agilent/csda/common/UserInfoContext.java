@@ -1,6 +1,6 @@
 package com.agilent.csda.common;
 
-import com.agilent.csda.acl.model.User;
+import com.agilent.csda.phase1.model.User;
 
 /**
  * Save UserInfo Context

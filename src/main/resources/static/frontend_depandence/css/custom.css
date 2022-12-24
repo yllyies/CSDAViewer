@@ -802,7 +802,7 @@
   content: "\e260"; }
 
 .left_col {
-  background: #2A3F54; }
+  background: #0085D5; }
 
 .container {
   width: 100%;
@@ -1031,7 +1031,7 @@ body .container.body .right_col {
 .nav_title {
   width: 230px;
   float: left;
-  background: #2A3F54;
+  background: #0085D5;
   border-radius: 0;
   height: 57px;
   padding: 0px; }
@@ -1151,8 +1151,7 @@ body .container.body .right_col {
   color: #fff !important; }
 
 body {
-  color: #73879C;
-  background: #2A3F54;
+  background: #0085D5;
   font-family: "Helvetica Neue", Roboto, Arial, "Droid Sans", sans-serif;
   font-size: 13px;
   font-weight: 400;
@@ -1395,8 +1394,8 @@ a:hover, a:focus {
 
 .nav.side-menu > li.active > a {
   text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;
-  background: -webkit-gradient(linear, left top, left bottom, from(#334556), to(#2C4257)), #2A3F54;
-  background: linear-gradient(#334556, #2C4257), #2A3F54;
+  background: -webkit-gradient(linear, left top, left bottom, from(#00426A), to(#00426A)), #00426A;
+  background: linear-gradient(#00426A, #00426A), #00426A;
   -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
   box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0; }
 
@@ -1894,8 +1893,9 @@ table.jambo_table {
   border: 1px solid rgba(221, 221, 221, 0.78); }
 
 table.jambo_table thead {
-  background: rgba(52, 73, 94, 0.94);
+  background: #0085D5;
   color: #ECF0F1; }
+
 
 table.jambo_table tbody tr:hover td {
   background: rgba(38, 185, 154, 0.07);
@@ -2938,7 +2938,7 @@ a.btn-success, a.btn-primary, a.btn-warning, a.btn-danger {
   color: #fff; }
 
 .btn-success {
-  background: #26B99A;
+  background: #0085D5;
   border: 1px solid #169F85; }
 
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open .dropdown-toggle.btn-success {
@@ -4973,7 +4973,7 @@ ul.notifications {
   padding: 0 0 4px 0; }
 
 #datatable-div{
-	height: 500px;
+	height: calc(70vh - 15px);
 	overflow:scroll;
 }
 #datatable-div::-webkit-scrollbar{display:none; background: #ffc107}
@@ -4986,3 +4986,45 @@ ul.notifications {
 :not(:root):fullscreen::backdrop {
     background: white
 }
+
+.table-custom {
+  width: 100%;
+  margin-bottom: 0.1rem;
+  color: #212529;
+  table-layout:fixed;
+  margin:0px;
+}
+
+.table-custom th {
+  padding: 0.5rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+
+.table-custom td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+
+.img-thumbnail_custom {
+  background-color: #fff;
+  border-radius: 0.25rem;
+  max-width: 100%;
+  height: 57px;
+}
+
+.nav_title_custom {
+  width: 230px;
+  float: left;
+  background: #0085D5;
+  border-radius: 0.25rem;
+  height: 57px;
+  padding: 0px;
+  margin: 2px;}

@@ -56,7 +56,7 @@ function init_charts() {
 }
 
 function init_DataTables() {
-    /*$('#datatable-custom').dataTable({
+    $('#instrumentTable_tbody').dataTable({
       autoWidth : true,
       scrollCollapse: false,
       pagingType: "simple",
@@ -68,7 +68,7 @@ function init_DataTables() {
       fixedColumns: true,
       "lengthChange": false
     });
-    $('#datatable-custom2').dataTable({
+    $('#instrumentTable_thead').dataTable({
       autoWidth : true,
       scrollCollapse: false,
       pagingType: "simple",
@@ -77,7 +77,7 @@ function init_DataTables() {
       searching: false,
       ordering: false,
       "lengthChange": false
-    });*/
+    });
 };
 
 function time() {
@@ -91,6 +91,7 @@ function time() {
     minutes = date.getMinutes();
     seconds = date.getSeconds();
     vWeek_s = date.getDay();
+    date.Format("yyyy年MM月dd日 hh:mm:ss")
     document.getElementById("clock").innerHTML = year + "年" + month + "月" + day + "日" + "\t" + hours + ":" + minutes +":" + seconds + "\t" + vWeek[vWeek_s] ;
 };
 
@@ -293,7 +294,7 @@ function autoScroll(father,children) {
 		scrollItem = $(father), //需要上下移动内容的父元素
 		scrollItemchildren = 500, //每次移动的距离
 		scrollTimeTnterval = 5000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(father).scrollTop() 会慢慢变小的BUG )
-		scrollAnimateTime = 500,  //滚动动画的持续时间, 毫秒
+		scrollAnimateTime = 1500,  //滚动动画的持续时间, 毫秒
  		istoBottom = true,
 		innerHeight = $(father).innerHeight();
 	function time() {

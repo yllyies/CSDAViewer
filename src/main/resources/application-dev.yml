@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: dev
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/cdsa?serverTimezone=UTC&characterEncoding=utf-8&useSSL=false

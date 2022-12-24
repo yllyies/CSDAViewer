@@ -1,9 +1,10 @@
 package com.agilent.csda.config;
 
-import com.agilent.csda.acl.service.impl.UserServiceImpl;
+import com.agilent.csda.phase1.service.impl.UserServiceImpl;
 import com.agilent.csda.common.ConfigConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,6 +21,7 @@ import javax.sql.DataSource;
 /**
  * Spring Security Config
  */
+@Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true) // 启用方法安全设置
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -58,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/v2/api-docs/**"
                 )
                 .permitAll()
-                .antMatchers("/", "/login", "/check", "/analysis/**", "/instrument/**") // access login or register without authorize
+                .antMatchers("/", "/login", "/check", "/api/**") // access login or register without authorize
                 .permitAll()
                 .anyRequest()
                 .authenticated();
