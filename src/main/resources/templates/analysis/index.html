@@ -29,7 +29,7 @@
     <div class="col-md-3 left_col">
       <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
-          <img src="/frontend_depandence/images/logo_menu.png" alt="..." class="img-thumbnail_custom">
+          <img th:src="@{/frontend_depandence/images/logo_menu.png}" alt="..." class="img-thumbnail_custom">
         </div>
 
         <div class="clearfix"></div>
@@ -37,7 +37,7 @@
         <!-- menu profile quick info -->
         <div class="profile clearfix">
           <div class="profile_info">
-            <span>Welcome,</span><span sec:authentication="name"></span>
+            <span class="container-fluid" >欢迎，</span><span sec:authentication="name" style="font-weight: bold" ></span>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -54,7 +54,7 @@
                 <ul class="nav child_menu">
                   <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('instrument')|">仪器运行时间<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li class="sub_menu"><a th:href="@{/analysis/query}">选择所有</a></li>
+                      <li class="sub_menu"><a href="javascript:void(0)" onclick="document:analysisForm.submit()">选择所有</a></li>
                       <li class="sub_menu"><a><input type="checkbox"> LC</a></li>
                       <li class="sub_menu"><a><input type="checkbox"> GC</a></li>
                     </ul>
@@ -72,7 +72,7 @@
     <!-- top navigation -->
     <div class="top_nav" >
       <div class="nav_title_custom" >
-        <img src="/frontend_depandence/images/logo_banner.png" alt="..." class="img-thumbnail_custom">
+        <img th:src="@{/frontend_depandence/images/logo_banner.png}" alt="..." class="img-thumbnail_custom">
       </div>
       <div class="clearfix"></div>
     </div>
@@ -227,26 +227,27 @@
 
 
 <!-- jQuery -->
-<script src="/frontend_depandence/js/jquery.js"></script>
+<script th:src="@{/frontend_depandence/js/jquery.js}"></script>
 <!-- Bootstrap -->
-<script src="/frontend_depandence/js/bootstrap.bundle.js"></script>
-<script src="/frontend_depandence/js/bootstrap-multiselect.js"></script>
+<script th:src="@{/frontend_depandence/js/bootstrap.bundle.js}"></script>
+<script th:src="@{/frontend_depandence/js/bootstrap-multiselect.js}"></script>
 <!-- Chart.js -->
-<script src="/frontend_depandence/js/Chart.js"></script>
+<script th:src="@{/frontend_depandence/js/Chart.js}"></script>
 <!-- bootstrap-daterangepicker -->
 <script th:src="@{/frontend_depandence/js/moment.js}"></script>
 <script th:src="@{/frontend_depandence/js/daterangepicker.js}"></script>
 <!-- Datatables -->
-<script src="/frontend_depandence/js/jquery.dataTables.js"></script>
-<script src="/frontend_depandence/js/dataTables.bootstrap.js"></script>
-<script src="/frontend_depandence/js/dataTables.buttons.js"></script>
+<script th:src="@{/frontend_depandence/js/jquery.dataTables.js}"></script>
+<script th:src="@{/frontend_depandence/js/dataTables.bootstrap.js}"></script>
+<script th:src="@{/frontend_depandence/js/dataTables.buttons.js}"></script>
 <!-- Parsley -->
 <!--<script src="/frontend_depandence/js/parsley.js"></script>-->
 <!-- iCheck -->
-<script src="/frontend_depandence/js/icheck.js"></script>
+<script th:src="@{/frontend_depandence/js/icheck.js}"></script>
 <!-- Custom Theme Scripts -->
-<script src="/frontend_depandence/js/custom.js"></script>
+<script th:src="@{/frontend_depandence/js/Chart.js}"></script>
 <script th:src="@{/frontend_depandence/js_custom/analysis.js}"></script>
+<script th:src="@{/frontend_depandence/js/Chart.js}"></script>
 
 <!-- load for js scope -->
 <script th:inline="javascript">

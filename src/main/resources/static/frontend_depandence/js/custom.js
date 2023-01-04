@@ -5018,10 +5018,10 @@ if (typeof NProgress != 'undefined') {
 		init_ColorPicker();
 		init_TagsInput();
 		init_parsley();
-		init_daterangepicker();
-		init_daterangepicker_right();
-		init_daterangepicker_single_call();
-		init_daterangepicker_reservation();
+//		init_daterangepicker();
+//		init_daterangepicker_right();
+//		init_daterangepicker_single_call();
+//		init_daterangepicker_reservation();
 		init_SmartWizard();
 		init_EasyPieChart();
 		init_charts();
@@ -5030,14 +5030,14 @@ if (typeof NProgress != 'undefined') {
 		init_skycons();
 		init_select2();
 		init_validator();
-		init_DataTables();
-		init_chart_doughnut();
+//		init_DataTables();
+//		init_chart_doughnut();
 		init_gauge();
 		init_PNotify();
 		init_starrr();
 		init_calendar();
-		init_compose();
-		init_CustomNotification();
+//		init_compose();
+//		init_CustomNotification();
 		init_autosize();
 		init_autocomplete();
 				

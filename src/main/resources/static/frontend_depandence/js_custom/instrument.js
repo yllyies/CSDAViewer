@@ -24,44 +24,54 @@ function time() {
 
 // 滚动方法
 function autoScroll(father,children) {
+    debugger
 	let isreset = false,
 		scrollItem = $(father), //需要上下移动内容的父元素
 		scrollItemchildren = 500, //每次移动的距离
-		scrollTimeTnterval = 5000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(father).scrollTop() 会慢慢变小的BUG )
+		scrollTimeTnterval = 3000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(father).scrollTop() 会慢慢变小的BUG )
 		scrollAnimateTime = 1500,  //滚动动画的持续时间, 毫秒
  		istoBottom = true,
+ 		scr
 		innerHeight = $(father).innerHeight();
-	function time() {
+	function scrollFun() {
 		if (isreset) {
 			isreset = false;
 			return
 		}
 		let a = scrollItem.scrollTop();
-		// console.log(a,scrollItemchildren,scroll,istoBottom)
 		if (istoBottom) {
+		    console.log('向下滚动');
 			scrollItem.animate({
 				scrollTop: a + scrollItemchildren
-			}, scrollAnimateTime,'linear'); //滚动动画时间
-		} else {
-			scrollItem.animate({
-				scrollTop: a - scrollItemchildren
 			}, scrollAnimateTime,'linear'); //滚动动画时间
 		}
 
 		if (istoBottom) {
 			if(scrollItem.scrollTop() + innerHeight >= $(father).prop("scrollHeight")){
-				// console.log('到底了',scrollItem.scrollTop())
-				isreset = true;
-				istoBottom = false;
+				// 重新查询结果
+                window.location.reload();
 			}
 		} else {
 			if (scrollItem.scrollTop() <= 0) {
-				// console.log('到顶了',scrollItem.scrollTop())
 				istoBottom = true;
 			}
 		}
 	}
-	let sItval = setInterval(time, scrollTimeTnterval); //多久滚动一次
+	let sItval = setInterval(scrollFun, scrollTimeTnterval); //多久滚动一次
+}
+/* 异步查询仪器信息*/
+function query() {
+    $('#instrumentTable_tbody').load("/instrument/list2");
+     /*$.ajax({
+        url:"/instrument/list2",
+        data: "value='test'" ,
+        type:"GET",
+        cache: false,
+        success:function(result){
+        debugger
+            $("#instrumentTable_tbody").html(result);
+        }
+    });*/
 }
 
 

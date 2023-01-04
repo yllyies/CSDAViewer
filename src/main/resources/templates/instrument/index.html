@@ -20,10 +20,8 @@
   <link th:href="@{/frontend_depandence/css/custom.css}" rel="stylesheet">
   <!-- bootstrap-daterangepicker -->
   <link th:href="@{/frontend_depandence/css/daterangepicker.css}" rel="stylesheet">
-  <!-- bootstrap-progressbar -->
-<!--  <link th:href="@{/frontend_depandence/css/bootstrap-progressbar-3.3.4.css}" rel="stylesheet">-->
 
-  <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+  <link th:href="@{/frontend_depandence/css/jquery.dataTables.min.css}" rel="stylesheet">
   <link th:href="@{/frontend_depandence/css/dataTables.bootstrap.css}" rel="stylesheet">
   <link th:href="@{/frontend_depandence/css/buttons.bootstrap.css}" rel="stylesheet">
 </head>
@@ -34,7 +32,7 @@
     <div class="col-md-3 left_col">
       <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
-          <img src="/frontend_depandence/images/logo_menu.png" alt="..." class="img-thumbnail_custom">
+          <img th:src="@{/frontend_depandence/images/logo_menu.png}" alt="..." class="img-thumbnail_custom">
         </div>
 
         <div class="clearfix"></div>
@@ -42,7 +40,7 @@
         <!-- menu profile quick info -->
         <div class="profile clearfix">
           <div class="profile_info">
-            <span>Welcome,</span><span sec:authentication="name"></span>
+            <span class="container-fluid" >欢迎，</span><span sec:authentication="name" style="font-weight: bold" ></span>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -53,15 +51,16 @@
           <div class="menu_section">
             <h3>菜单</h3>
             <ul class="nav side-menu">
-              <li><a href="#"><i class="fa fa-desktop"></i>仪器总览<span class="fa fa-chevron-down"></span></a>
+              <li><a href="#"><i class="fa fa-desktop" ></i>仪器总览<span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                   <li th:each="item:${locations}"><a th:if="${not #strings.isEmpty(item)}" th:text="${item}"></a></li>
                 </ul>
               </li>
-              <li><a th:href="@{/analysis/list}" ><i class="fa fa-bar-chart-o"></i>统计分析<span class="fa fa-chevron-down"></span></a>
+              <li><a th:href="@{/analysis/list}" ><i class="fa fa-bar-chart-o" ></i>统计分析<span class="fa fa-chevron-down"></span></a>
               </li>
             </ul>
           </div>
+
         </div>
         <!-- /sidebar menu -->
       </div>
@@ -70,7 +69,7 @@
     <!-- top navigation -->
     <div class="top_nav" >
       <div class="nav_title_custom" >
-        <img src="/frontend_depandence/images/logo_banner.png" alt="..." class="img-thumbnail_custom">
+        <img th:src="@{/frontend_depandence/images/logo_banner.png}" alt="..." class="img-thumbnail_custom">
       </div>
       <div class="clearfix"></div>
     </div>
@@ -89,6 +88,7 @@
           <div class="x_title">
             <h2>当前时间：&nbsp;&nbsp;<span id="clock"></span></h2>
             <ul class="nav navbar-right panel_toolbox">
+              <li><a href="javascript:void(0)" onclick="query()"><i class="fa fa-search fa-lg"></i></a></li>
               <li><a href="javascript:void(0)" onclick="toggleFullscreen()"><i class="fa fa-arrows-alt fa-lg"></i></a></li>
             </ul>
             <div class="clearfix"></div>
@@ -96,11 +96,11 @@
 
           <div class="col-md-12 col-sm-8 col-xs-8">
             <h2>
-              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:white;border-radius: 0.25rem;border: solid 0.1rem #eeeeee;"></i>&nbsp;未连接：<span style="font-weight:bold;" th:text="123"></span>台</label>
-              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:green;"></i>&nbsp;空闲中：<span style="font-weight:bold;" th:text="123"></span>台</label>
-              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:blue"></i>&nbsp;运行中：<span style="font-weight:bold;" th:text="123"></span>台</label>
-              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:orange"></i>&nbsp;维护中：<span style="font-weight:bold;" th:text="123"></span>台</label>
-              <label class="col-md-2 col-sm-3 "><i class="fa fa-square fa-lg" style="color:red"></i>&nbsp;报错：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:white;border-radius: 0.25rem;border: solid 0.1rem #eeeeee;"></i>&nbsp;未连接：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:green;"></i>&nbsp;空闲中：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:blue"></i>&nbsp;运行中：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-auto  "><i class="fa fa-square fa-lg" style="color:orange"></i>&nbsp;维护中：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-auto  "><i class="fa fa-square fa-lg" style="color:red"></i>&nbsp;报错：<span style="font-weight:bold;" th:text="123"></span>台</label>
             </h2>
           </div>
           <div class="x_content">
@@ -108,40 +108,45 @@
               <table id="instrumentTable_thead" class="table-custom table-striped jambo_table">
                 <thead style="font-size:12px">
                 <tr>
-                  <th class="datatable-td" width="10%">仪器状态</th>
+                  <th class="datatable-td" width="8%">状态</th>
                   <th class="datatable-td" width="10%">仪器名称</th>
-                  <th class="datatable-td" width="10%">仪器类型</th>
-                  <th class="datatable-td" width="10%">项目</th>
+                  <th class="datatable-td" width="10%">仪器描述</th>
+<!--                  <th class="datatable-td" width="10%">仪器类型</th>-->
+                  <th class="datatable-td" width="15%">项目</th>
                   <th class="datatable-td" width="10%">操作用户</th>
                   <th class="datatable-td" width="10%">登录用户</th>
-                  <th class="datatable-td" width="10%">序列名称</th>
-                  <th class="datatable-td" width="10%">提交时间</th>
+                  <th class="datatable-td" width="15%">序列名称</th>
+                  <th class="datatable-td" width="15%">提交时间</th>
                   <th class="datatable-td" width="30%">当前样品</th>
+                  <th class="datatable-td" width="10%">运行时间</th>
                   <th class="datatable-td" width="10%">运行状态</th>
                 </tr>
                 </thead>
               </table>
             </div>
-            <div class="table-responsive" id="datatable-div">
+            <div class="table-responsive" id="datatable-div" th:fragment="datatable-div">
               <table id="instrumentTable_tbody" class="table-custom" >
-                <tbody  style="font-size:11px">
+                <tbody  style="font-size:12px">
                 <tr th:each="item:${dataSource}">
-                  <td class="datatable-td" width="10%"><i class="fa fa-square" style="color:green"></i></td>
+                  <td class="datatable-td" width="8%"><i class="fa fa-square fa-2x" th:if="${not #strings.isEmpty(item.color)}" th:style="'color:' + ${item.color}"></i></td>
                   <td class="datatable-td" width="10%" th:text="${item.instrumentName}"></td>
-                  <td class="datatable-td" width="10%">LC</td>
-                  <td class="datatable-td" width="10%" th:text="${item.project.name}"></td>
-                  <td class="datatable-td" width="10%" th:text="${item.creator}"></td>
-                  <td class="datatable-td" width="10%" th:text="${item.creator}"></td>
-                  <td class="datatable-td" width="10%" >Sequence01</td>
-                  <td class="datatable-td" width="10%" >HH:mm:ss</td>
-                  <td class="datatable-td" width="30%" >sample1</td>
+                  <td class="datatable-td" width="10%" th:text="${item.instrumentDescription}"></td>
+<!--                  <td class="datatable-td" width="10%">LC</td>-->
+                  <td class="datatable-td" width="15%" th:text="${item.projectName}"></td>
+                  <td class="datatable-td" width="10%" th:text="${item.operationUsername}"></td>
+                  <td class="datatable-td" width="10%" th:text="${item.loginUsername}"></td>
+                  <td class="datatable-td" width="15%" th:text="${item.sequenceName}"></td>
+                  <td class="datatable-td" width="15%" th:text="${item.commitTime}"></td>
+                  <td class="datatable-td" width="30%" th:text="${item.currentSample}"></td>
+                  <td class="datatable-td" width="10%" th:text="${item.runtimeString}"></td>
                   <td class="datatable-td" width="10%">
                     <div class="progress">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                        <span>5/10</span>
+                      <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                        <span th:text="${item.sequenceInfo}"></span>
                       </div>
                     </div>
                   </td>
+
                 </tr>
                 </tbody>
               </table>
@@ -161,18 +166,18 @@
 </div>
 
 <!-- jQuery -->
-<script src="/frontend_depandence/js/jquery.js"></script>
+
+<script th:src="@{/frontend_depandence/js/jquery.js}"></script>
 <!-- Bootstrap -->
-<script src="/frontend_depandence/js/bootstrap.bundle.js"></script>
-<!-- Custom Theme Scripts -->
-<!--<script src="/frontend_depandence/js/custom.js"></script>-->
-<script src="/frontend_depandence/js_custom/instrument.js"></script>
+<script th:src="@{/frontend_depandence/js/bootstrap.bundle.js}"></script>
 <!-- Datatables -->
-<script src="/frontend_depandence/js/jquery.dataTables.js"></script>
-<script src="/frontend_depandence/js/dataTables.bootstrap.js"></script>
-<script src="/frontend_depandence/js/dataTables.buttons.js"></script>
+<script th:src="@{/frontend_depandence/js/jquery.dataTables.js}"></script>
+<script th:src="@{/frontend_depandence/js/dataTables.bootstrap.js}"></script>
+<script th:src="@{/frontend_depandence/js/dataTables.buttons.js}"></script>
 <!-- iCheck -->
-<script src="/frontend_depandence/js/icheck.js"></script>
+<script th:src="@{/frontend_depandence/js/icheck.js}"></script>
+<!-- Custom Theme Scripts -->
+<script th:src="@{/frontend_depandence/js_custom/instrument.js}"></script>
 
 <!-- load for js scope -->
 <script>

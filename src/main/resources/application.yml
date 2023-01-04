@@ -2,7 +2,7 @@ spring:
   profiles:
     active: dev
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/cdsa?serverTimezone=UTC&characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456
@@ -33,5 +33,5 @@ server:
   port: 8082
 
 # 自定义接口配置
-csda:
+cdsa:
   interface-url: http://localhost:9190/api/CDSADa/InstrumentState
