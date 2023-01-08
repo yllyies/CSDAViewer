@@ -16,6 +16,28 @@ function init_charts() {
                 beginAtZero: true
               }
             }]
+          },
+          hover: {
+            animationDuration: 0  // 防止鼠标移上去，数字闪烁
+          },
+          animation: {           // 这部分是数值显示的功能实现
+            onComplete: function () {
+              var chartInstance = this.chart,
+              ctx = chartInstance.ctx;
+              // 以下属于canvas的属性（font、fillStyle、textAlign...）
+              ctx.font = Chart.helpers.fontString("10", Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+              ctx.fillStyle = "black";
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+              this.data.datasets.forEach(function (dataset, i) {
+                  var meta = chartInstance.controller.getDatasetMeta(i);
+                  meta.data.forEach(function (bar, index) {
+                      var data = dataset.data[index];
+                      var label = dataset.label;
+                     ctx.fillText(label + ":" + data + "H", bar._model.x, bar._model.y-5);
+                  });
+              });
+            }
           }
         }
       });
@@ -36,6 +58,27 @@ function init_charts() {
                  beginAtZero: true
                }
              }]
+           },
+           hover: {
+             animationDuration: 0  // 防止鼠标移上去，数字闪烁
+           },
+           animation: {           // 这部分是数值显示的功能实现
+             onComplete: function () {
+               var chartInstance = this.chart,
+               ctx = chartInstance.ctx;
+               // 以下属于canvas的属性（font、fillStyle、textAlign...）
+               ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+               ctx.fillStyle = "black";
+               ctx.textAlign = 'center';
+               ctx.textBaseline = 'bottom';
+               this.data.datasets.forEach(function (dataset, i) {
+                   var meta = chartInstance.controller.getDatasetMeta(i);
+                   meta.data.forEach(function (bar, index) {
+                       var data = dataset.data[index];
+                       ctx.fillText(data + "H", bar._model.x, bar._model.y-5);
+                   });
+               });
+             }
            }
          }
       });

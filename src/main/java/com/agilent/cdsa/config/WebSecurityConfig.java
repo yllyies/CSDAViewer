@@ -1,18 +1,18 @@
 package com.agilent.cdsa.config;
 
-import com.agilent.cdsa.phase1.service.impl.UserServiceImpl;
 import com.agilent.cdsa.common.ConfigConstant;
+import com.agilent.cdsa.phase1.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -22,7 +22,8 @@ import javax.sql.DataSource;
  * Spring Security Config
  */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true) // 启用方法安全设置
+//@EnableGlobalMethodSecurity(prePostEnabled = true) // 启用方法安全设置
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -40,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin().loginPage(ConfigConstant.REQUEST_LOGIN_PAGE_URL)
                 .loginProcessingUrl(ConfigConstant.LOGIN_FORM_SUBMIT_URL)
                 .defaultSuccessUrl(ConfigConstant.DEFAULT_LOGIN_SUCCESSFUL_REQUEST_URL, ConfigConstant.ALWAYS_USE_DEFAULT_LOGIN_SUCCESSFUL_REQUEST_URL)
+                .failureHandler(failureHandler())
                 .permitAll()
                 .and()
                 .authorizeRequests()
@@ -66,19 +68,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated();
         //session管理,失效后跳转
         http.sessionManagement().invalidSessionUrl("/login");
-        //单用户登录，如果有一个登录了，同一个用户在其他地方登录将前一个剔除下线
-        //http.sessionManagement().maximumSessions(1).expiredSessionStrategy(expiredSessionStrategy());
-        //单用户登录，如果有一个登录了，同一个用户在其他地方不能登录
-//        http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true);
         //退出时情况cookies
         http.logout().deleteCookies("JESSIONID");
         //解决中文乱码问题
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
-        //
         http.addFilterBefore(filter, CsrfFilter.class);
+    }
 
+    SimpleUrlAuthenticationFailureHandler failureHandler() {
+        SimpleUrlAuthenticationFailureHandler handler = new SimpleUrlAuthenticationFailureHandler();
+        handler.setDefaultFailureUrl("/toRedirect");
+        handler.setUseForward(true);
+        return handler;
     }
 
     /**
@@ -89,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         /**
          * BCryptPasswordEncoder：相同的密码明文每次生成的密文都不同，安全性更高
          */
-        return new BCryptPasswordEncoder();
+        return new CustomPasswordEncoder();
     }
 
     @Bean

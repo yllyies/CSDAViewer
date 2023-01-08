@@ -35,3 +35,11 @@ server:
 # 自定义接口配置
 cdsa:
   interface-url: http://localhost:9190/api/CDSADa/InstrumentState
+
+#License相关配置
+license:
+  subject: cdsAssistant #主体 - 注意主体要与生成证书的主体一致一致，不然验证通过不了
+  publicAlias: cdsAssistant_publicCert #公钥别称
+  storePass: agilent@123 #访问公钥的密码
+  licensePath: license/cdsAssistant_license.lic #license文件名，前缀为 classPath:resource目录
+  publicKeysStorePath: license/cdsAssistant_publicCerts.keystore #公钥位置

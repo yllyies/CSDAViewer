@@ -1,8 +1,6 @@
 package com.agilent.cdsa.phase1.service;
 
 import com.agilent.cdsa.phase1.dto.InstrumentDto;
-import com.agilent.cdsa.phase1.model.Rslt;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +23,7 @@ public interface RsltService {
      *
      * @return
      */
-    Page<Rslt> doFindPage(int pageNum, int pageSize);
+//    Page<Rslt> doFindPage(int pageNum, int pageSize);
 
     /**
      * 查询所有仪器信息

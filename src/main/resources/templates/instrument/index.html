@@ -88,7 +88,7 @@
           <div class="x_title">
             <h2>当前时间：&nbsp;&nbsp;<span id="clock"></span></h2>
             <ul class="nav navbar-right panel_toolbox">
-              <li><a href="javascript:void(0)" onclick="query()"><i class="fa fa-search fa-lg"></i></a></li>
+<!--              <li><a href="javascript:void(0)" onclick="query()"><i class="fa fa-search fa-lg"></i></a></li>-->
               <li><a href="javascript:void(0)" onclick="toggleFullscreen()"><i class="fa fa-arrows-alt fa-lg"></i></a></li>
             </ul>
             <div class="clearfix"></div>
@@ -96,51 +96,51 @@
 
           <div class="col-md-12 col-sm-8 col-xs-8">
             <h2>
-              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:white;border-radius: 0.25rem;border: solid 0.1rem #eeeeee;"></i>&nbsp;未连接：<span style="font-weight:bold;" th:text="123"></span>台</label>
-              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:green;"></i>&nbsp;空闲中：<span style="font-weight:bold;" th:text="123"></span>台</label>
-              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:blue"></i>&nbsp;运行中：<span style="font-weight:bold;" th:text="123"></span>台</label>
-              <label class="col-md-auto  "><i class="fa fa-square fa-lg" style="color:orange"></i>&nbsp;维护中：<span style="font-weight:bold;" th:text="123"></span>台</label>
-              <label class="col-md-auto  "><i class="fa fa-square fa-lg" style="color:red"></i>&nbsp;报错：<span style="font-weight:bold;" th:text="123"></span>台</label>
+              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:white;border-radius: 0.25rem;border: solid 0.1rem #eeeeee;"></i>&nbsp;未连接：<span style="font-weight:bold;" th:text="1"></span>台</label>
+              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:green;"></i>&nbsp;空闲中：<span style="font-weight:bold;" th:text="18"></span>台</label>
+              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:blue"></i>&nbsp;运行中：<span style="font-weight:bold;" th:text="9"></span>台</label>
+              <label class="col-md-auto  "><i class="fa fa-square fa-lg" style="color:orange"></i>&nbsp;维护中：<span style="font-weight:bold;" th:text="1"></span>台</label>
+              <label class="col-md-auto  "><i class="fa fa-square fa-lg" style="color:red"></i>&nbsp;报错：<span style="font-weight:bold;" th:text="0"></span>台</label>
             </h2>
           </div>
           <div class="x_content">
             <div class="table-responsive">
               <table id="instrumentTable_thead" class="table-custom table-striped jambo_table">
-                <thead style="font-size:12px">
+                <thead style="font-size:12px;" >
                 <tr>
-                  <th class="datatable-td" width="8%">状态</th>
-                  <th class="datatable-td" width="10%">仪器名称</th>
-                  <th class="datatable-td" width="10%">仪器描述</th>
-<!--                  <th class="datatable-td" width="10%">仪器类型</th>-->
-                  <th class="datatable-td" width="15%">项目</th>
-                  <th class="datatable-td" width="10%">操作用户</th>
-                  <th class="datatable-td" width="10%">登录用户</th>
-                  <th class="datatable-td" width="15%">序列名称</th>
-                  <th class="datatable-td" width="15%">提交时间</th>
-                  <th class="datatable-td" width="30%">当前样品</th>
-                  <th class="datatable-td" width="10%">运行时间</th>
-                  <th class="datatable-td" width="10%">运行状态</th>
+                  <th width="8%">状态</th>
+                  <th width="12%">仪器名称</th>
+                  <th width="15%">描述</th>
+<!--                  <th width="10%">仪器类型</th>-->
+                  <th width="15%">项目</th>
+                  <th width="12%">操作用户</th>
+                  <th width="12%">登录用户</th>
+                  <th width="15%">序列名称</th>
+                  <th width="15%">提交时间</th>
+                  <th width="25%">当前样品</th>
+                  <th width="12%">运行时间</th>
+                  <th width="12%">运行状态</th>
                 </tr>
                 </thead>
               </table>
             </div>
-            <div class="table-responsive" id="datatable-div" th:fragment="datatable-div">
+            <div class="table-responsive" id="datatable-div" th:fragment="datatable-div" >
               <table id="instrumentTable_tbody" class="table-custom" >
                 <tbody  style="font-size:12px">
-                <tr th:each="item:${dataSource}">
-                  <td class="datatable-td" width="8%"><i class="fa fa-square fa-2x" th:if="${not #strings.isEmpty(item.color)}" th:style="'color:' + ${item.color}"></i></td>
-                  <td class="datatable-td" width="10%" th:text="${item.instrumentName}"></td>
-                  <td class="datatable-td" width="10%" th:text="${item.instrumentDescription}"></td>
-<!--                  <td class="datatable-td" width="10%">LC</td>-->
-                  <td class="datatable-td" width="15%" th:text="${item.projectName}"></td>
-                  <td class="datatable-td" width="10%" th:text="${item.operationUsername}"></td>
-                  <td class="datatable-td" width="10%" th:text="${item.loginUsername}"></td>
-                  <td class="datatable-td" width="15%" th:text="${item.sequenceName}"></td>
-                  <td class="datatable-td" width="15%" th:text="${item.commitTime}"></td>
-                  <td class="datatable-td" width="30%" th:text="${item.currentSample}"></td>
-                  <td class="datatable-td" width="10%" th:text="${item.runtimeString}"></td>
-                  <td class="datatable-td" width="10%">
-                    <div class="progress">
+                <tr id="datatable-tr" th:each="item:${dataSource}">
+                  <td width="8%"><i class="fa fa-square fa-2x" th:if="${not #strings.isEmpty(item.color)}" th:style="'color:' + ${item.color}"></i></td>
+                  <td width="12%" th:text="${item.instrumentName}"></td>
+                  <td width="15%" th:text="${item.instrumentDescription}"></td>
+<!--                  <td width="10%">LC</td>-->
+                  <td width="15%" th:text="${item.projectName}"></td>
+                  <td width="12%" th:text="${item.operationUsername}"></td>
+                  <td width="12%" th:text="${item.loginUsername}"></td>
+                  <td width="15%" th:text="${item.sequenceName}"></td>
+                  <td width="15%" th:text="${item.commitTime}"></td>
+                  <td width="25%" th:text="${item.currentSample}"></td>
+                  <td width="12%" th:text="${item.runtimeString}"></td>
+                  <td width="12%">
+                    <div class="progress" th:if="${not #strings.isEmpty(item.sequenceInfo)}">
                       <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
                         <span th:text="${item.sequenceInfo}"></span>
                       </div>
@@ -190,7 +190,7 @@
     });
     window.onload = function(params) {
         setTimeout(function() {
-            autoScroll('#datatable-div','tr')  //参数1是 需要上下移动内容的父元素   参数2 是 该父元素下的每个子元素; 参考上面的html即可
+            autoScroll('datatable-div','tr')  //参数1是 需要上下移动内容的父元素   参数2 是 该父元素下的每个子元素; 参考上面的html即可
         }, 1000);
     };
 

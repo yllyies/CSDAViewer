@@ -25,25 +25,18 @@ public class InstrumentController {
     @Autowired
     private RsltService rsltService;
 
-    @ApiOperation("定义UI图1页主要查询接口")
+    @ApiOperation("仪器总览界面主查询")
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public ModelAndView list() {
-//        List<InstrumentDto> instrumentDtos = rsltService.doFindInstrumentsByPost();
-        List<InstrumentDto> instrumentDtos = new ArrayList<>();
-
-        for (int i = 0; i < 50; i++) {
-            instrumentDtos.add(new InstrumentDto(String.valueOf(i), "Not Connected", "green", "LC-" + i, "LC", "Project-" + i,
-                    "admin", "admin", "Sequence-" + i, "12-22 10:10:30", "Sample-"  + i, "Lab" + i, (long) i, DateUtil.secondToTime(i), "7 / 10"));
-        }
         ModelAndView modelAndView = new ModelAndView("instrument/index");
+        List<InstrumentDto> instrumentDtos = rsltService.doFindInstrumentsByPost();
         modelAndView.getModel().put("dataSource", instrumentDtos);
         return modelAndView;
     }
 
-    @ApiOperation("定义UI图1页主要查询接口")
+    @ApiOperation("仪器总览界面主查询--模拟数据")
     @RequestMapping(value = "list2", method = RequestMethod.GET)
     public String list2(Model model) {
-//        List<InstrumentDto> instrumentDtos = rsltService.doFindInstrumentsByPost();
         List<InstrumentDto> instrumentDtos = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             instrumentDtos.add(new InstrumentDto(String.valueOf(i), "Not Connected", "green", "LC-" + i, "LC", "Project-" + i,

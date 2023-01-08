@@ -1,11 +1,11 @@
 package com.agilent.cdsa.phase1.dto;
 
+import com.agilent.cdsa.config.CustomPasswordEncoder;
 import com.agilent.cdsa.phase1.model.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -69,7 +69,7 @@ public class UserRolesDto implements UserDetails {
 
     @Override
     public String getPassword() {
-        return new BCryptPasswordEncoder().encode(aclUser.getPassword());
+        return new CustomPasswordEncoder().encode(aclUser.getPassword());
     }
 
     @Override

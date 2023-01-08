@@ -13,10 +13,6 @@ import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -88,13 +84,13 @@ public class RsltServiceImpl implements RsltService {
     }
 
 
-    @Override
+    /*@Override
     public Page<Rslt> doFindPage(int pageNum, int pageSize) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         Page<Rslt> pageResult = rsltDao.findAll(pageable);
         return pageResult;
-    }
+    }*/
 
     @Override
     public Map<String, Object> doFindInstruments() {

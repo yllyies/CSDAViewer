@@ -10,15 +10,15 @@
     <title>登录</title>
 
     <!-- Bootstrap -->
-    <link th:href="@{/frontend_depandence/css/bootstrap.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{frontend_depandence/css/bootstrap.css}" rel="stylesheet" type="text/css">
     <!-- Font Awesome -->
-    <link th:href="@{/frontend_depandence/css/font-awesome.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{frontend_depandence/css/font-awesome.css}" rel="stylesheet" type="text/css">
 <!--    &lt;!&ndash; NProgress &ndash;&gt;-->
-<!--    <link th:href="@{/frontend_depandence/css/nprogress.css}" rel="stylesheet" type="text/css">-->
+<!--    <link th:href="@{frontend_depandence/css/nprogress.css}" rel="stylesheet" type="text/css">-->
     <!-- Animate.css -->
-    <link th:href="@{/frontend_depandence/css/animate.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{frontend_depandence/css/animate.css}" rel="stylesheet" type="text/css">
     <!-- Custom Theme Style -->
-    <link th:href="@{/frontend_depandence/css/custom.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{frontend_depandence/css/custom.css}" rel="stylesheet" type="text/css">
   </head>
 
   <body class="login">
@@ -40,6 +40,7 @@
               <div>
                 <button type="submit" class="btn btn-success submit">登录</button>
 <!--                <a class="reset_pass" href="#signup">Create Account</a>-->
+                <p style="color:red" th:text="${message}" th:if="${not #strings.isEmpty(message)}"></p>
               </div>
 
               <div class="clearfix"></div>
@@ -118,11 +119,11 @@
     </div>
 
     <!-- jQuery -->
-    <script th:src="@{/frontend_depandence/js/jquery.js}"></script>
+    <script th:src="@{frontend_depandence/js/jquery.js}"></script>
     <!-- Bootstrap -->
-    <script th:src="@{/frontend_depandence/js/bootstrap.bundle.js}"></script>
+    <script th:src="@{frontend_depandence/js/bootstrap.bundle.js}"></script>
     <!-- Custom Theme Scripts -->
-    <script th:src="@{/frontend_depandence/js/custom.js}"></script>
+    <script th:src="@{frontend_depandence/js/custom.js}"></script>
 
   </body>
 </html>

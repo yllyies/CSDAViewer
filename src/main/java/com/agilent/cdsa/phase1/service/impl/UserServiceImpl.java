@@ -1,10 +1,13 @@
 package com.agilent.cdsa.phase1.service.impl;
 
-import com.agilent.cdsa.phase1.repository.UserDao;
-import com.github.pagehelper.PageHelper;
+import com.agilent.cdsa.common.BusinessException;
+import com.agilent.cdsa.license.client.LicenseVerify;
 import com.agilent.cdsa.phase1.dto.UserRolesDto;
 import com.agilent.cdsa.phase1.model.User;
+import com.agilent.cdsa.phase1.repository.UserDao;
 import com.agilent.cdsa.phase1.service.UserService;
+import com.github.pagehelper.PageHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,12 +25,15 @@ import java.util.List;
  * @since 2019-09-01
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Resource
     private UserDao userDao;
     @Autowired
     private UserService userService;
+    @Resource
+    private LicenseVerify licenseVerify;
 
     @Override
     public List<User> doFindAll() {
@@ -42,7 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User doFindByName(String userName) {
-        return userDao.findByName(userName).get(0);
+        return userDao.findByName(userName);
     }
 
     @Override
@@ -52,6 +58,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // 证书验证
+        if (!licenseVerify.verify()) {
+            log.warn("您的证书无效，请核查服务器是否取得授权或重新申请证书！");
+            throw new BusinessException("您的证书无效，请核查服务器是否取得授权或重新申请证书！");
+        }
         User user = userService.doFindByName(username);
         if (user != null) {
             UserRolesDto userRolesDto = new UserRolesDto();
@@ -72,7 +83,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             }
             return userRolesDto;
         } else {
-            throw new UsernameNotFoundException("admin: " + username + " do not exist!");
+            throw new UsernameNotFoundException("用户不存在 " + username);
         }
     }
 }

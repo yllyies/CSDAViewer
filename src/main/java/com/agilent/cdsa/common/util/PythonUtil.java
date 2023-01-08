@@ -1,30 +1,26 @@
 package com.agilent.cdsa.common.util;
 
+import cn.hutool.core.io.resource.ClassPathResource;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ClassUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 public class PythonUtil {
 
-    public static String execPythonFileWithReturn(String filePath) {
+    public static String execPythonFileWithReturn(String fileName) {
         StringBuilder message = new StringBuilder();
         try {
-            if (ClassUtils.getDefaultClassLoader() == null) {
-                return message.toString();
-            }
-            String path = Objects.requireNonNull(ClassUtils.getDefaultClassLoader().getResource("")).getPath().substring(1) + "static/py/" + filePath;
-            String[] args = new String[]{"python", path};
+            ClassPathResource classPathResource = new ClassPathResource("static/py/" + fileName);
+            String[] args = new String[]{"python", classPathResource.getAbsolutePath()};
             Process proc = Runtime.getRuntime().exec(args);// 执行py文件
 
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-            String line = null;
+            String line;
             while ((line = in.readLine()) != null) {
                 message.append(line);
             }
@@ -36,13 +32,10 @@ public class PythonUtil {
         return message.toString();
     }
 
-    public static void execPythonFile(String filePath) {
+    public static void execPythonFile(String fileName) {
         try {
-            if (ClassUtils.getDefaultClassLoader() == null) {
-                return;
-            }
-            String path = Objects.requireNonNull(ClassUtils.getDefaultClassLoader().getResource("")).getPath().substring(1) + "static/py/" + filePath;
-            String[] args = new String[]{"python", path};
+            ClassPathResource classPathResource = new ClassPathResource("static/py/" + fileName);
+            String[] args = new String[]{"python", classPathResource.getAbsolutePath()};
             Process proc = Runtime.getRuntime().exec(args);// 执行py文件
 
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
@@ -67,12 +60,11 @@ public class PythonUtil {
     public static void execPythonFile(String fileName, String params) {
 
         // 获取python文件所在目录地址
-        String windowsPath = ClassUtils.getDefaultClassLoader().getResource("").getPath().substring(1) + "static/py/";
-
+        ClassPathResource classPathResource = new ClassPathResource("static/py/" + fileName);
         // windows执行脚本需要使用 cmd.exe /c 才能正确执行脚本
         Process process = null;
         try {
-            process = new ProcessBuilder("cmd.exe", "/c", "python", windowsPath + fileName, params).start();
+            process = new ProcessBuilder("cmd.exe", "/c", "python", classPathResource.getAbsolutePath() + fileName, params).start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -104,7 +96,9 @@ public class PythonUtil {
         String res = "";
         while (true) {
             try {
-                if (!((res = reader.readLine()) != null)) break;
+                if ((res = reader.readLine()) == null) {
+                    break;
+                }
             } catch (IOException e) {
                 log.error("读取python文件 fileName=" + fileName + " 读取结果异常", e);
             }
@@ -113,4 +107,8 @@ public class PythonUtil {
         return resultList;
     }
 
+//    @Test
+//    public void print() {
+//        System.out.println("result: " + PythonUtil.execPythonFileWithReturn("instrument_status.py"));
+//    }
 }

@@ -4981,10 +4981,6 @@ ul.notifications {
 }
 #datatable-div::-webkit-scrollbar{display:none; background: #ffc107}
 
-.datatable-td{
-    text-align: center;
-    vertical-align: center;
-}
 /** 避免全屏后背景色异常 **/
 :not(:root):fullscreen::backdrop {
     background: white
@@ -5005,15 +5001,19 @@ ul.notifications {
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
+  text-align: center;
+  height: 20px
 }
 
 .table-custom td {
   padding: 0.75rem;
-  vertical-align: top;
+  vertical-align: middle;
   border-top: 1px solid #dee2e6;
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
+  text-align: center;
+  height: 45px
 }
 
 .img-thumbnail_custom {

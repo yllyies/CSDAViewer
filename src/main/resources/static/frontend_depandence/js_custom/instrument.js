@@ -23,55 +23,40 @@ function time() {
 };
 
 // 滚动方法
-function autoScroll(father,children) {
-    debugger
-	let isreset = false,
-		scrollItem = $(father), //需要上下移动内容的父元素
-		scrollItemchildren = 500, //每次移动的距离
-		scrollTimeTnterval = 3000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(father).scrollTop() 会慢慢变小的BUG )
-		scrollAnimateTime = 1500,  //滚动动画的持续时间, 毫秒
- 		istoBottom = true,
- 		scr
-		innerHeight = $(father).innerHeight();
+function autoScroll(eleId,childId) {
+	let pause = false,
+		scrollItem = $('#' + eleId), //需要上下移动内容的父元素
+		ele = document.getElementById(eleId),
+		scrollItemchildren = $('#' + childId).height() * 10, //每次移动的距离
+		scrollTimeTnterval = 10,000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(eleId).scrollTop() 会慢慢变小的BUG )
+		scrollAnimateTime = 1,000,  //滚动动画的持续时间, 毫秒
+		innerHeight = $(eleId).innerHeight();
 	function scrollFun() {
-		if (isreset) {
-			isreset = false;
+	    if(scrollItem.scrollTop() + innerHeight >= $('#' + eleId).prop("scrollHeight")){
+            // 重新查询结果
+            window.location.reload();
+        }
+		if (pause) {
 			return
 		}
 		let a = scrollItem.scrollTop();
-		if (istoBottom) {
-		    console.log('向下滚动');
-			scrollItem.animate({
-				scrollTop: a + scrollItemchildren
-			}, scrollAnimateTime,'linear'); //滚动动画时间
-		}
-
-		if (istoBottom) {
-			if(scrollItem.scrollTop() + innerHeight >= $(father).prop("scrollHeight")){
-				// 重新查询结果
-                window.location.reload();
-			}
-		} else {
-			if (scrollItem.scrollTop() <= 0) {
-				istoBottom = true;
-			}
-		}
+		console.log('向下滚动');
+        scrollItem.animate({
+            scrollTop: a + scrollItemchildren
+        }, scrollAnimateTime,'linear'); //滚动动画时间
 	}
 	let sItval = setInterval(scrollFun, scrollTimeTnterval); //多久滚动一次
+	ele.onmouseover = function() {
+	    clearInterval(sItval);
+	}
+	ele.onmouseleave = function() {
+        autoScroll('datatable-div', 'datatable-tr');
+    }
 }
+
 /* 异步查询仪器信息*/
 function query() {
     $('#instrumentTable_tbody').load("/instrument/list2");
-     /*$.ajax({
-        url:"/instrument/list2",
-        data: "value='test'" ,
-        type:"GET",
-        cache: false,
-        success:function(result){
-        debugger
-            $("#instrumentTable_tbody").html(result);
-        }
-    });*/
 }
 
 

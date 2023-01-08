@@ -231,6 +231,10 @@ public class DxServiceImpl implements DxService {
                     row.values().stream().reduce(Long::sum).get() : RandomUtil.randomLong(180000, 720000)) / 3600;
             doughnutDatasets.add(sum);
         }
+        // 线图颜色不重复
+//        for (int i = 0; i < lineDatasets.size(); i++) {
+//            lineDatasets.get(i).setBorderColor(CodeListConstant.COLOR_LIST[i]);
+//        }
     }
 
     private void processDaterangeByTimeUnit(List<ChartDatasetDto> barDatasets, TreeMap<DateTime, DateTime> startToEndMap, String timeUnit, DateTime startTime, DateTime endTime, int years) {
