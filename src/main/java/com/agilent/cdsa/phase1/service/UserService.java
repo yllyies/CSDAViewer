@@ -12,8 +12,6 @@ public interface UserService {
 
     List<User> doFindAll();
 
-    List<User> doFindPage(int pageNum, int pageSize);
-
     User doFindByName(String userName);
 
     User doFindById(Long id);

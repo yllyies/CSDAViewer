@@ -6,7 +6,6 @@ import com.agilent.cdsa.phase1.dto.UserRolesDto;
 import com.agilent.cdsa.phase1.model.User;
 import com.agilent.cdsa.phase1.repository.UserDao;
 import com.agilent.cdsa.phase1.service.UserService;
-import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,12 +36,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public List<User> doFindAll() {
-        return userDao.findAll();
-    }
-
-    @Override
-    public List<User> doFindPage(int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
         return userDao.findAll();
     }
 

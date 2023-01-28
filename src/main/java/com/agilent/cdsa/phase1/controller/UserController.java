@@ -4,17 +4,15 @@ package com.agilent.cdsa.phase1.controller;
 import com.agilent.cdsa.phase1.model.User;
 import com.agilent.cdsa.phase1.service.UserService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 
 @Api(tags = "UserController")
@@ -26,15 +24,6 @@ public class UserController {
     private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-
-
-    @ApiOperation("listPage")
-    @RequestMapping(value = "/listPage", method = RequestMethod.GET)
-    public ModelAndView listPage(@RequestParam(value = "pageNum", defaultValue = "1") @ApiParam("index") Integer pageNum,
-                                 @RequestParam(value = "pageSize", defaultValue = "10") @ApiParam("pageSize") Integer pageSize) {
-        List<User> users = userService.doFindPage(pageNum, pageSize);
-        return new ModelAndView("/user/user_list", "allUsers", users);
-    }
 
     @RequestMapping(value = "/toUpdate/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
