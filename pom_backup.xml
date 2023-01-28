@@ -42,11 +42,11 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>1.1.10</version>
-		</dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.10</version>
+        </dependency>
 
 		<!-- import thymeleaf support -->
 		<dependency>
@@ -84,7 +84,7 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
@@ -124,15 +124,15 @@
 
 		<!-- local/test -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
 			<version>1.18.6</version>
-		</dependency>
+        </dependency>
 		<!--MySQL数据库连接配置-->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -155,7 +155,7 @@
 	</dependencies>
 
 	<build>
-		<!--<plugins>
+		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -169,6 +169,6 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
-		</plugins>-->
+		</plugins>
 	</build>
 </project>

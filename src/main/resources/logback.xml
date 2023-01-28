@@ -1,43 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<property name="LOG_HOME" value="/logs" />
+	<property name="LOG_HOME" value="./logs" />
+	<property name="MAX_HISTORY" value="90" />
 	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>
-				%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n
-			</Pattern>
-		</layout>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n
+			</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
 	</appender>
 
-	<appender name="RollingFile"
+	<appender name="fileInfoLog"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOG_HOME}/cds_assistant.log</file>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</Pattern>
 		</encoder>
 
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<!-- rollover daily and when the file reaches 10 MegaBytes -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- 按天回滚 daily -->
 			<fileNamePattern>${LOG_HOME}/cds_assistant_log-%d{yyyy-MM-dd}.%i.log
 			</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>10MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- 日志最大的历史 100天 -->
+			<maxHistory>${MAX_HISTORY}</maxHistory>
+			<maxFileSize>100MB</maxFileSize>
 		</rollingPolicy>
 	</appender>
 
 	<!-- LOG everything at INFO level -->
 	<root level="info">
-		<appender-ref ref="RollingFile" />
+		<appender-ref ref="fileInfoLog" />
 		<appender-ref ref="Console" />
 	</root>
-
-	<!-- LOG level -->
-	<logger name="com.agilent" level="debug" additivity="false">
-		<appender-ref ref="RollingFile" />
-		<appender-ref ref="Console" />
-	</logger>
 
 	<logger name="org.h2" level="debug" additivity="false">
 		<appender-ref ref="Console" />
