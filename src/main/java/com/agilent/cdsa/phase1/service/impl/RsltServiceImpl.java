@@ -122,6 +122,7 @@ public class RsltServiceImpl implements RsltService {
         JSONObject jsonObj = JSONObject.fromObject(new HashMap<>());
         HttpEntity<String> request = new HttpEntity<>(jsonObj.toString(), headers);
         List<InstrumentDto> result = HttpUtil.httpRequest(instrumentInfoUrl, HttpMethod.GET, request, new ParameterizedTypeReference<List<InstrumentDto>>(){});
+
         return result;
     }
 }
