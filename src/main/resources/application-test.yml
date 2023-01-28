@@ -19,13 +19,13 @@ spring:
       ddl-auto: validate
 
   thymeleaf:
-    mode: HTML5
-    encoding: utf-8
-    servlet:
-      content-type: text/html
     cache: false
-    prefix: classpath:/templates/
-    suffix: .html
+
+logging:
+  level:
+    root: info
+  path: ./logs
+  config: classpath:./logback.xml
 
 server:
   port: 9190

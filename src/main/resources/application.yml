@@ -19,18 +19,19 @@ spring:
       databasePlatform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: validate
+    open-in-view: false
 
   thymeleaf:
-    mode: HTML5
-    encoding: utf-8
-    servlet:
-      content-type: text/html
     cache: false
-    prefix: classpath:/templates/
-    suffix: .html
 
 server:
   port: 8082
+
+logging:
+  level:
+    root: info
+  path: ./logs
+  config: classpath:./logback.xml
 
 # 自定义接口配置
 cdsa:

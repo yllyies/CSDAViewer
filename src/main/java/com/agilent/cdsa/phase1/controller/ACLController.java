@@ -38,7 +38,6 @@ public class ACLController {
 
     @RequestMapping(value = {"/", "/login"}, method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("login-------------------");
         return new ModelAndView("login");
     }
 
