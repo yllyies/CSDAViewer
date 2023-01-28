@@ -5,11 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @Repository
-public interface ProjectDao extends JpaRepository<Project, Integer>, JpaSpecificationExecutor<Project>
+public interface ProjectDao extends JpaRepository<Project, BigDecimal>, JpaSpecificationExecutor<Project>
 {
 
-    List<Project> findByIdIn(List<Integer> ids);
 }
