@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>数据分析</title>
+  <link rel="icon" th:href="@{/frontend_depandence/images/agilent_icon.png}">
 
   <!-- Bootstrap -->
   <link th:href="@{/frontend_depandence/css/bootstrap.css}" rel="stylesheet">
@@ -48,11 +49,10 @@
           <div class="menu_section">
             <h3>菜单</h3>
             <ul class="nav side-menu">
-              <li><a th:href="@{/instrument/list}"><i class="fa fa-desktop"></i>仪器总览<span class="fa fa-chevron-down"></span></a>
-              </li>
+              <li><a th:href="@{/instrument/list}"><i class="fa fa-desktop"></i>仪器总览<span class="fa fa-chevron-down"></span></a></li>
               <li><a><i class="fa fa-bar-chart-o"></i>统计分析<span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                  <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('instrument')|">仪器运行时间<span class="fa fa-chevron-down"></span></a>
+                  <li ><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('instrument')|">仪器运行时间<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li class="sub_menu"><a href="javascript:void(0)" onclick="document:analysisForm.submit()">选择所有</a></li>
                       <li class="sub_menu"><a><input type="checkbox"> LC</a></li>
@@ -247,7 +247,7 @@
 <!-- Custom Theme Scripts -->
 <script th:src="@{/frontend_depandence/js/Chart.js}"></script>
 <script th:src="@{/frontend_depandence/js_custom/analysis.js}"></script>
-<script th:src="@{/frontend_depandence/js/Chart.js}"></script>
+<script th:src="@{/frontend_depandence/js_custom/custom.js}"></script>
 
 <!-- load for js scope -->
 <script th:inline="javascript">
@@ -264,6 +264,7 @@
     var requestParams = [[${requestParams}]];
     <!--初始化组件-->
     $(document).ready(function() {
+      init_sidebar();
       init_charts();
       init_form(requestParams);
     });

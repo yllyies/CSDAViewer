@@ -8,7 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>CDSA VIEWER</title>
+    <title>主页</title>
+    <link rel="icon" th:href="@{/frontend_depandence/images/agilent_icon.png}">
 
     <!-- Bootstrap -->
     <link th:href="@{/frontend_depandence/css/bootstrap.css}" rel="stylesheet">
@@ -33,7 +34,7 @@
                 <!-- menu profile quick info -->
                 <div class="profile clearfix">
                     <div class="profile_pic">
-                        <img th:src="@{frontend_depandence/images/img.jpg}" alt="..." class="img-circle profile_img">
+                        <img th:src="@{/frontend_depandence/images/img.jpg}" alt="..." class="img-circle profile_img">
                     </div>
                     <div class="profile_info">
                         <span>Welcome,</span><span sec:authentication="name"></span>
@@ -133,7 +134,7 @@
                             <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                                 <li>
                                     <a>
-                        <span class="image"><img th:src="@{frontend_depandence/images/img.jpg}"
+                        <span class="image"><img th:src="@{/frontend_depandence/images/img.jpg}"
                                                  alt="Profile Image"/></span>
                                         <span>
                           <span>John Smith</span>
@@ -146,7 +147,7 @@
                                 </li>
                                 <li>
                                     <a>
-                        <span class="image"><img th:src="@{frontend_depandence/images/img.jpg}"
+                        <span class="image"><img th:src="@{/frontend_depandence/images/img.jpg}"
                                                  alt="Profile Image"/></span>
                                         <span>
                           <span>John Smith</span>

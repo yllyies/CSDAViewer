@@ -28,8 +28,8 @@ function autoScroll(eleId,childId) {
 		scrollItem = $('#' + eleId), //需要上下移动内容的父元素
 		ele = document.getElementById(eleId),
 		scrollItemchildren = $('#' + childId).height() * 10, //每次移动的距离
-		scrollTimeTnterval = 10,000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(eleId).scrollTop() 会慢慢变小的BUG )
-		scrollAnimateTime = 1,000,  //滚动动画的持续时间, 毫秒
+		scrollTimeTnterval = 20000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(eleId).scrollTop() 会慢慢变小的BUG )
+		scrollAnimateTime = 1000,  //滚动动画的持续时间, 毫秒
 		innerHeight = $(eleId).innerHeight();
 	function scrollFun() {
 	    if(scrollItem.scrollTop() + innerHeight >= $('#' + eleId).prop("scrollHeight")){
