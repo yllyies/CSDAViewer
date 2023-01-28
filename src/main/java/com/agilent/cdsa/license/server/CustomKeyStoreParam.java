@@ -3,6 +3,7 @@ package com.agilent.cdsa.license.server;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
 import de.schlichtherle.license.AbstractKeyStoreParam;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,6 +13,7 @@ import java.io.InputStream;
  * 自定义KeyStoreParam，用于将公私钥存储文件存放到其他磁盘位置而不是项目中
  *
  */
+@Slf4j
 public class CustomKeyStoreParam extends AbstractKeyStoreParam {
 
     /**

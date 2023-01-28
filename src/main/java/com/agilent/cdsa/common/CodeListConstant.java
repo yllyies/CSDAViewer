@@ -22,5 +22,5 @@ public class CodeListConstant {
     public static final String PROJECT_VIEW = "ProjectView";
     public static final String CREATOR_VIEW = "CreatorView";
 
-    public static final String[] COLOR_LIST = {"#ffa500", "#00FFFF", "#FF0000", "#0000FF", "#FFA500", "#FFFF00", "#008000"};
+    public static final String[] COLOR_LIST = {"#63B2EE", "#76DA91", "#F8CB7F", "#F89588", "#7CD6CF", "#9192AB", "#7898E1", "#EFA666", "#EDDD86", "#9987CE", "#63B2EE", "#76DA91"};
 }

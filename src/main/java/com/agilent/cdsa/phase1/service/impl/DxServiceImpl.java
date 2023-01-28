@@ -241,7 +241,7 @@ public class DxServiceImpl implements DxService {
         switch (timeUnit) {
             case CodeListConstant.TIME_UNIT_YEAR: {
                 long between = DateUtil.between(startTime, endTime, DateUnit.SECOND, false);
-                while (between >= 0 && !startToEndMap.containsKey(startTime)) {
+                while (between > 0 && !startToEndMap.containsKey(startTime)) {
                     DateTime endOffset = DateUtil.offset(startTime, DateField.YEAR, 1).offsetNew(DateField.SECOND, -1);// 2021-01-01 00:00:00
                     startToEndMap.put(new DateTime(startTime), endOffset);
                     barDatasets.add(new ChartDatasetDto(DateUtil.format(startTime, "yyyy"), CodeListConstant.COLOR_LIST[0], new ArrayList<>()));
@@ -254,8 +254,6 @@ public class DxServiceImpl implements DxService {
                     startTime.offset(DateField.YEAR, 1);// 2022-04-01 00:00:00
                     between = DateUtil.between(endOffset, endTime, DateUnit.SECOND, false);
                 }
-
-
                 break;
             }
             case CodeListConstant.TIME_UNIT_QUARTER: {
