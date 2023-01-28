@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * ALTER TABLE cdsa.rslt CHANGE IsSqxRslt Is_sqx_rslt bit(1) NULL COMMENT '是否序列结果集，可能是跟测试无关。';
@@ -18,7 +19,7 @@ public class Project implements Serializable
 
     @Id
     @Column(nullable = false)
-    private Integer id;
+    private BigDecimal id;
 
     @Column
     private String name;
@@ -29,11 +30,11 @@ public class Project implements Serializable
     @Column
     private String cmPath;
 
-    public Integer getId() {
+    public BigDecimal getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(BigDecimal id) {
         this.id = id;
     }
 
