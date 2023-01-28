@@ -1,3 +1,4 @@
 /.idea/
-/app.log_IS_UNDEFINED/
 /target/
+*.log
+*.iml
