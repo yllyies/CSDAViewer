@@ -1,7 +1,6 @@
 package com.agilent.cdsa.license.client;
 
 import cn.hutool.core.io.resource.ClassPathResource;
-import cn.hutool.core.util.StrUtil;
 import com.agilent.cdsa.license.server.CustomKeyStoreParam;
 import de.schlichtherle.license.*;
 import io.swagger.annotations.ApiModelProperty;
@@ -76,7 +75,7 @@ public class LicenseVerify {
             licenseManager = new CustomLicenseManager(licenseParam);
             licenseManager.uninstall();
             String path = new ClassPathResource("").getAbsolutePath() + licensePath;
-            LicenseContent licenseContent = licenseManager.install(new File(StrUtil.replace(path, "test-classes", "classes")));
+            LicenseContent licenseContent = licenseManager.install(new File(path));
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             installSuccess = true;
             log.info("------------------------------- 证书安装成功 -------------------------------");
@@ -84,9 +83,47 @@ public class LicenseVerify {
         } catch (Exception e) {
             installSuccess = false;
             log.error("------------------------------- 证书安装失败 -------------------------------");
-            log.error("证书生成失败：", e);
+            log.error("证书安装失败：", e);
         }
     }
+/*
+    private void generateLicenseTest() {
+        // 生成license需要的一些参数
+        LicenseProperties param = new LicenseProperties();
+        // 证书授权主体
+        param.setSubject("cdsAssistant");
+        // 私钥别名
+        param.setPrivateAlias("cdsAssistant_privateKey");
+        // 私钥密码（需要妥善保管，不能让使用者知道）
+        param.setKeyPass("agilent@123");
+        // 访问私钥库的密码
+        param.setStorePass("agilent@123");
+        // 证书存储地址
+        param.setLicensePath("license/cdsAssistant_license.lic");
+        // 私钥库所在地址
+        param.setPrivateKeysStorePath("license/cdsAssistant_privateKeys.keystore");
+        // 证书生效时间
+        Calendar issueCalendar = Calendar.getInstance();
+        param.setIssuedTime(issueCalendar.getTime());
+        // 证书失效时间
+        Calendar expiryCalendar = Calendar.getInstance();
+        // 设置当前时间
+        expiryCalendar.setTime(new Date());
+        // 往后延长一年 = 授权一年时间
+        expiryCalendar.add(Calendar.MONTH, 3);
+        param.setExpiryTime(expiryCalendar.getTime());
+        // 用户类型
+        param.setConsumerType("user");
+        // 用户数量
+        param.setConsumerAmount(1);
+        // 描述
+        param.setDescription("测试");
+        LicenseGenerator licenseGenerator = new LicenseGenerator();
+        licenseGenerator.setLicenseProperties(param);
+        // 生成license
+        licenseGenerator.generateLicense();
+        log.info("------------------------------- License生成安装成功 -------------------------------");
+    }*/
 
     /**
      * 卸载证书，在bean从容器移除的时候自动调用

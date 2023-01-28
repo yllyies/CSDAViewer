@@ -1,5 +1,7 @@
 package com.agilent.cdsa.license.server;
 
+import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.core.util.StrUtil;
 import com.agilent.cdsa.license.client.CustomLicenseManager;
 import de.schlichtherle.license.*;
 import lombok.Data;
@@ -28,7 +30,8 @@ public class LicenseGenerator {
         try {
             LicenseManager licenseManager = new CustomLicenseManager(initLicenseParam());
             LicenseContent licenseContent = initLicenseContent();
-            licenseManager.store(licenseContent, new File(licenseProperties.getLicensePath()));
+            String path = new ClassPathResource("").getAbsolutePath() + licenseProperties.getLicensePath();
+            licenseManager.store(licenseContent, new File(StrUtil.replace(path, "test-classes", "classes")));
         } catch (Exception e) {
             log.error(MessageFormat.format("证书生成失败：{0}", licenseProperties), e);
         }
