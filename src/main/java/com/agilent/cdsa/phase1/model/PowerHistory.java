@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Entity
 @Table(name = "power_history")
-
 public class PowerHistory implements Serializable
 {
     private static final long serialVersionUID = 7434120365325073766L;
@@ -41,8 +40,8 @@ public class PowerHistory implements Serializable
     @Column(name = "created_date")
     private Timestamp createdDate;
 
-    public PowerHistory(String instrumentId, String ip, String token) {
-        this.instrumentId = instrumentId;
+    public PowerHistory(String id, String ip, String token) {
+        this.id = id;
         this.ip = ip;
         this.token = token;
     }
