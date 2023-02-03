@@ -1,7 +1,7 @@
 package com.agilent.cdsa.config;
 
 import com.agilent.cdsa.common.ConfigConstant;
-import com.agilent.cdsa.phase1.service.impl.UserServiceImpl;
+import com.agilent.cdsa.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
 package com.agilent.cdsa.common;
 
-import com.agilent.cdsa.phase1.model.User;
+import com.agilent.cdsa.model.User;
 
 /**
  * Save UserInfo Context

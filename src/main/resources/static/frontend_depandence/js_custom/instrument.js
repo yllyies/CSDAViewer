@@ -53,11 +53,3 @@ function autoScroll(eleId,childId) {
         autoScroll('datatable-div', 'datatable-tr');
     }
 }
-
-/* 异步查询仪器信息*/
-function query() {
-    $('#instrumentTable_tbody').load("/instrument/list2");
-}
-
-
-
