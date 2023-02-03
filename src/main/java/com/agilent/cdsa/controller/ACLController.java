@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 
-@Api(tags = "ACLController")
+@Api(tags = "菜单跳转控制器")
 @Controller
 public class ACLController {
 
