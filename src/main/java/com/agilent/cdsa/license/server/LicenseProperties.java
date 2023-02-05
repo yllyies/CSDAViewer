@@ -1,6 +1,5 @@
 package com.agilent.cdsa.license.server;
 
-import com.agilent.cdsa.license.client.LicenseExtraModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -47,8 +46,6 @@ public class LicenseProperties implements Serializable {
 
     @ApiModelProperty("描述信息")
     private String description;
-
-    @ApiModelProperty("额外的服务器硬件校验信息")
-    private LicenseExtraModel licenseExtraModel;
+    
 }
 

@@ -2,17 +2,11 @@ package com.agilent.cdsa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan("com.agilent.cdsa.*")
-@SpringBootApplication
-public class PrjApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(PrjApplication.class, args);
-    }
-}
-
-/*@ComponentScan("com.agilent.cdsa.*")
 @SpringBootApplication
 public class PrjApplication extends SpringBootServletInitializer {
     // war 主程序入口
@@ -25,4 +19,4 @@ public class PrjApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(PrjApplication.class);
     }
-}*/
+}

@@ -88,20 +88,6 @@ public class CustomLicenseManager extends LicenseManager {
         }
     }
 
-
-    /**
-     * 复写validate方法，用于增加我们额外的校验信息
-     */
-    @Override
-    protected synchronized void validate(final LicenseContent content) throws LicenseContentException {
-        //1. 首先调用父类的validate方法
-        super.validate(content);
-        //2. 然后校验自定义的License参数，去校验我们的license信息
-        LicenseExtraModel expectedCheckModel = (LicenseExtraModel) content.getExtra();
-        // TODO 做我们自定义的校验，暂不限制到IP/MAC
-    }
-
-
     /**
      * 重写XMLDecoder解析XML
      */

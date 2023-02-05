@@ -64,7 +64,6 @@ public class LicenseGenerator {
         LicenseContent licenseContent = new LicenseContent();
         licenseContent.setHolder(DEFAULT_HOLDER_AND_ISSUER);
         licenseContent.setIssuer(DEFAULT_HOLDER_AND_ISSUER);
-
         licenseContent.setSubject(licenseProperties.getSubject());
         licenseContent.setIssued(licenseProperties.getIssuedTime());
         licenseContent.setNotBefore(licenseProperties.getIssuedTime());
@@ -72,12 +71,6 @@ public class LicenseGenerator {
         licenseContent.setConsumerType(licenseProperties.getConsumerType());
         licenseContent.setConsumerAmount(licenseProperties.getConsumerAmount());
         licenseContent.setInfo(licenseProperties.getDescription());
-
-        //扩展校验，这里可以自定义一些额外的校验信息(也可以用json字符串保存)
-        if (licenseProperties.getLicenseExtraModel() != null) {
-            licenseContent.setExtra(licenseProperties.getLicenseExtraModel());
-        }
-
         return licenseContent;
     }
 }
