@@ -2958,7 +2958,10 @@ a.btn-success, a.btn-primary, a.btn-warning, a.btn-danger {
   border-color: #394D5F; }
 
 .btn-round {
-  border-radius: 30px; }
+  border-radius: 30px;
+  font-size: small;
+  margin-left: 8px;
+}
 
 .btn.btn-app {
   position: relative;
@@ -5030,4 +5033,85 @@ ul.notifications {
   border-radius: 0.25rem;
   height: 57px;
   padding: 0px;
-  margin: 2px;}
+  margin: 2px;
+}
+
+/* 自定义按钮：用于仪器总览-仪器状态展示 */
+/* 总计 System total */
+.btn-total {
+  border-right: 3px solid #dcdcdc;
+  line-height: 2;
+  margin-right: 30px;
+}
+.btn-total:hover {
+  color: #708090;
+}
+.btn-total>span {
+  color:#a9a9a9;
+  font-weight: bold;
+}
+/* 运行中 Running */
+.btn-running {
+  border: 2px solid #32cd32;
+}
+//把第一个竖线去掉
+.btn-running:first-child:before {
+  margin-left: 20px
+}
+.btn-running:hover {
+  color: #708090;
+  border: 2px solid #00ff00;
+}
+.btn-running span {
+  color:#32cd32;
+  font-weight: bold;
+}
+
+/* 空闲 Idel */
+.btn-idel {
+  border: 2px solid #0069d9;
+}
+.btn-idel:hover {
+  color: #708090;
+  border: 2px solid #007bff;
+}
+.btn-idel span {
+  color:#0069d9;
+  font-weight: bold;
+}
+/* 错误 Error */
+.btn-error {
+  border: 2px solid #c82333;
+}
+.btn-error:hover {
+  color: #708090;
+  border: 2px solid #dc3545;
+}
+.btn-error span {
+  color:#c82333;
+  font-weight: bold;
+}
+/* 离线 Offline */
+.btn-offline {
+  border: 2px solid #23272b;
+}
+.btn-offline:hover {
+  color: #708090;
+  border: 2px solid #343a40;
+}
+.btn-offline span {
+  color:#23272b;
+  font-weight: bold;
+}
+/* 未知 Unknown */
+.btn-unknown {
+  border: 2px solid #a9a9a9;
+}
+.btn-unknown:hover {
+  color: #708090;
+  border: 2px solid #c0c0c0;
+}
+.btn-unknown>span {
+  color:#a9a9a9;
+  font-weight: bold;
+}
