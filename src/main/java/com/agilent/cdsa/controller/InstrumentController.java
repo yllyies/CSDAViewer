@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.agilent.cdsa.common.CodeListConstant;
 import com.agilent.cdsa.dto.InstrumentDto;
-import com.agilent.cdsa.service.PowerHistoryService;
 import com.agilent.cdsa.service.RsltService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,8 +24,6 @@ public class InstrumentController {
 
     @Autowired
     private RsltService rsltService;
-    @Autowired
-    private PowerHistoryService powerHistoryService;
 
     @ApiOperation("仪器总览界面主查询")
     @RequestMapping(value = "list", method = RequestMethod.GET)
