@@ -1,5 +1,6 @@
 package com.agilent.cdsa.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.agilent.cdsa.common.util.HttpUtil;
 import com.agilent.cdsa.dto.InstrumentDto;
@@ -116,13 +117,16 @@ public class RsltServiceImpl implements RsltService {
 
     @Override
     public List<InstrumentDto> doFindInstrumentsByPost() {
+        List<InstrumentDto> result = new ArrayList<>();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(MediaType.APPLICATION_JSON_UTF8_VALUE));
         headers.add("Accept", MediaType.APPLICATION_JSON.toString());
         JSONObject jsonObj = JSONObject.fromObject(new HashMap<>());
         HttpEntity<String> request = new HttpEntity<>(jsonObj.toString(), headers);
-        List<InstrumentDto> result = HttpUtil.httpRequest(instrumentInfoUrl, HttpMethod.GET, request, new ParameterizedTypeReference<List<InstrumentDto>>(){});
-
+        List<InstrumentDto> response = HttpUtil.httpRequest(instrumentInfoUrl, HttpMethod.GET, request, new ParameterizedTypeReference<List<InstrumentDto>>(){});
+        if (CollUtil.isNotEmpty(response)) {
+            result.addAll(response);
+        }
         return result;
     }
 }

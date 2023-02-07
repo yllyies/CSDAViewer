@@ -1,4 +1,4 @@
-package com.agilent.cdsa.phase1.model;
+package com.agilent.cdsa.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

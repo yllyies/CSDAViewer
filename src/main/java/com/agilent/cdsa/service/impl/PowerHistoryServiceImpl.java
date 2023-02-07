@@ -1,14 +1,18 @@
-package com.agilent.cdsa.phase1.service.impl;
+package com.agilent.cdsa.service.impl;
 
-import com.agilent.cdsa.phase1.model.PowerHistory;
-import com.agilent.cdsa.phase1.repository.PowerHistoryDao;
-import com.agilent.cdsa.phase1.service.PowerHistoryService;
+import cn.hutool.core.collection.CollUtil;
+import com.agilent.cdsa.common.util.PythonUtil;
+import com.agilent.cdsa.model.PowerHistory;
+import com.agilent.cdsa.repository.PowerHistoryDao;
+import com.agilent.cdsa.repository.ProjectDao;
+import com.agilent.cdsa.service.PowerHistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author lifang
@@ -17,6 +21,8 @@ import java.util.List;
 @Service
 @Slf4j
 public class PowerHistoryServiceImpl implements PowerHistoryService {
+    @Autowired
+    private ProjectDao projectDao;
     @Autowired
     private PowerHistoryDao powerHistoryDao;
 
@@ -39,5 +45,16 @@ public class PowerHistoryServiceImpl implements PowerHistoryService {
     public void doBatchCreate(List<PowerHistory> instruments) {
         powerHistoryDao.saveAll(instruments);
         powerHistoryDao.flush();
+    }
+
+    @Override
+    public String doMachineLearnPower(String instrumentId) {
+        List<PowerHistory> powerHistories = powerHistoryDao.findByInstrumentId(instrumentId);
+        if (CollUtil.isEmpty(powerHistories)) {
+            return "";
+        }
+        List<Double> powerList = powerHistories.stream().map(PowerHistory::getPower).collect(Collectors.toList());
+        String s = PythonUtil.execPyByListReturnString("instrument_power.py", powerList);
+        return "" + s;
     }
 }

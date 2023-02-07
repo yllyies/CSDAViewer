@@ -1,6 +1,6 @@
-package com.agilent.cdsa.phase1.service;
+package com.agilent.cdsa.service;
 
-import com.agilent.cdsa.phase1.model.PowerHistory;
+import com.agilent.cdsa.model.PowerHistory;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface PowerHistoryService {
 
     void doBatchCreate(List<PowerHistory> entities);
 
-
+    String doMachineLearnPower(String instrumentId);
 }
