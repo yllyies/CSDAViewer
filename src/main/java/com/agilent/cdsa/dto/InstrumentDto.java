@@ -13,6 +13,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InstrumentDto implements Serializable {
+
+    private static final long serialVersionUID = -4865203808778094585L;
+
     @ApiModelProperty("仪器ID，主键：object 表ID 仪器唯一索引")
     private String instrumentId;
     @ApiModelProperty("仪器状态")

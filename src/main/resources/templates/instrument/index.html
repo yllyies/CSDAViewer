@@ -87,7 +87,7 @@
       <div class="col-md-12 col-sm-12" id="fullScreenPanel">
         <div class="x_panel" style="border:none">
           <div class="x_title">
-            <h2>当前时间：&nbsp;&nbsp;<span id="clock"></span></h2>
+            <h6 style="margin: 5px 0 6px;float: left;display: block;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">当前时间：&nbsp;&nbsp;<span id="clock"></span></h6>
             <ul class="nav navbar-right panel_toolbox">
               <li><a href="javascript:void(0)" onclick="toggleFullscreen()"><i class="fa fa-arrows-alt fa-lg"></i></a></li>
             </ul>
@@ -95,13 +95,14 @@
           </div>
 
           <div class="col-md-12 col-sm-8 col-xs-8">
-            <h2>
-              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:white;border-radius: 0.25rem;border: solid 0.1rem #eeeeee;"></i>&nbsp;未连接：<span style="font-weight:bold;" th:text="1"></span>台</label>
-              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:green;"></i>&nbsp;空闲中：<span style="font-weight:bold;" th:text="18"></span>台</label>
-              <label class="col-md-auto "><i class="fa fa-square fa-lg" style="color:blue"></i>&nbsp;运行中：<span style="font-weight:bold;" th:text="9"></span>台</label>
-              <label class="col-md-auto  "><i class="fa fa-square fa-lg" style="color:orange"></i>&nbsp;维护中：<span style="font-weight:bold;" th:text="1"></span>台</label>
-              <label class="col-md-auto  "><i class="fa fa-square fa-lg" style="color:red"></i>&nbsp;报错：<span style="font-weight:bold;" th:text="0"></span>台</label>
-            </h2>
+            <div class="x_content">
+              <button type="button" class="btn btn-total">System total <span th:text="${systemTotal}"></span></button>
+              <button type="button" class="btn btn-round btn-running">Running <span th:text="${runningCount}"></span></button>
+              <button type="button" class="btn btn-round btn-idel">Idel <span th:text="${idleCount}"></span></button>
+              <button type="button" class="btn btn-round btn-error">Error <span th:text="${errorCount}"></span></button>
+              <button type="button" class="btn btn-round btn-offline">Offline <span th:text="${offlineCount}"></span></button>
+              <button type="button" class="btn btn-round btn-unknown">Unknown <span th:text="${unknownCount}"></span></button>
+            </div>
           </div>
           <div class="x_content">
             <div class="table-responsive">
