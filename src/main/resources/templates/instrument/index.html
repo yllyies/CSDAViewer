@@ -112,7 +112,6 @@
                   <th width="8%">状态</th>
                   <th width="12%">仪器名称</th>
                   <th width="15%">描述</th>
-<!--                  <th width="10%">仪器类型</th>-->
                   <th width="15%">项目</th>
                   <th width="12%">操作用户</th>
                   <th width="12%">登录用户</th>
@@ -134,11 +133,11 @@
                   <td width="15%" th:text="${item.instrumentDescription}"></td>
 <!--                  <td width="10%">LC</td>-->
                   <td width="15%" th:text="${item.projectName}"></td>
-                  <td width="12%" th:text="${item.operationUsername}"></td>
-                  <td width="12%" th:text="${item.loginUsername}"></td>
+                  <td width="12%" th:text="${item.commitUser}"></td>
+                  <td width="12%" th:text="${item.acqUser}"></td>
                   <td width="15%" th:text="${item.sequenceName}"></td>
                   <td width="15%" th:text="${item.commitTime}"></td>
-                  <td width="25%" th:text="${item.currentSample}"></td>
+                  <td width="25%" th:text="${item.sampleName}"></td>
                   <td width="12%" th:text="${item.runtimeString}"></td>
                   <td width="12%">
                     <div class="progress" th:if="${not #strings.isEmpty(item.sequenceInfo)}">

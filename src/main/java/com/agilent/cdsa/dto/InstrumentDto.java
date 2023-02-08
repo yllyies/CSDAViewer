@@ -24,26 +24,28 @@ public class InstrumentDto implements Serializable {
     private String color;
     @ApiModelProperty("仪器名称")
     private String instrumentName;
-    @ApiModelProperty("仪器类型，无法明确区分")
-    private String instrumentType;
     @ApiModelProperty("项目名称")
     private String projectName;
     @ApiModelProperty("操作用户，实时SDK获取")
-    private String operationUsername;
+    private String commitUser;
     @ApiModelProperty("登录用户")
-    private String loginUsername;
+    private String acqUser;
     @ApiModelProperty("序列名称")
     private String sequenceName;
     @ApiModelProperty("提交时间")
     private String commitTime;
+    @ApiModelProperty("当前样品名称")
+    private String sampleName;
+    @ApiModelProperty("当前样品第几针")
+    private Integer currentSample;
     @ApiModelProperty("当前样品")
-    private String currentSample;
+    private Integer sampleTotal;
     @ApiModelProperty("仪器描述")
     private String instrumentDescription;
     @ApiModelProperty("仪器运行时间，数据库获取")
     private Long runtime;
     @ApiModelProperty("仪器运行时间字符串")
     private String runtimeString;
-    @ApiModelProperty("显示当前序列的运行状态")
+    @ApiModelProperty("显示当前序列的运行状态，当前第几帧/一共有几针，如 5 / 10")
     private String sequenceInfo;
 }

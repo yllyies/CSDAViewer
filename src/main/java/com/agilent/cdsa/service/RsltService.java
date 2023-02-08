@@ -37,5 +37,5 @@ public interface RsltService {
      *
      * @return 仪器信息集合
      */
-    List<InstrumentDto> doFindInstrumentsByPost();
+    List<InstrumentDto> doFindInstrumentsByRemote();
 }
