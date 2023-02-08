@@ -34,4 +34,15 @@ public class HttpUtil {
         return null;
     }
 
+    public static <T> String httpRequest(String url, HttpMethod method, HttpEntity<T> entity) {
+        try {
+            //发起一个POST请求
+            ResponseEntity<String> result = httpUtil.restTemplate.exchange(url, method, entity, String.class);
+            return result.getBody();
+        } catch (Exception e) {
+            log.error("请求失败： " + e.getMessage());
+        }
+        return null;
+    }
+
 }
