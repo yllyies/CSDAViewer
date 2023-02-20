@@ -30,6 +30,8 @@ logging:
 
 server:
   port: 8082
+  session:
+    timeout:PT60M
 
 # 自定义接口配置
 cdsa:

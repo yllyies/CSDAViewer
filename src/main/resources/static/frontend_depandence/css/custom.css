@@ -5052,31 +5052,26 @@ ul.notifications {
 }
 /* 运行中 Running */
 .btn-running {
-  border: 2px solid #32cd32;
-}
-//把第一个竖线去掉
-.btn-running:first-child:before {
-  margin-left: 20px
+  border: 2px solid #0069d9;
 }
 .btn-running:hover {
   color: #708090;
-  border: 2px solid #00ff00;
+  border: 2px solid #007bff;
 }
 .btn-running span {
-  color:#32cd32;
+  color:#0069d9;
   font-weight: bold;
 }
-
 /* 空闲 Idel */
 .btn-idel {
-  border: 2px solid #0069d9;
+  border: 2px solid #32cd32;
 }
 .btn-idel:hover {
   color: #708090;
-  border: 2px solid #007bff;
+  border: 2px solid #00ff00;
 }
 .btn-idel span {
-  color:#0069d9;
+  color:#32cd32;
   font-weight: bold;
 }
 /* 错误 Error */

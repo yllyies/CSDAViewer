@@ -36,11 +36,11 @@ public class InstrumentController {
         }
         Map<String, Long> stateToCountMap = instrumentDtos.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
         modelAndView.getModel().put("systemTotal", instrumentDtos.size()); // 总数
-        modelAndView.getModel().put("runningCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_PRERUN, CodeListConstant.INSTRUMENT_STATE_RUNNING).values().size()); // 运行
-        modelAndView.getModel().put("idleCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE, CodeListConstant.INSTRUMENT_STATE_NOT_READY, CodeListConstant.INSTRUMENT_STATE_SLEEP).values().size()); // 空闲
+        modelAndView.getModel().put("runningCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_PRERUN, CodeListConstant.INSTRUMENT_STATE_RUNNING).values().stream().mapToLong(Long::intValue).sum()); // 运行
+        modelAndView.getModel().put("idleCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE, CodeListConstant.INSTRUMENT_STATE_NOT_READY, CodeListConstant.INSTRUMENT_STATE_SLEEP).values().stream().mapToLong(Long::intValue).sum()); // 空闲
         modelAndView.getModel().put("errorCount", 0); // 错误
-        modelAndView.getModel().put("offlineCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT).values().size()); // 离线
-        modelAndView.getModel().put("unknownCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE).values().size()); // 未知
+        modelAndView.getModel().put("offlineCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT).values().stream().mapToLong(Long::intValue).sum()); // 离线
+        modelAndView.getModel().put("unknownCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE).values().stream().mapToLong(Long::intValue).sum()); // 未知
         return modelAndView;
     }
 }

@@ -52,7 +52,7 @@
           <div class="menu_section">
             <h3>菜单</h3>
             <ul class="nav side-menu">
-              <li><a href="#"><i class="fa fa-desktop" ></i>仪器总览<span class="fa fa-chevron-down"></span></a>
+              <li><a href="#"><i class="fa fa-desktop" ></i>仪器总览</a>
                 <ul class="nav child_menu">
                   <li th:each="item:${locations}"><a th:if="${not #strings.isEmpty(item)}" th:text="${item}"></a></li>
                 </ul>
@@ -96,12 +96,12 @@
 
           <div class="col-md-12 col-sm-8 col-xs-8">
             <div class="x_content">
-              <button type="button" class="btn btn-total">System total <span th:text="${systemTotal}"></span></button>
-              <button type="button" class="btn btn-round btn-running">Running <span th:text="${runningCount}"></span></button>
-              <button type="button" class="btn btn-round btn-idel">Idel <span th:text="${idleCount}"></span></button>
-              <button type="button" class="btn btn-round btn-error">Error <span th:text="${errorCount}"></span></button>
-              <button type="button" class="btn btn-round btn-offline">Offline <span th:text="${offlineCount}"></span></button>
-              <button type="button" class="btn btn-round btn-unknown">Unknown <span th:text="${unknownCount}"></span></button>
+              <button type="button" class="btn btn-total">仪器总数 <span th:text="${systemTotal}"></span></button>
+              <button type="button" class="btn btn-round btn-running">运行中 <span th:text="${runningCount}"></span></button>
+              <button type="button" class="btn btn-round btn-idel">空闲 <span th:text="${idleCount}"></span></button>
+              <button type="button" class="btn btn-round btn-error">错误 <span th:text="${errorCount}"></span></button>
+              <button type="button" class="btn btn-round btn-offline">未连接 <span th:text="${offlineCount}"></span></button>
+              <button type="button" class="btn btn-round btn-unknown">未知 <span th:text="${unknownCount}"></span></button>
             </div>
           </div>
           <div class="x_content">
@@ -141,7 +141,7 @@
                   <td width="12%" th:text="${item.runtimeString}"></td>
                   <td width="12%">
                     <div class="progress" th:if="${not #strings.isEmpty(item.sequenceInfo)}">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                      <div class="progress-bar bg-success" role="progressbar" th:style="'width:' + ${item.progressBarWidth}" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
                         <span th:text="${item.sequenceInfo}"></span>
                       </div>
                     </div>
