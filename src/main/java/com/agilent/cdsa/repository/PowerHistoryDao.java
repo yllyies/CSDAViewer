@@ -11,9 +11,8 @@ import java.util.List;
 public interface PowerHistoryDao extends JpaRepository<PowerHistory, String>, JpaSpecificationExecutor<PowerHistory>
 {
 
-    List<PowerHistory> findByIdIn(List<String> ids);
+    List<PowerHistory> findByIpInOrderByCreatedDateDesc(List<String> ips);
 
     List<PowerHistory> findByIp(String ip);
 
-    List<PowerHistory> findByInstrumentId(String ip);
 }

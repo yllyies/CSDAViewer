@@ -45,4 +45,5 @@ public class CodeListConstant {
     public static final String INSTRUMENT_STATE_MAINTENANCE_DUE = "Maintenance Due";
     public static final String INSTRUMENT_STATE_SLEEP = "Sleep";
     public static final String INSTRUMENT_STATE_OFFLINE = "Offline";
+    public static final String INSTRUMENT_STATE_UNKNOWN = "Unknown";
 }

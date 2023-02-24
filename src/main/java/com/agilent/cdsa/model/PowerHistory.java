@@ -24,19 +24,14 @@ public class PowerHistory implements Serializable
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator" )
     @GeneratedValue(generator = "uuid")
     private String id;
-
     @Column
-    private String instrumentId;
-
+    private String instrumentName;
     @Column
     private String ip;
-
     @Column
     private String token;
-
     @Column
     private Double power;
-
     @Column(name = "created_date")
     private Timestamp createdDate;
 
@@ -44,6 +39,15 @@ public class PowerHistory implements Serializable
         this.id = id;
         this.ip = ip;
         this.token = token;
+    }
+
+
+    public PowerHistory(String instrumentName, String ip, String token, Double power, Timestamp createdDate) {
+        this.instrumentName = instrumentName;
+        this.ip = ip;
+        this.token = token;
+        this.power = power;
+        this.createdDate = createdDate;
     }
 
     public String getId() {
@@ -54,12 +58,12 @@ public class PowerHistory implements Serializable
         this.id = id;
     }
 
-    public String getInstrumentId() {
-        return instrumentId;
+    public String getInstrumentName() {
+        return instrumentName;
     }
 
-    public void setInstrumentId(String instrumentId) {
-        this.instrumentId = instrumentId;
+    public void setInstrumentName(String instrumentName) {
+        this.instrumentName = instrumentName;
     }
 
     public String getIp() {
