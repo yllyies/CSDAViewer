@@ -7,8 +7,6 @@ import com.agilent.cdsa.common.util.PythonUtil;
 import com.agilent.cdsa.dto.InstrumentDto;
 import com.agilent.cdsa.dto.XiaomiHumitureDto;
 import com.agilent.cdsa.service.InstrumentService;
-import com.agilent.cdsa.dto.InstrumentDto;
-import com.agilent.cdsa.service.RsltService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,7 @@ public class InstrumentController {
         modelAndView.getModel().put("dataSource", instruments); // 仪器状态结果集
         Map<String, Long> stateToCountMap = instruments.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
         modelAndView.getModel().put("systemTotal", instruments.size()); // 总数
-        modelAndView.getModel().put("runningCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_PRE_RUN, CodeListConstant.INSTRUMENT_STATE_RUNNING).values().size()); // 运行
+        modelAndView.getModel().put("runningCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_PRERUN, CodeListConstant.INSTRUMENT_STATE_RUNNING).values().size()); // 运行
         modelAndView.getModel().put("idleCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE, CodeListConstant.INSTRUMENT_STATE_NOT_READY, CodeListConstant.INSTRUMENT_STATE_SLEEP).values().size()); // 空闲
         modelAndView.getModel().put("errorCount", 0); // 错误
         modelAndView.getModel().put("offlineCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT).values().size()); // 离线

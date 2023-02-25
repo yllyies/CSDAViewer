@@ -130,7 +130,7 @@ public class InstrumentServiceImpl implements InstrumentService {
             }
             for (int i = 1; i < powerLevels.length - 1; i++) {
                 if (powerLevels[powerLevels.length - i] - power < 5 && powerLevels[powerLevels.length - i] - power > -5) {
-                    return CodeListConstant.INSTRUMENT_STATE_PRE_RUN;
+                    return CodeListConstant.INSTRUMENT_STATE_PRERUN;
                 }
             }
             return CodeListConstant.INSTRUMENT_STATE_UNKNOWN;

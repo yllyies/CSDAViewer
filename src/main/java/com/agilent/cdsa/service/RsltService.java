@@ -14,11 +14,4 @@ public interface RsltService {
      * @return
      */
     Map<String, Object> doFindInstruments();
-
 }
-    /**
-     * 查询所有仪器信息
-     *
-     * @return 仪器信息集合
-     */
-    List<InstrumentDto> doFindInstrumentsByRemote();
