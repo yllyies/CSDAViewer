@@ -1,9 +1,11 @@
 spring:
   profiles:
-    active: dev
+    include:
+      - xiaomi-info
+      - params
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/cdsa?serverTimezone=UTC&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/cdsa?serverTimezone=UTC&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 123456
     druid:
@@ -25,17 +27,13 @@ spring:
     cache: false
 
 server:
-  port: 8082
+  port: 8081
 
 logging:
   level:
     root: info
   path: ./logs
   config: classpath:./logback.xml
-
-# 自定义接口配置
-cdsa:
-  interface-url: http://localhost:9190/api/CDSADa/InstrumentState
 
 #License相关配置
 license:
@@ -44,3 +42,9 @@ license:
   storePass: agilent@123 #访问公钥的密码
   licensePath: license/cdsAssistant_license.lic #license文件名，前缀为 classPath:resource目录
   publicKeysStorePath: license/cdsAssistant_publicCerts.keystore #公钥位置
+
+# REST Template
+restTemplate:
+  connectionRequestTimeout: 300000
+  connectionTimeout: 300000
+  readTimeout: 300000

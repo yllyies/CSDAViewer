@@ -87,7 +87,7 @@
       <div class="col-md-12 col-sm-12" id="fullScreenPanel">
         <div class="x_panel" style="border:none">
           <div class="x_title">
-            <h6 style="margin: 5px 0 6px;float: left;display: block;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">当前时间：&nbsp;&nbsp;<span id="clock"></span></h6>
+            <h6 style="margin: 5px 0 6px;float: left;display: block;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"><span style="margin-right: 50px;" id="clock"></span><span th:text="${humiture}"></span></h6>
             <ul class="nav navbar-right panel_toolbox">
               <li><a href="javascript:void(0)" onclick="toggleFullscreen()"><i class="fa fa-arrows-alt fa-lg"></i></a></li>
             </ul>
@@ -96,12 +96,12 @@
 
           <div class="col-md-12 col-sm-8 col-xs-8">
             <div class="x_content">
-              <button type="button" class="btn btn-total">仪器总数 <span th:text="${systemTotal}"></span></button>
-              <button type="button" class="btn btn-round btn-running">运行中 <span th:text="${runningCount}"></span></button>
-              <button type="button" class="btn btn-round btn-idel">空闲 <span th:text="${idleCount}"></span></button>
-              <button type="button" class="btn btn-round btn-error">错误 <span th:text="${errorCount}"></span></button>
-              <button type="button" class="btn btn-round btn-offline">未连接 <span th:text="${offlineCount}"></span></button>
-              <button type="button" class="btn btn-round btn-unknown">未知 <span th:text="${unknownCount}"></span></button>
+              <button type="button" class="btn btn-total">System total <span th:text="${systemTotal}"></span></button>
+              <button type="button" class="btn btn-round btn-running">Running <span th:text="${runningCount}"></span></button>
+              <button type="button" class="btn btn-round btn-idel">Idel <span th:text="${idleCount}"></span></button>
+              <button type="button" class="btn btn-round btn-error">Error <span th:text="${errorCount}"></span></button>
+              <button type="button" class="btn btn-round btn-offline">Offline <span th:text="${offlineCount}"></span></button>
+              <button type="button" class="btn btn-round btn-unknown">Unknown <span th:text="${unknownCount}"></span></button>
             </div>
           </div>
           <div class="x_content">
@@ -110,7 +110,7 @@
                 <thead style="font-size:12px;" >
                 <tr>
                   <th width="8%">状态</th>
-                  <th width="12%">仪器名称</th>
+                  <th width="15%">仪器名称</th>
                   <th width="15%">描述</th>
                   <th width="15%">项目</th>
                   <th width="12%">操作用户</th>
@@ -129,7 +129,7 @@
                 <tbody  style="font-size:12px">
                 <tr id="datatable-tr" th:each="item:${dataSource}">
                   <td width="8%"><i class="fa fa-square fa-2x" th:if="${not #strings.isEmpty(item.color)}" th:style="'color:' + ${item.color}"></i></td>
-                  <td width="12%" th:text="${item.instrumentName}"></td>
+                  <td width="15%" th:text="${item.instrumentName}"></td>
                   <td width="15%" th:text="${item.instrumentDescription}"></td>
 <!--                  <td width="10%">LC</td>-->
                   <td width="15%" th:text="${item.projectName}"></td>

@@ -36,6 +36,7 @@ public class CodeListConstant {
     public static final String INSTRUMENT_STATE_MAINTENANCE_DUE = "MaintenanceDue";
     public static final String INSTRUMENT_STATE_SLEEP = "Sleep";
     public static final String INSTRUMENT_STATE_OFFLINE = "Offline";
+    public static final String INSTRUMENT_STATE_UNKNOWN = "Unknown";
 
     public static final String INSTRUMENT_STATE_COLOR_NOT_CONNECT = "#23272b";
     public static final String INSTRUMENT_STATE_COLOR_IDLE = "#00ff00";
@@ -46,4 +47,5 @@ public class CodeListConstant {
     public static final String INSTRUMENT_STATE_COLOR_MAINTENANCE_DUE = "#ffd700";
     public static final String INSTRUMENT_STATE_COLOR_SLEEP = "#ffd700";
     public static final String INSTRUMENT_STATE_COLOR_OFFLINE = "#343a40";
+    public static final String INSTRUMENT_STATE_COLOR_UNKNOWN = "#343a40";
 }
