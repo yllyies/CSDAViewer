@@ -49,16 +49,10 @@
           <div class="menu_section">
             <h3>菜单</h3>
             <ul class="nav side-menu">
-              <li><a th:href="@{/instrument/list}"><i class="fa fa-desktop"></i>仪器总览<span class="fa fa-chevron-down"></span></a></li>
+              <li><a th:href="@{/instrument/list}"><i class="fa fa-desktop"></i>仪器总览</a></li>
               <li><a><i class="fa fa-bar-chart-o"></i>统计分析<span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                  <li ><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('instrument')|">仪器运行时间<span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li class="sub_menu"><a href="javascript:void(0)" onclick="document:analysisForm.submit()">选择所有</a></li>
-                      <li class="sub_menu"><a><input type="checkbox"> LC</a></li>
-                      <li class="sub_menu"><a><input type="checkbox"> GC</a></li>
-                    </ul>
-                  </li>
+                  <li ><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('instrument')|">仪器运行时间</a></li>
                   <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('project')|">项目进样统计</a></li>
                   <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('creator')|">人员进样统计</a></li>
                 </ul>

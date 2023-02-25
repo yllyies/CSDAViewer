@@ -20,8 +20,6 @@ public class InstrumentDto implements Serializable {
     private String instrumentId;
     @ApiModelProperty("仪器状态")
     private String instrumentState;
-    @ApiModelProperty("仪器状态颜色")
-    private String color;
     @ApiModelProperty("仪器名称")
     private String instrumentName;
     @ApiModelProperty("项目名称")
@@ -44,8 +42,15 @@ public class InstrumentDto implements Serializable {
     private String instrumentDescription;
     @ApiModelProperty("仪器运行时间，数据库获取")
     private Long runtime;
-    @ApiModelProperty("仪器运行时间字符串")
-    private String runtimeString;
     @ApiModelProperty("显示当前序列的运行状态，当前第几帧/一共有几针，如 5 / 10")
     private String sequenceInfo;
+    /* 前端显示特殊处理 */
+    @ApiModelProperty("仪器状态颜色")
+    private String color;
+    @ApiModelProperty("仪器运行时间字符串")
+    private String runtimeString;
+    @ApiModelProperty("进度条百分比长度")
+    private String progressBarWidth;
+
+
 }

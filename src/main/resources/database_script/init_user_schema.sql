@@ -12,4 +12,5 @@ create table ACL_USER
 	password varchar(60) not null,
 	status varchar(40)
 );
+ALTER TABLE cdsa.acl_user COMMENT='用户信息表';
 INSERT INTO ACL_USER (id, name, email, password, status) VALUES (1, 'Agilent', 'michael.li2@agilent.com', '123456', '1');

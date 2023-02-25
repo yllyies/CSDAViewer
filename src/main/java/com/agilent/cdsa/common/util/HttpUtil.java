@@ -20,7 +20,7 @@ public class HttpUtil {
     @PostConstruct
     public void init() {
         httpUtil = this;
-        httpUtil.restTemplate = this.restTemplate;
+        httpUtil.restTemplate = new RestTemplate();
     }
 
     public static <T, K> K httpRequest(String url, HttpMethod method, HttpEntity<T> entity, ParameterizedTypeReference<K> responseType) {
