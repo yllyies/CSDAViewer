@@ -10,8 +10,8 @@ ALTER TABLE cdsa.dx ADD uploaded_date DATETIME NULL;
 update cdsa.dx set uploaded_date = str_to_date(replace(replace(uploaded ,"T", " "), "Z", ""),'%Y-%m-%d %H:%i:%s.%f');
 
 --添加用户表
-DROP TABLE IF EXISTS cdsa.ACL_USER;
-create table cdsa.ACL_USER
+DROP TABLE IF EXISTS cdsa.acl_user;
+create table cdsa.acl_user
 (
 	id int auto_increment
 		primary key,
@@ -19,6 +19,16 @@ create table cdsa.ACL_USER
 	email varchar(40) not null,
 	password varchar(60) not null,
 	status varchar(40)
-);
-ALTER TABLE cdsa.acl_user COMMENT='用户信息表';
-INSERT INTO cdsa.ACL_USER (id, name, email, password, status) VALUES (1, 'Agilent', 'michael.li2@agilent.com', '123456', '1');
+) comment '用户信息表，内置登录CDS Assistant 用户信息';
+INSERT INTO cdsa.acl_user (id, name, email, password, status) VALUES (1, 'Agilent', 'michael.li2@agilent.com', '123456', '1');
+
+-- 创建仪器功率记录表
+create table cdsa.power_history
+(
+    id varchar(100) primary key,
+    instrument_name varchar(100) ,
+    ip varchar(100) not null,
+    token varchar(100) not null,
+    power DOUBLE(6, 2) not null,
+    created_date DATETIME null
+) comment '仪器信息表，用于记录第三方仪器的ip、token，功率信息';
