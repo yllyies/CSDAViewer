@@ -7,7 +7,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.agilent.cdsa.common.dto.BusinessException;
 import com.agilent.cdsa.config.XiaomiSocketConfig;
 import com.agilent.cdsa.dto.XiaomiHumitureDto;
 import com.agilent.cdsa.model.PowerHistory;
@@ -45,9 +44,9 @@ public class PythonUtil {
         try {
             properties = PropertiesLoaderUtils.loadAllProperties(PARAMNAME_XIAOMI_INFO_PROPERTIES);
         } catch (IOException e) {
-            log.error("获取温湿度计信息失败，请检查 application-xiaomi-info.properties 是否存在。");
+            log.warn("获取温湿度计信息失败，请检查 application-xiaomi-info.properties 是否存在。");
             e.printStackTrace();
-            throw new BusinessException("获取温湿度计信息失败，请检查 application-xiaomi-info.properties 是否存在。");
+//            throw new BusinessException("获取温湿度计信息失败，请检查 application-xiaomi-info.properties 是否存在。");
         }
         try {
             ClassPathResource classPathResource = new ClassPathResource(FILENAME_HUMITURE_PYTHON);
@@ -64,9 +63,9 @@ public class PythonUtil {
             in.close();
             proc.waitFor();
         } catch (IOException | InterruptedException e) {
-            log.error("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
+            log.warn("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
             e.printStackTrace();
-            throw new BusinessException("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
+//            throw new BusinessException("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
         }
 
         if (JSONUtil.isJsonArray(message.toString())) {
@@ -117,9 +116,9 @@ public class PythonUtil {
             in.close();
             proc.waitFor();
         } catch (IOException | InterruptedException e) {
-            log.error("获取仪器功率信息失败，请检查 instrument_status.py是否正确。");
+            log.warn("获取仪器功率信息失败，请检查 instrument_status.py是否正确。");
             e.printStackTrace();
-            throw new BusinessException("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
+//            throw new BusinessException("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
         }
         if (JSONUtil.isJsonArray(message.toString())) {
             JSONArray jsonArray = JSONUtil.parseArray(message.toString());
@@ -158,9 +157,9 @@ public class PythonUtil {
             in.close();
             proc.waitFor();
         } catch (IOException | InterruptedException e) {
-            log.error("机器学习功率档位失败，请检查 instrument_power.py 是否正确。");
+            log.warn("机器学习功率档位失败，请检查 instrument_power.py 是否正确。");
             e.printStackTrace();
-            throw new BusinessException("机器学习功率档位失败，请检查 instrument_power.py 是否正确。");
+//            throw new BusinessException("机器学习功率档位失败，请检查 instrument_power.py 是否正确。");
         }
         return message.toString();
     }

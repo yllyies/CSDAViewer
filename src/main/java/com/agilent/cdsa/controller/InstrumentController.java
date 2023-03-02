@@ -31,7 +31,7 @@ public class InstrumentController {
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public ModelAndView list() {
         ModelAndView modelAndView = new ModelAndView("instrument/index");
-        List<InstrumentDto> instruments = instrumentService.doFindInstrumentsByPost();
+        List<InstrumentDto> instruments = instrumentService.doFindInstrumentsByRemote();
         List<InstrumentDto> thirdPartyInstruments = instrumentService.doFindThirdPartyInstruments();
         instruments.addAll(thirdPartyInstruments);
         modelAndView.getModel().put("dataSource", instruments); // 仪器状态结果集
