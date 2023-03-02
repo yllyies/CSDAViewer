@@ -107,7 +107,7 @@ public class InstrumentServiceImpl implements InstrumentService {
         }
         log.info("cdsa extra program response:" + responseStr);
         cn.hutool.json.JSONObject jsonObject = JSONUtil.parseObj(responseStr);
-        InstrumentDto[] instrumentStateList = jsonObject.get("instrument_state", InstrumentDto[].class);
+        InstrumentDto[] instrumentStateList = jsonObject.get("array", InstrumentDto[].class);
         List<InstrumentDto> result = Arrays.asList(instrumentStateList);
 
         if (CollUtil.isEmpty(result)) {
