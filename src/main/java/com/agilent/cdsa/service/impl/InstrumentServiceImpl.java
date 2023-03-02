@@ -139,11 +139,11 @@ public class InstrumentServiceImpl implements InstrumentService {
                 instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
             }
             // 处理序列运行
-            if (null != instrumentDto.getSampleTotal()) {
-                instrumentDto.setSequenceInfo(instrumentDto.getCurrentSample() == null ? "" : instrumentDto.getCurrentSample() + " / " + instrumentDto.getSampleTotal());
+            if (null != instrumentDto.getSampleTotal() && instrumentDto.getSampleTotal() != 0) {
+                instrumentDto.setSequenceInfo((instrumentDto.getCurrentSample() == null ? "0" : instrumentDto.getCurrentSample()) + " / " + instrumentDto.getSampleTotal());
             }
             // 处理进度条
-            if (null != instrumentDto.getCurrentSample() && null != instrumentDto.getSampleTotal()) {
+            if (null != instrumentDto.getCurrentSample() && null != instrumentDto.getSampleTotal() && instrumentDto.getSampleTotal() != 0) {
                 instrumentDto.setProgressBarWidth(NumberUtil.formatPercent((float) instrumentDto.getCurrentSample() / (float) instrumentDto.getSampleTotal() * 100, 2) + "%");
             }
             // 处理仪器状态颜色
