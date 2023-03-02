@@ -5062,6 +5062,19 @@ ul.notifications {
   color:#0069d9;
   font-weight: bold;
 }
+/* notReady Idel */
+.btn-notready {
+  border: 2px solid #febb07;
+}
+.btn-notready:hover {
+  color: #fec939;
+  border: 2px solid #00ff00;
+}
+.btn-notready span {
+  color:#febb07;
+  font-weight: bold;
+}
+
 /* 空闲 Idel */
 .btn-idel {
   border: 2px solid #32cd32;
