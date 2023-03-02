@@ -5045,6 +5045,7 @@ ul.notifications {
 }
 .btn-total:hover {
   color: #708090;
+  font-weight: bold;
 }
 .btn-total>span {
   color:#a9a9a9;
@@ -5057,6 +5058,7 @@ ul.notifications {
 .btn-running:hover {
   color: #708090;
   border: 2px solid #007bff;
+  font-weight: bold;
 }
 .btn-running span {
   color:#0069d9;
@@ -5067,8 +5069,9 @@ ul.notifications {
   border: 2px solid #febb07;
 }
 .btn-notready:hover {
-  color: #fec939;
+  color: #708090;
   border: 2px solid #00ff00;
+  font-weight: bold;
 }
 .btn-notready span {
   color:#febb07;
@@ -5082,6 +5085,7 @@ ul.notifications {
 .btn-idel:hover {
   color: #708090;
   border: 2px solid #00ff00;
+  font-weight: bold;
 }
 .btn-idel span {
   color:#32cd32;
@@ -5094,6 +5098,7 @@ ul.notifications {
 .btn-error:hover {
   color: #708090;
   border: 2px solid #dc3545;
+  font-weight: bold;
 }
 .btn-error span {
   color:#c82333;
@@ -5106,6 +5111,7 @@ ul.notifications {
 .btn-offline:hover {
   color: #708090;
   border: 2px solid #343a40;
+  font-weight: bold;
 }
 .btn-offline span {
   color:#23272b;

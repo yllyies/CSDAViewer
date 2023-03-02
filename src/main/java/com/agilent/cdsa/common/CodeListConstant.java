@@ -30,7 +30,7 @@ public class CodeListConstant {
     public static final String INSTRUMENT_STATE_NOT_CONNECT = "NotConnect";
     public static final String INSTRUMENT_STATE_IDLE = "Idle";
     public static final String INSTRUMENT_STATE_ERROR = "Error";
-    public static final String INSTRUMENT_STATE_PRERUN = "Prerun";
+    public static final String INSTRUMENT_STATE_PRERUN = "PreRun";
     public static final String INSTRUMENT_STATE_RUNNING = "Running";
     public static final String INSTRUMENT_STATE_NOT_READY = "NotReady";
     public static final String INSTRUMENT_STATE_MAINTENANCE_DUE = "MaintenanceDue";
