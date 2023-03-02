@@ -118,8 +118,8 @@ public class InstrumentServiceImpl implements InstrumentService {
         // 处理仪器运行时间，收集 Prerun Running 状态的数据
         List<BigDecimal> instrumentIds = result.stream().map(InstrumentDto::getInstrumentId).map(BigDecimal::new).collect(Collectors.toList());
         List<InstrumentState> instrumentStates = instrumentStateService.doFindByIds(instrumentIds);
-        Map<BigDecimal, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
-                StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(InstrumentState::getInstrumentId, Collectors.mapping(InstrumentState::getInstrumentRuntime, Collectors.counting())));
+        Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
+                StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.mapping(InstrumentState::getInstrumentRuntime, Collectors.counting())));
 
         this.processDisplayField(result, instrumentIdToCountMap);
         return result;
@@ -131,15 +131,21 @@ public class InstrumentServiceImpl implements InstrumentService {
      * @param result 需要返回的仪器信息
      * @param instrumentIdToCountMap 仪器ID对应数量
      */
-    private void processDisplayField(List<InstrumentDto> result, Map<BigDecimal, Long> instrumentIdToCountMap) {
+    private void processDisplayField(List<InstrumentDto> result, Map<String, Long> instrumentIdToCountMap) {
         // 处理运行时间和状态颜色
         for (InstrumentDto instrumentDto : result) {
             // 处理运行时间（分钟）
-            instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
+            if (instrumentIdToCountMap.containsKey(instrumentDto.getInstrumentId())) {
+                instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
+            }
             // 处理序列运行
-            instrumentDto.setSequenceInfo(instrumentDto.getCurrentSample() == null ? "" : instrumentDto.getCurrentSample() + " / " + instrumentDto.getSampleTotal());
+            if (null != instrumentDto.getSampleTotal()) {
+                instrumentDto.setSequenceInfo(instrumentDto.getCurrentSample() == null ? "" : instrumentDto.getCurrentSample() + " / " + instrumentDto.getSampleTotal());
+            }
             // 处理进度条
-            instrumentDto.setProgressBarWidth(NumberUtil.formatPercent((float) instrumentDto.getCurrentSample() / (float) instrumentDto.getSampleTotal() * 100, 2) + "%");
+            if (null != instrumentDto.getCurrentSample() && null != instrumentDto.getSampleTotal()) {
+                instrumentDto.setProgressBarWidth(NumberUtil.formatPercent((float) instrumentDto.getCurrentSample() / (float) instrumentDto.getSampleTotal() * 100, 2) + "%");
+            }
             // 处理仪器状态颜色
             String instrumentState = instrumentDto.getInstrumentState();
             if (StrUtil.isBlank(instrumentState)) {

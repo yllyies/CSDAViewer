@@ -98,7 +98,7 @@
             <div class="x_content">
               <button type="button" class="btn btn-total">System total <span th:text="${systemTotal}"></span></button>
               <button type="button" class="btn btn-round btn-running">Running <span th:text="${runningCount}"></span></button>
-              <button type="button" class="btn btn-round btn-notready">Idel <span th:text="${notReadyCount}"></span></button>
+              <button type="button" class="btn btn-round btn-notready">NotReady <span th:text="${notReadyCount}"></span></button>
               <button type="button" class="btn btn-round btn-idel">Idel <span th:text="${idleCount}"></span></button>
               <button type="button" class="btn btn-round btn-error">Error <span th:text="${errorCount}"></span></button>
               <button type="button" class="btn btn-round btn-offline">Offline <span th:text="${offlineCount}"></span></button>
@@ -142,7 +142,7 @@
                   <td width="12%" th:text="${item.runtimeString}"></td>
                   <td width="12%">
                     <div class="progress" th:if="${not #strings.isEmpty(item.sequenceInfo)}">
-                      <div class="progress-bar bg-success" role="progressbar" th:style="'width:' + ${item.progressBarWidth}" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                      <div class="progress-bar bg-success" role="progressbar" th:style="'width:' + ${item.progressBarWidth}" aria-valuemin="0" aria-valuemax="100">
                         <span th:text="${item.sequenceInfo}"></span>
                       </div>
                     </div>
