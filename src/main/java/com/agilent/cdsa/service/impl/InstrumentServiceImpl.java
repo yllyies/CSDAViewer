@@ -121,7 +121,7 @@ public class InstrumentServiceImpl implements InstrumentService {
         Map<BigDecimal, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
                 StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(InstrumentState::getInstrumentId, Collectors.mapping(InstrumentState::getInstrumentRuntime, Collectors.counting())));
 
-        processDisplayField(result, instrumentIdToCountMap);
+        this.processDisplayField(result, instrumentIdToCountMap);
         return result;
     }
 
@@ -172,6 +172,9 @@ public class InstrumentServiceImpl implements InstrumentService {
                     break;
                 case CodeListConstant.INSTRUMENT_STATE_OFFLINE :
                     instrumentDto.setColor(CodeListConstant.INSTRUMENT_STATE_COLOR_OFFLINE);
+                    break;
+                case CodeListConstant.INSTRUMENT_STATE_UNKNOWN :
+                    instrumentDto.setColor(CodeListConstant.INSTRUMENT_STATE_UNKNOWN);
                     break;
                 default:
                     instrumentDto.setColor("transparent");

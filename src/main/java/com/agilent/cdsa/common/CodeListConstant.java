@@ -43,7 +43,7 @@ public class CodeListConstant {
     public static final String INSTRUMENT_STATE_COLOR_ERROR = "#dc3545";
     public static final String INSTRUMENT_STATE_COLOR_PRERUN = "#32cd32";
     public static final String INSTRUMENT_STATE_COLOR_RUNNING = "#007bff";
-    public static final String INSTRUMENT_STATE_COLOR_NOT_READY = "#ffd700";
+    public static final String INSTRUMENT_STATE_COLOR_NOT_READY = "#febb07";
     public static final String INSTRUMENT_STATE_COLOR_MAINTENANCE_DUE = "#ffd700";
     public static final String INSTRUMENT_STATE_COLOR_SLEEP = "#ffd700";
     public static final String INSTRUMENT_STATE_COLOR_OFFLINE = "#343a40";
