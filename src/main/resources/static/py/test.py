@@ -5,13 +5,13 @@ from miio.gateway.devices.subdevice import SubDevice, SubDeviceInfo
 
 
 def info2():
-    s = Device(ip='172.16.1.7', token='8ae3c9d20fbdfde7af2cef0096163aa9')
+    s = Device(ip='169.254.234.11', token='3788ccc06c7a52ca1327fb44fa6f30d6')
     msg = s.send("get_properties", [{'did': 'MYDID', 'siid': 11, 'piid': 2}])
     print(msg)
 
 def info3():
     # 网关注册
-    g = Gateway(ip='172.16.1.5', token='49666a335576336450376d6f634c3537')
+    g = Gateway(ip='169.254.234.14', token='3245666c3339413237476d694f4f3654')
     dev_info = SubDeviceInfo('lumi.158d0009412d6c', 19, -1, -1, -1)
     # 子设备注册
     device = SubDevice(g, dev_info, {'zigbee_id': 'lumi.weather.v1'})

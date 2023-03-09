@@ -1,16 +1,12 @@
 import sys, json
-from micloud import MiCloud
+from miio.gateway import Gateway
+from miio.gateway.devices.subdevice import SubDevice, SubDeviceInfo
 
 if __name__ == '__main__':
-    mc = MiCloud(sys.argv[1], sys.argv[2])
-    success = mc.login()
-    responseList = mc.get_devices(country="cn")
-    obj = list(filter(lambda item: item['did'] in sys.argv[3].split(";"), responseList))
-    print(json.dumps(obj))
-
-# if __name__ == '__main__':
-#     mc = MiCloud("15972207686@163.com", "lifang420418")
-#     mc.login()
-#     responseList = mc.get_devices(country="cn")
-#     obj = list(filter(lambda item: item['did'] in 'lumi.158d0009412d6c'.split(";"), responseList))
-#     print(obj[0]['desc'])
+    # 网关注册
+    g = Gateway(ip=sys.argv[1], token=sys.argv[2])
+    dev_info = SubDeviceInfo(sys.argv[3], 19, -1, -1, -1)
+    # 子设备注册
+    device = SubDevice(g, dev_info, {'zigbee_id': 'lumi.weather.v1'})
+    info = device.get_property_exp(["temperature", "humidity"])
+    print({"temperature": info[0], "humidity": info[1]})

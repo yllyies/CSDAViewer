@@ -17,9 +17,7 @@ public class XiaomiHumitureDto {
     private String humidity;
     private String desc;
 
-    public XiaomiHumitureDto(String did, String name, String temperature, String humidity) {
-        this.did = did;
-        this.name = name;
+    public XiaomiHumitureDto(String temperature, String humidity) {
         this.temperature = temperature;
         this.humidity = humidity;
         // 自动拼接温湿度信息
