@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableScheduling
@@ -23,7 +24,9 @@ public class SaticScheduleTask {
     private void configureTasks() {
         List<PowerHistory> powerHistories = PythonUtil.doGetInstrumentPower();
         if (CollUtil.isNotEmpty(powerHistories)) {
-            instrumentService.doBatchCreate(powerHistories);
+            // 过滤功率为0的数据，此时默认关机
+            List<PowerHistory> filter = powerHistories.stream().filter(pw -> null != pw.getPower() && pw.getPower() != 0d).collect(Collectors.toList());
+            instrumentService.doBatchCreate(filter);
         }
     }
 }

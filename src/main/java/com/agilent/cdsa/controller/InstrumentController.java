@@ -7,6 +7,7 @@ import com.agilent.cdsa.common.util.PythonUtil;
 import com.agilent.cdsa.dto.InstrumentDto;
 import com.agilent.cdsa.dto.XiaomiHumitureDto;
 import com.agilent.cdsa.service.InstrumentService;
+import com.agilent.cdsa.service.InstrumentStateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class InstrumentController {
 
     @Autowired
     private InstrumentService instrumentService;
+    @Autowired
+    private InstrumentStateService instrumentStateService;
 
     @ApiOperation("仪器总览界面主查询")
     @RequestMapping(value = "list", method = RequestMethod.GET)

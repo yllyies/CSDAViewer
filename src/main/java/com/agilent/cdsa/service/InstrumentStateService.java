@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface InstrumentStateService {
 
-    List<InstrumentState> doFindByIds(List<BigDecimal> ids);
+    List<InstrumentState> doFindByInstrumentIdIn(List<BigDecimal> instrumentIds);
 
 }

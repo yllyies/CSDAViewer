@@ -117,10 +117,8 @@ public class InstrumentServiceImpl implements InstrumentService {
         log.info("get data from cdsa extra program api, total:" + result.size());
         // 处理仪器运行时间，收集 Prerun Running 状态的数据
         List<BigDecimal> instrumentIds = result.stream().map(InstrumentDto::getInstrumentId).map(BigDecimal::new).collect(Collectors.toList());
-        List<InstrumentState> instrumentStates = instrumentStateService.doFindByIds(instrumentIds);
-        Map<BigDecimal, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
-                StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(InstrumentState::getInstrumentId, Collectors.mapping(InstrumentState::getInstrumentRuntime, Collectors.counting())));
-
+        List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
+        Map<BigDecimal, Long> instrumentIdToCountMap = instrumentStates.stream().collect(Collectors.groupingBy(InstrumentState::getInstrumentId, Collectors.mapping(InstrumentState::getInstrumentRuntime, Collectors.counting())));
         this.processDisplayField(result, instrumentIdToCountMap);
         return result;
     }
