@@ -48,4 +48,9 @@ public class CodeListConstant {
     public static final String INSTRUMENT_STATE_COLOR_SLEEP = "#ffd700";
     public static final String INSTRUMENT_STATE_COLOR_OFFLINE = "#343a40";
     public static final String INSTRUMENT_STATE_COLOR_UNKNOWN = "#343a40";
+
+    /**
+     * 空值
+     */
+    public static final String NONE = "None";
 }

@@ -17,6 +17,8 @@ public class InstrumentState implements Serializable {
 
     @Id
     @Column(nullable = false)
+    private String id;
+    @Column
     private BigDecimal instrumentId;
     @Column
     private String instrumentName;
@@ -26,6 +28,14 @@ public class InstrumentState implements Serializable {
     private String instrumentState;
     @Column
     private Integer instrumentRuntime;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public BigDecimal getInstrumentId() {
         return instrumentId;

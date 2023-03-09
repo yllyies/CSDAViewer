@@ -117,10 +117,8 @@ public class InstrumentServiceImpl implements InstrumentService {
         log.info("get data from cdsa extra program api, total:" + result.size());
         // 处理仪器运行时间，收集 Prerun Running 状态的数据
         List<BigDecimal> instrumentIds = result.stream().map(InstrumentDto::getInstrumentId).map(BigDecimal::new).collect(Collectors.toList());
-        List<InstrumentState> instrumentStates = instrumentStateService.doFindByIds(instrumentIds);
-        Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
-                StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.mapping(InstrumentState::getInstrumentRuntime, Collectors.counting())));
-
+        List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
+        Map<BigDecimal, Long> instrumentIdToCountMap = instrumentStates.stream().collect(Collectors.groupingBy(InstrumentState::getInstrumentId, Collectors.mapping(InstrumentState::getInstrumentRuntime, Collectors.counting())));
         this.processDisplayField(result, instrumentIdToCountMap);
         return result;
     }
@@ -131,7 +129,7 @@ public class InstrumentServiceImpl implements InstrumentService {
      * @param result 需要返回的仪器信息
      * @param instrumentIdToCountMap 仪器ID对应数量
      */
-    private void processDisplayField(List<InstrumentDto> result, Map<String, Long> instrumentIdToCountMap) {
+    private void processDisplayField(List<InstrumentDto> result, Map<BigDecimal, Long> instrumentIdToCountMap) {
         // 处理运行时间和状态颜色
         for (InstrumentDto instrumentDto : result) {
             // 处理运行时间（分钟）

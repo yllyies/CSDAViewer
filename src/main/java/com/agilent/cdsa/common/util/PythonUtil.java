@@ -26,9 +26,9 @@ import java.util.Properties;
 @Component
 public class PythonUtil {
 
-    public static final String PARAMNAME_XIAOMI_HUMITURE_DIDLIST = "xiaomi.humiture.didlist";
-    public static final String PARAMNAME_XIAOMI_USERNAME = "xiaomi.username";
-    public static final String PARAMNAME_XIAOMI_PASSWORD = "xiaomi.password";
+    public static final String PARAMNAME_XIAOMI_HUMITURE_DIDLIST = "xiaomi.humiture.did";
+    public static final String PARAMNAME_XIAOMI_HUMITURE_IP = "xiaomi.humiture.ip";
+    public static final String PARAMNAME_XIAOMI_HUMITURE_TOKEN = "xiaomi.humiture.token";
     public static final String FILENAME_HUMITURE_PYTHON = "/static/py/humiture.py";
     public static final String PARAMNAME_XIAOMI_INFO_PROPERTIES = "application-xiaomi-info.properties";
 
@@ -38,7 +38,7 @@ public class PythonUtil {
      *
      * @return 仪器功率记录集合
      */
-    public static List<XiaomiHumitureDto> doGetHumitureInfo() {
+    public static XiaomiHumitureDto doGetHumitureInfo() {
         StringBuilder message = new StringBuilder();
         Properties properties = null;
         try {
@@ -51,8 +51,8 @@ public class PythonUtil {
         try {
             ClassPathResource classPathResource = new ClassPathResource(FILENAME_HUMITURE_PYTHON);
 
-            String[] args = new String[]{"python", classPathResource.getAbsolutePath(), properties.getProperty(PARAMNAME_XIAOMI_USERNAME),
-                    properties.getProperty(PARAMNAME_XIAOMI_PASSWORD), properties.getProperty(PARAMNAME_XIAOMI_HUMITURE_DIDLIST)};
+            String[] args = new String[]{"python", classPathResource.getAbsolutePath(), properties.getProperty(PARAMNAME_XIAOMI_HUMITURE_IP),
+                    properties.getProperty(PARAMNAME_XIAOMI_HUMITURE_TOKEN), properties.getProperty(PARAMNAME_XIAOMI_HUMITURE_DIDLIST)};
 
             Process proc = Runtime.getRuntime().exec(args);// 执行py文件
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
@@ -67,33 +67,17 @@ public class PythonUtil {
             e.printStackTrace();
 //            throw new BusinessException("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
         }
-
-        if (JSONUtil.isJsonArray(message.toString())) {
-
-            JSONArray jsonArray = JSONUtil.parseArray(message.toString());
-            List<XiaomiHumitureDto> result = new ArrayList<>();
-            for (Object obj : jsonArray) {
-                if (obj == null) {
-                    continue;
-                }
-                JSONObject jsonObject = (JSONObject) obj;
-                String did = jsonObject.get("did", String.class, Boolean.TRUE);
-                if (StrUtil.isNotBlank(did)) {
-                    JSONObject prop = jsonObject.get("prop", JSONObject.class, Boolean.TRUE);
-                    String temperature = prop.get("temperature", String.class, true);
-                    String humidity = prop.get("humidity", String.class, true);
-                    if (StrUtil.isBlank(temperature) || StrUtil.isBlank(humidity)) {
-                        result.add(new XiaomiHumitureDto(did, jsonObject.get("name", String.class), "None", "None"));
-                    } else {
-                        result.add(new XiaomiHumitureDto(did, jsonObject.get("name", String.class),
-                                NumberUtil.div(temperature, "100", 1, RoundingMode.HALF_UP).toString(),
-                                NumberUtil.div(humidity, "100", 1, RoundingMode.HALF_UP).toString()));
-                    }
-                }
+        if (JSONUtil.isJsonObj(message.toString())) {
+            JSONObject jsonObject = JSONUtil.parseObj(message.toString());
+            String temperature = jsonObject.get("temperature", String.class, true);
+            String humidity = jsonObject.get("humidity", String.class, true);
+            if (StrUtil.isNotBlank(temperature) && StrUtil.isNotBlank(humidity)) {
+                return new XiaomiHumitureDto(NumberUtil.div(temperature, "100", 1, RoundingMode.HALF_UP).toString(),
+                        NumberUtil.div(humidity, "100", 1, RoundingMode.HALF_UP).toString());
             }
-            return result;
         }
-        return new ArrayList<>();
+
+        return new XiaomiHumitureDto("None", "None");
     }
 
     /**

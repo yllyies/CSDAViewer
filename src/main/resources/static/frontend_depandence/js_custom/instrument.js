@@ -32,7 +32,8 @@ function autoScroll(eleId,childId) {
 		scrollAnimateTime = 1000,  //滚动动画的持续时间, 毫秒
 		innerHeight = $(eleId).innerHeight();
 	function scrollFun() {
-	    if(scrollItem.scrollTop() + innerHeight >= $('#' + eleId).prop("scrollHeight")){
+	    if (scrollItem.scrollTop() + innerHeight >= $('#' + eleId).prop("scrollHeight") ||
+	        scrollItem.scrollTop() + innerHeight == 0){
             // 重新查询结果
             window.location.reload();
         }

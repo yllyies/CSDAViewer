@@ -1,5 +1,6 @@
 package com.agilent.cdsa.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.agilent.cdsa.model.InstrumentState;
 import com.agilent.cdsa.repository.InstrumentStateDao;
 import com.agilent.cdsa.service.InstrumentStateService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +21,10 @@ public class InstrumentStateServiceImpl implements InstrumentStateService {
     private InstrumentStateDao instrumentStateDao;
 
     @Override
-    public List<InstrumentState> doFindByIds(List<BigDecimal> ids) {
-        return instrumentStateDao.findByInstrumentIdIn(ids);
+    public List<InstrumentState> doFindByInstrumentIdIn(List<BigDecimal> instrumentIds) {
+        if (CollUtil.isEmpty(instrumentIds)) {
+            return new ArrayList<>();
+        }
+        return instrumentStateDao.findByInstrumentIdIn(instrumentIds);
     }
 }
