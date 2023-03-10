@@ -1,9 +1,6 @@
 package com.agilent.cdsa.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -16,24 +13,25 @@ public class InstrumentState implements Serializable {
     private static final long serialVersionUID = 3905628661906255711L;
 
     @Id
-    @Column(nullable = false)
-    private String id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
+
     @Column
     private BigDecimal instrumentId;
     @Column
     private String instrumentName;
     @Column
     private String instrumentDescription;
-    @Column
+    @Column(name = "instrument_state")
     private String instrumentState;
     @Column
     private Integer instrumentRuntime;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

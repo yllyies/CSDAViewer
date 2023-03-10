@@ -31,7 +31,7 @@ public class InstrumentDto implements Serializable {
     @ApiModelProperty("序列名称")
     private String sequenceName;
     @ApiModelProperty("提交时间")
-    private String commitTime;
+    private String updateTime;
     @ApiModelProperty("当前样品名称")
     private String sampleName;
     @ApiModelProperty("当前样品第几针")
@@ -51,6 +51,8 @@ public class InstrumentDto implements Serializable {
     private String runtimeString;
     @ApiModelProperty("进度条百分比长度")
     private String progressBarWidth;
+    @ApiModelProperty("序列提交时间")
+    private String commitTime;
 
 
 }

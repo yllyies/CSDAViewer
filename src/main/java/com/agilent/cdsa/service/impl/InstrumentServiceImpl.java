@@ -107,7 +107,7 @@ public class InstrumentServiceImpl implements InstrumentService {
         }
         log.info("cdsa extra program response:" + responseStr);
         cn.hutool.json.JSONObject jsonObject = JSONUtil.parseObj(responseStr);
-        InstrumentDto[] instrumentStateList = jsonObject.get("array", InstrumentDto[].class);
+        InstrumentDto[] instrumentStateList = jsonObject.get("instrument_state", InstrumentDto[].class);
         List<InstrumentDto> result = Arrays.asList(instrumentStateList);
 
         if (CollUtil.isEmpty(result)) {
@@ -118,7 +118,8 @@ public class InstrumentServiceImpl implements InstrumentService {
         // 处理仪器运行时间，收集 Prerun Running 状态的数据
         List<BigDecimal> instrumentIds = result.stream().map(InstrumentDto::getInstrumentId).map(BigDecimal::new).collect(Collectors.toList());
         List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
-        Map<BigDecimal, Long> instrumentIdToCountMap = instrumentStates.stream().collect(Collectors.groupingBy(InstrumentState::getInstrumentId, Collectors.mapping(InstrumentState::getInstrumentRuntime, Collectors.counting())));
+        Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
+                StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
         this.processDisplayField(result, instrumentIdToCountMap);
         return result;
     }
@@ -129,20 +130,22 @@ public class InstrumentServiceImpl implements InstrumentService {
      * @param result 需要返回的仪器信息
      * @param instrumentIdToCountMap 仪器ID对应数量
      */
-    private void processDisplayField(List<InstrumentDto> result, Map<BigDecimal, Long> instrumentIdToCountMap) {
+    private void processDisplayField(List<InstrumentDto> result, Map<String, Long> instrumentIdToCountMap) {
         // 处理运行时间和状态颜色
         for (InstrumentDto instrumentDto : result) {
             // 处理运行时间（分钟）
             if (instrumentIdToCountMap.containsKey(instrumentDto.getInstrumentId())) {
                 instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
+            } else {
+                log.warn("仪器运行时间获取失败：仪器功率" + instrumentIdToCountMap.keySet() +  "当前仪器ID：" + instrumentDto.getInstrumentId());
             }
-            // 处理序列运行
+            // 处理序列运行状态
             if (null != instrumentDto.getSampleTotal() && instrumentDto.getSampleTotal() != 0) {
                 instrumentDto.setSequenceInfo((instrumentDto.getCurrentSample() == null ? "0" : instrumentDto.getCurrentSample()) + " / " + instrumentDto.getSampleTotal());
             }
             // 处理进度条
             if (null != instrumentDto.getCurrentSample() && null != instrumentDto.getSampleTotal() && instrumentDto.getSampleTotal() != 0) {
-                instrumentDto.setProgressBarWidth(NumberUtil.formatPercent((float) instrumentDto.getCurrentSample() / (float) instrumentDto.getSampleTotal() * 100, 2) + "%");
+                instrumentDto.setProgressBarWidth(NumberUtil.formatPercent((float) instrumentDto.getCurrentSample() / (float) instrumentDto.getSampleTotal(), 2));
             }
             // 处理仪器状态颜色
             String instrumentState = instrumentDto.getInstrumentState();

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,18 +34,49 @@ public class InstrumentController {
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public ModelAndView list() {
         ModelAndView modelAndView = new ModelAndView("instrument/index");
-        List<InstrumentDto> instruments = instrumentService.doFindInstrumentsByRemote();
+        List<InstrumentDto> agilentInstruments = instrumentService.doFindInstrumentsByRemote();
+        List<InstrumentDto> result = new ArrayList<>(agilentInstruments);
         List<InstrumentDto> thirdPartyInstruments = instrumentService.doFindThirdPartyInstruments();
-        instruments.addAll(thirdPartyInstruments);
-        modelAndView.getModel().put("dataSource", instruments); // 仪器状态结果集
-        Map<String, Long> stateToCountMap = instruments.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
-        modelAndView.getModel().put("systemTotal", instruments.size()); // 总数
-        modelAndView.getModel().put("runningCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_PRERUN, CodeListConstant.INSTRUMENT_STATE_RUNNING).values().size()); // 运行
-        modelAndView.getModel().put("notReadyCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY, CodeListConstant.INSTRUMENT_STATE_SLEEP).values().size()); // 空闲
-        modelAndView.getModel().put("idleCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE).values().size()); // 空闲
-        modelAndView.getModel().put("errorCount", 0); // 错误
-        modelAndView.getModel().put("offlineCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT).values().size()); // 离线
-        modelAndView.getModel().put("unknownCount", MapUtil.getAny(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_UNKNOWN).values().size()); // 未知
+        result.addAll(thirdPartyInstruments);
+        // 模拟数据
+        InstrumentDto instrumentDto = new InstrumentDto();
+        instrumentDto.setInstrumentId("100");
+        instrumentDto.setInstrumentName("Monitor-02");
+        instrumentDto.setCommitTime(CodeListConstant.INSTRUMENT_STATE_RUNNING);
+        instrumentDto.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_RUNNING);
+        instrumentDto.setColor(CodeListConstant.INSTRUMENT_STATE_COLOR_RUNNING);
+        instrumentDto.setInstrumentDescription("运行中");
+        result.add(instrumentDto);
+        InstrumentDto instrumentDto2 = new InstrumentDto();
+        instrumentDto2.setInstrumentId("101");
+        instrumentDto2.setInstrumentName("Monitor-01");
+        instrumentDto2.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
+        instrumentDto2.setColor(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
+        instrumentDto2.setInstrumentDescription("关机");
+        result.add(instrumentDto2);
+
+        modelAndView.getModel().put("dataSource", result); // 仪器状态结果集
+        Map<String, Long> stateToCountMap = result.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
+        modelAndView.getModel().put("systemTotal", result.size()); // 总数
+
+        if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_RUNNING)) {
+            modelAndView.getModel().put("runningCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING));
+        }
+        if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_NOT_READY)) {
+            modelAndView.getModel().put("notReadyCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY));
+        }
+        if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_IDLE)) {
+            modelAndView.getModel().put("idleCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE));
+        }
+        if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_ERROR)) {
+            modelAndView.getModel().put("errorCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR));
+        }
+        if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT)) {
+            modelAndView.getModel().put("offlineCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT));
+        }
+        if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_UNKNOWN)) {
+            modelAndView.getModel().put("unknownCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_UNKNOWN));
+        }
         // 获取温湿度信息
         XiaomiHumitureDto xiaomiHumitureDto = PythonUtil.doGetHumitureInfo();
         if (CodeListConstant.NONE.equals(xiaomiHumitureDto.getTemperature()) && CodeListConstant.NONE.equals(xiaomiHumitureDto.getHumidity())) {

@@ -11,14 +11,14 @@
 
 	<appender name="fileInfoLog"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_HOME}/cds_assistant.log</file>
+		<file>${LOG_HOME}/cdsa.log</file>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</Pattern>
 		</encoder>
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 			<!-- 按天回滚 daily -->
-			<fileNamePattern>${LOG_HOME}/cds_assistant_log-%d{yyyy-MM-dd}.%i.log
+			<fileNamePattern>${LOG_HOME}/cdsa_log-%d{yyyy-MM-dd}.%i.log
 			</fileNamePattern>
 			<!-- 日志最大的历史 100天 -->
 			<maxHistory>${MAX_HISTORY}</maxHistory>

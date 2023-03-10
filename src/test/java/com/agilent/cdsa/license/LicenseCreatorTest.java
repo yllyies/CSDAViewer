@@ -20,17 +20,17 @@ public class LicenseCreatorTest {
         // 生成license需要的一些参数
         LicenseProperties param = new LicenseProperties();
         // 证书授权主体
-        param.setSubject("cdsAssistant");
+        param.setSubject("cdsa");
         // 私钥别名
-        param.setPrivateAlias("cdsAssistant_privateKey");
+        param.setPrivateAlias("cdsa_privateKey");
         // 私钥密码（需要妥善保管，不能让使用者知道）
         param.setKeyPass("agilent@123");
         // 访问私钥库的密码
         param.setStorePass("agilent@123");
         // 证书存储地址
-        param.setLicensePath("license/cdsAssistant_license.lic");
+        param.setLicensePath("license/cdsa_license.lic");
         // 私钥库所在地址
-        param.setPrivateKeysStorePath("license/cdsAssistant_privateKeys.keystore");
+        param.setPrivateKeysStorePath("license/cdsa_privateKeys.keystore");
         // 证书生效时间
         Calendar issueCalendar = Calendar.getInstance();
         param.setIssuedTime(issueCalendar.getTime());

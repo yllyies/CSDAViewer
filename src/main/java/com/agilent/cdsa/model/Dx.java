@@ -26,9 +26,6 @@ public class Dx implements Serializable
     @Column(length = 1024)
     private String name;
 
-    @Column(length = 30)
-    private String uploaded;
-
     @Column
     private Integer methodSetTime;
 
@@ -44,9 +41,9 @@ public class Dx implements Serializable
     @Column
     private BigDecimal filePath;
 
-    @Column(name = "uploaded_date")
+    @Column(name = "updated_date")
     @JsonFormat(pattern = "MM/dd/yyyy")
-    private Timestamp uploadedDate;
+    private Timestamp updatedDate;
 
     @ManyToOne(targetEntity = Rslt.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_node_id", insertable = false, updatable = false)
@@ -74,14 +71,6 @@ public class Dx implements Serializable
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUploaded() {
-        return uploaded;
-    }
-
-    public void setUploaded(String uploaded) {
-        this.uploaded = uploaded;
     }
 
     public Integer getMethodSetTime() {
@@ -124,12 +113,12 @@ public class Dx implements Serializable
         this.filePath = filePath;
     }
 
-    public Timestamp getUploadedDate() {
-        return uploadedDate;
+    public Timestamp getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setUploadedDate(Timestamp uploadedDate) {
-        this.uploadedDate = uploadedDate;
+    public void setUpdatedDate(Timestamp updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     public Rslt getRslt() {

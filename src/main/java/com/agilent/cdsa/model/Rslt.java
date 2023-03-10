@@ -36,15 +36,9 @@ public class Rslt implements Serializable
     @Column
     private String creator;
 
-    @Column
-    private String created;
-
     @Column(name = "created_date")
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Timestamp createdDate;
-
-    @Column
-    private Boolean isSqxRslt;
 
     @Column(name = "project_id", insertable = false, updatable = false)
     private BigDecimal projectId;
@@ -115,28 +109,12 @@ public class Rslt implements Serializable
         this.creator = creator;
     }
 
-    public String getCreated() {
-        return created;
-    }
-
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
     public Timestamp getCreatedDate() {
         return createdDate;
     }
 
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public Boolean getSqxRslt() {
-        return isSqxRslt;
-    }
-
-    public void setSqxRslt(Boolean sqxRslt) {
-        isSqxRslt = sqxRslt;
     }
 
     public BigDecimal getProjectId() {

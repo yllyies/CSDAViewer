@@ -26,7 +26,7 @@ public interface DxDao extends JpaRepository<Dx, BigDecimal>, JpaSpecificationEx
     @Query(value = "select dx,rslt,p from Dx dx " +
             "left join Rslt rslt on dx.parentNodeId = rslt.nodeId " +
             "left join Project p on rslt.projectId = p.id " +
-            "where dx.uploadedDate between :startDate and :endDate " +
+            "where dx.updatedDate between :startDate and :endDate " +
             "and rslt.instrumentName in (:instrumentNames) ")
     List<Object[]> doQueryInstrumentNames(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
                                           @Param("instrumentNames") List<String> instrumentNames);
@@ -34,7 +34,7 @@ public interface DxDao extends JpaRepository<Dx, BigDecimal>, JpaSpecificationEx
     @Query(value = "select dx,rslt,p from Dx dx " +
             "left join Rslt rslt on dx.parentNodeId = rslt.nodeId " +
             "left join Project p on rslt.projectId = p.id " +
-            "where dx.uploadedDate between :startDate and :endDate " +
+            "where dx.updatedDate between :startDate and :endDate " +
             "and p.name in (:projectNames) ")
     List<Object[]> doQueryProjectNames(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
                                        @Param("projectNames") List<String> projectNames);
@@ -42,7 +42,7 @@ public interface DxDao extends JpaRepository<Dx, BigDecimal>, JpaSpecificationEx
     @Query(value = "select dx,rslt,p from Dx dx " +
             "left join Rslt rslt on dx.parentNodeId = rslt.nodeId " +
             "left join Project p on rslt.projectId = p.id " +
-            "where dx.uploadedDate between :startDate and :endDate " +
+            "where dx.updatedDate between :startDate and :endDate " +
             "and rslt.creator in (:creatorNames) ")
     List<Object[]> doQueryCreatorNames(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
                                        @Param("creatorNames") List<String> creatorNames);

@@ -123,11 +123,8 @@
               <div class="form-group row" >
                 <label class="control-label col-md-2 col-sm-3 " style="margin-left:5%;font-size:15px;font-weight:bold;">查询时间</label>
                 <div class="col-md-9 col-sm-9 " id="year_selector_div">
-                  <select id="year_selector" multiple="multiple">
-                    <option value="2019">2019</option>
-                    <option value="2020">2020</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
+                  <select id="year_selector" multiple="multiple" class="form-control">
+                    <option th:each="item:${yearRange}" th:value="${item}" th:text="${item}"></option>
                   </select>
                 </div>
               </div>

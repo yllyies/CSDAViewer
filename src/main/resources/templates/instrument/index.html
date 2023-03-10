@@ -112,13 +112,13 @@
                 <tr>
                   <th width="8%">状态</th>
                   <th width="15%">仪器名称</th>
-                  <th width="15%">描述</th>
+<!--                  <th width="15%">描述</th>-->
                   <th width="15%">项目</th>
                   <th width="12%">操作用户</th>
                   <th width="12%">登录用户</th>
                   <th width="15%">序列名称</th>
                   <th width="15%">提交时间</th>
-                  <th width="25%">当前样品</th>
+                  <th width="20%">当前样品</th>
                   <th width="12%">运行时间</th>
                   <th width="12%">运行状态</th>
                 </tr>
@@ -131,19 +131,20 @@
                 <tr id="datatable-tr" th:each="item:${dataSource}">
                   <td width="8%"><i class="fa fa-square fa-2x" th:if="${not #strings.isEmpty(item.color)}" th:style="'color:' + ${item.color}"></i></td>
                   <td width="15%" th:text="${item.instrumentName}"></td>
-                  <td width="15%" th:text="${item.instrumentDescription}"></td>
+<!--                  <td width="15%" th:text="${item.instrumentDescription}"></td>-->
 <!--                  <td width="10%">LC</td>-->
                   <td width="15%" th:text="${item.projectName}"></td>
                   <td width="12%" th:text="${item.commitUser}"></td>
                   <td width="12%" th:text="${item.acqUser}"></td>
                   <td width="15%" th:text="${item.sequenceName}"></td>
-                  <td width="15%" th:text="${item.commitTime}"></td>
-                  <td width="25%" th:text="${item.sampleName}"></td>
+<!--                  <td width="15%" th:text="${item.commitTime}"></td>-->
+                  <td width="15%" th:text="${item.updateTime}"></td>
+                  <td width="20%" th:text="${item.sampleName}"></td>
                   <td width="12%" th:text="${item.runtimeString}"></td>
                   <td width="12%">
                     <div class="progress" th:if="${not #strings.isEmpty(item.sequenceInfo)}">
                       <div class="progress-bar bg-success" role="progressbar" th:style="'width:' + ${item.progressBarWidth}" aria-valuemin="0" aria-valuemax="100">
-                        <span th:text="${item.sequenceInfo}"></span>
+                        <span th:text="${item.sequenceInfo}" style="color:black"></span>
                       </div>
                     </div>
                   </td>

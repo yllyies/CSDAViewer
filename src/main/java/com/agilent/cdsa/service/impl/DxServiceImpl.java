@@ -49,7 +49,7 @@ public class DxServiceImpl implements DxService {
         List<String> lineLabels = new ArrayList<>(); // 线图x轴：时间
         List<ChartDatasetDto> lineDatasets = new ArrayList<>(); // 数据结果：数组，一个元素对应一个仪器，所包含的data:[]对应每个时间点仪器耗时
         List<Long> doughnutDatasets = new ArrayList<>(); // 数据结果：数组，一个元素对应一个年份，所包含的map:[]对应一个年份下所有仪器耗时
-        List<TableDatasetDto> tableDatasets = new ArrayList<>();
+        List<TableDatasetDto> tableDatasets = new ArrayList<>(); // 数据结果：表格
         TreeMap<DateTime, DateTime> startToEndMap = new TreeMap<>();
         Map<String, Integer> dateStrToWorkHoursMap = new HashMap<>();
 
@@ -61,8 +61,10 @@ public class DxServiceImpl implements DxService {
             List<String> instrumentNamesAll = rslts.stream().map(Rslt::getInstrumentName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
             List<String> projectNamesAll = rslts.stream().map(Rslt::getProject).map(Project::getName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
             List<String> creatorsAll = rslts.stream().map(Rslt::getCreator).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
+            List<Integer> yearRange = rslts.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).collect(Collectors.toList());
             return new HashMap<>() {{
                 put("instrumentNames", instrumentNamesAll);
+                put("yearRange", yearRange);
                 put("projectNames", projectNamesAll);
                 put("creators", creatorsAll);
                 put("barLabels", barLabels);// 时间标签
@@ -106,11 +108,11 @@ public class DxServiceImpl implements DxService {
             for (Object[] objects : result) {
                 Dx dx = (Dx) objects[0];
                 Rslt rslt = (Rslt) objects[1];
-                Timestamp uploadedDate = dx.getUploadedDate();
+                Timestamp updatedDate = dx.getUpdatedDate();
                 Integer collectedTime = dx.getCollectedTime();
                 for (DateTime key : startToEndMap.navigableKeySet()) {
                     String dateFormate = formateByTimeUnit(timeUnit, key);
-                    if (DateUtil.isIn(uploadedDate, key, startToEndMap.get(key))) {
+                    if (DateUtil.isIn(updatedDate, key, startToEndMap.get(key))) {
                         if (graphMap.contains(rslt.getInstrumentName(), dateFormate)) {
                             BigDecimal add = new BigDecimal(graphMap.get(rslt.getInstrumentName(), dateFormate)).add(new BigDecimal(collectedTime));
                             graphMap.put(rslt.getInstrumentName(), dateFormate, add.longValue());
@@ -129,11 +131,11 @@ public class DxServiceImpl implements DxService {
             for (Object[] objects : result) {
                 Dx dx = (Dx) objects[0];
                 Project project = (Project) objects[2];
-                Timestamp uploadedDate = dx.getUploadedDate();
+                Timestamp updatedDate = dx.getUpdatedDate();
                 Integer collectedTime = dx.getCollectedTime();
                 for (DateTime key : startToEndMap.navigableKeySet()) {
                     String dateFormate = formateByTimeUnit(timeUnit, key);
-                    if (DateUtil.isIn(uploadedDate, key, startToEndMap.get(key))) {
+                    if (DateUtil.isIn(updatedDate, key, startToEndMap.get(key))) {
                         if (graphMap.contains(project.getName(), dateFormate)) {
                             BigDecimal add = new BigDecimal(graphMap.get(project.getName(), dateFormate)).add(new BigDecimal(collectedTime));
                             graphMap.put(project.getName(), dateFormate, add.longValue());
@@ -153,7 +155,7 @@ public class DxServiceImpl implements DxService {
             for (Object[] objects : result) {
                 Dx dx = (Dx) objects[0];
                 Rslt rslt = (Rslt) objects[1];
-                Timestamp uploadedDate = dx.getUploadedDate();
+                Timestamp uploadedDate = dx.getUpdatedDate();
                 Integer collectedTime = dx.getCollectedTime();
                 for (DateTime key : startToEndMap.navigableKeySet()) {
                     String dateFormate = formateByTimeUnit(timeUnit, key);
@@ -168,17 +170,18 @@ public class DxServiceImpl implements DxService {
                     }
                 }
             }
-
         }
 
         processData(graphMap, dateStrToWorkHoursMap, barLabels, barDatasets, lineLabels, lineDatasets, doughnutDatasets, tableDatasets);
         // 查询所有仪器信息
         List<Rslt> rslts = rsltDao.findAll();
         List<String> instrumentNamesAll = rslts.stream().map(Rslt::getInstrumentName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
+        List<Integer> yearRange = rslts.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).collect(Collectors.toList());
         List<String> projectNamesAll = rslts.stream().map(Rslt::getProject).map(Project::getName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
         List<String> creatorsAll = rslts.stream().map(Rslt::getCreator).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
         return new HashMap<>() {{
             put("instrumentNames", instrumentNamesAll);
+            put("yearRange", yearRange);
             put("projectNames", projectNamesAll);
             put("creators", creatorsAll);
             put("barLabels", barLabels);
@@ -206,7 +209,7 @@ public class DxServiceImpl implements DxService {
                 }
                 ChartDatasetDto chartDatasetDto = new ChartDatasetDto(label, "transparent", CodeListConstant.COLOR_LIST[i], new ArrayList<>());
                 for (String date : lineLabels) {
-                    var time = RandomUtil.randomLong(180000, 720000) / 3600;
+                    var time = RandomUtil.randomLong(4320, 8640) / 360; // 模拟数据
                     tableDatasets.add(new TableDatasetDto(label, date, time, df.format((float) time * 100 / dateStrToWorkHoursMap.get(date))));
                     chartDatasetDto.getData().add(time);
                 }
@@ -216,25 +219,21 @@ public class DxServiceImpl implements DxService {
             Map<String, Long> row = graphMap.row(label);
             // 柱状图数据处理
             for (ChartDatasetDto chartDatasetDto : barDatasets) {
-                chartDatasetDto.getData().add(row.getOrDefault(chartDatasetDto.getLabel(), RandomUtil.randomLong(180000, 720000)) / 3600);
+                chartDatasetDto.getData().add(row.getOrDefault(chartDatasetDto.getLabel(), RandomUtil.randomLong(4320, 8640)) / 360); // 模拟数据
             }
             // 线性图
             ChartDatasetDto chartDatasetDto = new ChartDatasetDto(label, "transparent", CodeListConstant.COLOR_LIST[i], new ArrayList<>());
             for (String lineLabel : lineLabels) {
-                var time = row.getOrDefault(lineLabel, RandomUtil.randomLong(180000, 720000)) / 3600;
-                tableDatasets.add(new TableDatasetDto(lineLabel, lineLabel, time, df.format((float) time * 100 / dateStrToWorkHoursMap.get(lineLabel))));
+                var time = row.getOrDefault(lineLabel, RandomUtil.randomLong(4320, 8640)) / 360; // 模拟数据
+                tableDatasets.add(new TableDatasetDto(label, lineLabel, time, df.format((float) time * 100 / dateStrToWorkHoursMap.get(lineLabel))));
                 chartDatasetDto.getData().add(time);
             }
             lineDatasets.add(chartDatasetDto);
             // 饼状图
             Long sum = (row.values().stream().reduce(Long::sum).isPresent() ?
-                    row.values().stream().reduce(Long::sum).get() : RandomUtil.randomLong(180000, 720000)) / 3600;
+                    row.values().stream().reduce(Long::sum).get() : RandomUtil.randomLong(4320, 8640)) / 360; // 模拟数据
             doughnutDatasets.add(sum);
         }
-        // 线图颜色不重复
-//        for (int i = 0; i < lineDatasets.size(); i++) {
-//            lineDatasets.get(i).setBorderColor(CodeListConstant.COLOR_LIST[i]);
-//        }
     }
 
     private void processDaterangeByTimeUnit(List<ChartDatasetDto> barDatasets, TreeMap<DateTime, DateTime> startToEndMap, String timeUnit, DateTime startTime, DateTime endTime, int years) {

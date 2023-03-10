@@ -76,7 +76,6 @@ public class PythonUtil {
                         NumberUtil.div(humidity, "100", 1, RoundingMode.HALF_UP).toString());
             }
         }
-
         return new XiaomiHumitureDto("None", "None");
     }
 
