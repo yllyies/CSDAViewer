@@ -12,8 +12,7 @@
 	<artifactId>cdsa</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>cdsa</name>
-	<packaging>war</packaging>
-	<description>CDSA Data Viewer</description>
+	<description>CDS Assistant Viewer</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,13 +25,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<!-- 排除 SpringBoot 自带 Tomcat-->
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -161,19 +153,12 @@
 			<artifactId>guava</artifactId>
 			<version>30.0-jre</version>
 		</dependency>
-		<!--打包-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -204,4 +189,3 @@
 		</plugins>
 	</build>
 </project>
-
