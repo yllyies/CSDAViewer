@@ -104,7 +104,6 @@ public class InstrumentServiceImpl implements InstrumentService {
             log.warn("get data from cdsa extra program api without response -------" + responseStr);
             return new ArrayList<>();
         }
-        log.info("cdsa extra program response:" + responseStr);
         cn.hutool.json.JSONObject jsonObject = JSONUtil.parseObj(responseStr);
         InstrumentDto[] instrumentStateList = jsonObject.get("instrument_state", InstrumentDto[].class);
         List<InstrumentDto> result = Arrays.asList(instrumentStateList);
@@ -113,7 +112,6 @@ public class InstrumentServiceImpl implements InstrumentService {
             log.warn("get data from cdsa extra program api without response");
             return new ArrayList<>();
         }
-        log.info("get data from cdsa extra program api, total:" + result.size());
         // 处理仪器实时状态前端展示字段
         this.processDisplayField(result);
         return result;
@@ -134,7 +132,10 @@ public class InstrumentServiceImpl implements InstrumentService {
     private void processDisplayField(List<InstrumentDto> result) {
         for (InstrumentDto instrumentDto : result) {
             // 处理序列运行时间（分钟）
-            instrumentDto.setExecuteTime(DateUtil.formatBetween(DateUtil.date(), DateUtil.parse(instrumentDto.getUpdateTime(), CodeListConstant.ISO_DATETIME_FORMAT), BetweenFormater.Level.MINUTE));
+            if (StrUtil.isNotBlank(instrumentDto.getUpdateTime())) {
+                instrumentDto.setExecuteTime(DateUtil.formatBetween(DateUtil.date(),
+                        DateUtil.parse(instrumentDto.getUpdateTime(), CodeListConstant.ISO_DATETIME_FORMAT), BetweenFormater.Level.SECOND));
+            }
             // 处理序列运行状态
             if (null != instrumentDto.getSampleTotal() && instrumentDto.getSampleTotal() != 0) {
                 instrumentDto.setSequenceInfo((instrumentDto.getCurrentSample() == null ? "0" : instrumentDto.getCurrentSample()) + " / " + instrumentDto.getSampleTotal());
