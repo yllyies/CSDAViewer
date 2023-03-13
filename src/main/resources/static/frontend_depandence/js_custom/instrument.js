@@ -28,23 +28,23 @@ function autoScroll(eleId,childId) {
 		scrollItem = $('#' + eleId), //需要上下移动内容的父元素
 		ele = document.getElementById(eleId),
 		scrollItemchildren = $('#' + childId).height() * 10, //每次移动的距离
-		scrollTimeTnterval = 20000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(eleId).scrollTop() 会慢慢变小的BUG )
-		scrollAnimateTime = 1000,  //滚动动画的持续时间, 毫秒
+		scrollTimeTnterval = 2000,  //滚动间隔, 单位毫秒      必须大于下面的 滚动动画的持续时间(超过的多一点好)  !!!!!!  否则会越滚越慢 (  $(eleId).scrollTop() 会慢慢变小的BUG )
+		scrollAnimateTime = 100,  //滚动动画的持续时间, 毫秒
 		innerHeight = $(eleId).innerHeight();
+	window.scrollCount = Math.round(ele.scrollHeight / scrollItemchildren);
 	function scrollFun() {
-	    if (scrollItem.scrollTop() + innerHeight >= $('#' + eleId).prop("scrollHeight") ||
-	        scrollItem.scrollTop() + innerHeight == 0){
-            // 重新查询结果
+        if (scrollCount == 0){
             window.location.reload();
         }
-		if (pause) {
-			return
-		}
-		let a = scrollItem.scrollTop();
-		console.log('向下滚动');
+        if (pause) {
+            return
+        }
         scrollItem.animate({
-            scrollTop: a + scrollItemchildren
-        }, scrollAnimateTime,'linear'); //滚动动画时间
+            scrollTop: scrollItem.scrollTop() + scrollItemchildren
+        }, scrollAnimateTime,'linear', function(){
+            window.scrollCount --;
+        }); //滚动动画时间
+
 	}
 	let sItval = setInterval(scrollFun, scrollTimeTnterval); //多久滚动一次
 	ele.onmouseover = function() {
