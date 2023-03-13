@@ -39,43 +39,50 @@ public class InstrumentController {
         List<InstrumentDto> thirdPartyInstruments = instrumentService.doFindThirdPartyInstruments();
         result.addAll(thirdPartyInstruments);
         // 模拟数据
-        InstrumentDto instrumentDto = new InstrumentDto();
-        instrumentDto.setInstrumentId("100");
-        instrumentDto.setInstrumentName("Monitor-02");
-        instrumentDto.setCommitTime(CodeListConstant.INSTRUMENT_STATE_RUNNING);
-        instrumentDto.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_RUNNING);
-        instrumentDto.setColor(CodeListConstant.INSTRUMENT_STATE_COLOR_RUNNING);
-        instrumentDto.setInstrumentDescription("运行中");
-        result.add(instrumentDto);
-        InstrumentDto instrumentDto2 = new InstrumentDto();
-        instrumentDto2.setInstrumentId("101");
-        instrumentDto2.setInstrumentName("Monitor-01");
-        instrumentDto2.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
-        instrumentDto2.setColor(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
-        instrumentDto2.setInstrumentDescription("关机");
-        result.add(instrumentDto2);
+//        InstrumentDto instrumentDto = new InstrumentDto();
+//        instrumentDto.setInstrumentId("100");
+//        instrumentDto.setInstrumentName("Monitor-02");
+//        instrumentDto.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_RUNNING);
+//        instrumentDto.setColor(CodeListConstant.INSTRUMENT_STATE_COLOR_RUNNING);
+//        instrumentDto.setInstrumentDescription("运行中");
+//        result.add(instrumentDto);
+//        InstrumentDto instrumentDto2 = new InstrumentDto();
+//        instrumentDto2.setInstrumentId("101");
+//        instrumentDto2.setInstrumentName("Monitor-01");
+//        instrumentDto2.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
+//        instrumentDto2.setColor(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
+//        instrumentDto2.setInstrumentDescription("关机");
+        for (int i = 100; i < 200; i++) {
+            InstrumentDto instrumentDto = new InstrumentDto();
+            instrumentDto.setInstrumentId(String.valueOf(i));
+            instrumentDto.setInstrumentName("Monitor" + i);
+            instrumentDto.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_RUNNING);
+            instrumentDto.setColor(CodeListConstant.INSTRUMENT_STATE_COLOR_RUNNING);
+            instrumentDto.setInstrumentDescription("运行中");
+            result.add(instrumentDto);
+        }
 
         modelAndView.getModel().put("dataSource", result); // 仪器状态结果集
         Map<String, Long> stateToCountMap = result.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
         modelAndView.getModel().put("systemTotal", result.size()); // 总数
 
         if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_RUNNING)) {
-            modelAndView.getModel().put("runningCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING));
+            modelAndView.getModel().put("runningCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING) == null ? "0": MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING));
         }
         if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_NOT_READY)) {
-            modelAndView.getModel().put("notReadyCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY));
+            modelAndView.getModel().put("notReadyCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY) == null ? "0": MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY));
         }
         if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_IDLE)) {
-            modelAndView.getModel().put("idleCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE));
+            modelAndView.getModel().put("idleCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE) == null ? "0": MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE));
         }
         if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_ERROR)) {
-            modelAndView.getModel().put("errorCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR));
+            modelAndView.getModel().put("errorCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR) == null ? "0": MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR));
         }
         if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT)) {
-            modelAndView.getModel().put("offlineCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT));
+            modelAndView.getModel().put("offlineCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT) == null ? "0": MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT));
         }
         if (stateToCountMap.containsKey(CodeListConstant.INSTRUMENT_STATE_UNKNOWN)) {
-            modelAndView.getModel().put("unknownCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_UNKNOWN));
+            modelAndView.getModel().put("unknownCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_UNKNOWN) == null ? "0": MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_UNKNOWN));
         }
         // 获取温湿度信息
         XiaomiHumitureDto xiaomiHumitureDto = PythonUtil.doGetHumitureInfo();

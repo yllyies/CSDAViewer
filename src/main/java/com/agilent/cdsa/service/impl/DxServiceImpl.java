@@ -6,16 +6,17 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.agilent.cdsa.model.Dx;
-import com.agilent.cdsa.model.Rslt;
+import com.agilent.cdsa.common.CodeListConstant;
 import com.agilent.cdsa.dto.AnalysisRequestDto;
 import com.agilent.cdsa.dto.ChartDatasetDto;
 import com.agilent.cdsa.dto.TableDatasetDto;
+import com.agilent.cdsa.model.Dx;
 import com.agilent.cdsa.model.Project;
+import com.agilent.cdsa.model.Rslt;
 import com.agilent.cdsa.repository.DxDao;
 import com.agilent.cdsa.repository.RsltDao;
 import com.agilent.cdsa.service.DxService;
-import com.agilent.cdsa.common.CodeListConstant;
+import com.agilent.cdsa.service.InstrumentStateService;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,12 @@ import java.util.stream.Collectors;
 @Service
 public class DxServiceImpl implements DxService {
 
-
     @Autowired
     private DxDao dxDao;
     @Autowired
     private RsltDao rsltDao;
+    @Autowired
+    private InstrumentStateService instrumentStateService;
 
     @Override
     public Map<String, Object> doQuery(AnalysisRequestDto analysisRequestDto) {
@@ -61,7 +63,7 @@ public class DxServiceImpl implements DxService {
             List<String> instrumentNamesAll = rslts.stream().map(Rslt::getInstrumentName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
             List<String> projectNamesAll = rslts.stream().map(Rslt::getProject).map(Project::getName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
             List<String> creatorsAll = rslts.stream().map(Rslt::getCreator).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
-            List<Integer> yearRange = rslts.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).collect(Collectors.toList());
+            List<Integer> yearRange = rslts.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).distinct().sorted().collect(Collectors.toList());
             return new HashMap<>() {{
                 put("instrumentNames", instrumentNamesAll);
                 put("yearRange", yearRange);
@@ -103,7 +105,16 @@ public class DxServiceImpl implements DxService {
             List<String> instrumentNames = StrUtil.splitTrim(analysisRequestDto.getInstrumentNames(), ",");
             barLabels.addAll(instrumentNames);
             List<Object[]> result = dxDao.doQueryInstrumentNames(startTime, endTime, instrumentNames);
-            // 根据时间粒度收集需要显示的所有时间段
+            // TODO 处理仪器运行时间（分钟）
+            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
+            Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
+                    StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
+
+            if (instrumentIdToCountMap.containsKey(instrumentDto.getInstrumentId())) {
+                instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
+            } else {
+                log.warn("仪器运行时间获取失败：" +  "当前仪器ID：" + instrumentDto.getInstrumentId());
+            }*/
             // 收集 dateset
             for (Object[] objects : result) {
                 Dx dx = (Dx) objects[0];
@@ -127,6 +138,16 @@ public class DxServiceImpl implements DxService {
             List<String> projectNames = StrUtil.splitTrim(analysisRequestDto.getProjectNames(), ",");
             barLabels.addAll(projectNames);
             List<Object[]> result = dxDao.doQueryProjectNames(startTime, endTime, projectNames);
+            // TODO 处理仪器运行时间（分钟）
+            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
+            Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
+                    StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
+
+            if (instrumentIdToCountMap.containsKey(instrumentDto.getInstrumentId())) {
+                instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
+            } else {
+                log.warn("仪器运行时间获取失败：" +  "当前仪器ID：" + instrumentDto.getInstrumentId());
+            }*/
             // 收集 dateset
             for (Object[] objects : result) {
                 Dx dx = (Dx) objects[0];
@@ -151,6 +172,16 @@ public class DxServiceImpl implements DxService {
             List<String> creatorNames = StrUtil.splitTrim(analysisRequestDto.getCreatorNames(), ",");
             barLabels.addAll(creatorNames);
             List<Object[]> result = dxDao.doQueryCreatorNames(startTime, endTime, creatorNames);
+            // TODO 处理仪器运行时间（分钟）
+            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
+            Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
+                    StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
+
+            if (instrumentIdToCountMap.containsKey(instrumentDto.getInstrumentId())) {
+                instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
+            } else {
+                log.warn("仪器运行时间获取失败：" +  "当前仪器ID：" + instrumentDto.getInstrumentId());
+            }*/
             // 收集 dateset
             for (Object[] objects : result) {
                 Dx dx = (Dx) objects[0];
@@ -176,7 +207,7 @@ public class DxServiceImpl implements DxService {
         // 查询所有仪器信息
         List<Rslt> rslts = rsltDao.findAll();
         List<String> instrumentNamesAll = rslts.stream().map(Rslt::getInstrumentName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
-        List<Integer> yearRange = rslts.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).collect(Collectors.toList());
+        List<Integer> yearRange = rslts.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).distinct().sorted().collect(Collectors.toList());
         List<String> projectNamesAll = rslts.stream().map(Rslt::getProject).map(Project::getName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
         List<String> creatorsAll = rslts.stream().map(Rslt::getCreator).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
         return new HashMap<>() {{

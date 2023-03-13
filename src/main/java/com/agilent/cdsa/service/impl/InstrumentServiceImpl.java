@@ -1,7 +1,8 @@
 package com.agilent.cdsa.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.date.BetweenFormater;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
@@ -10,7 +11,6 @@ import com.agilent.cdsa.common.CodeListConstant;
 import com.agilent.cdsa.common.util.HttpUtil;
 import com.agilent.cdsa.common.util.PythonUtil;
 import com.agilent.cdsa.dto.InstrumentDto;
-import com.agilent.cdsa.model.InstrumentState;
 import com.agilent.cdsa.model.PowerHistory;
 import com.agilent.cdsa.repository.PowerHistoryDao;
 import com.agilent.cdsa.repository.ProjectDao;
@@ -27,7 +27,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -115,30 +114,27 @@ public class InstrumentServiceImpl implements InstrumentService {
             return new ArrayList<>();
         }
         log.info("get data from cdsa extra program api, total:" + result.size());
-        // 处理仪器运行时间，收集 Prerun Running 状态的数据
-        List<BigDecimal> instrumentIds = result.stream().map(InstrumentDto::getInstrumentId).map(BigDecimal::new).collect(Collectors.toList());
-        List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
-        Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
-                StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
-        this.processDisplayField(result, instrumentIdToCountMap);
+        // 处理仪器实时状态前端展示字段
+        this.processDisplayField(result);
         return result;
     }
 
     /**
-     * 处理前端需要展示的冗余字段，
+     * 处理前端需要展示的冗余字段：
+     * <ol>
+     *     <li>序列运行时间，根据序列提交时间与当前时间的差值计算</li>
+     *     <li>仪器运行时间，根据数据库 instrument_state表，统计PreRun和Running状态的数据求和获取</li>
+     *     <li>序列运行状态，当前针 / 共计多少针计算</li>
+     *     <li>仪器运行状态进度条， 根据 当前针 / 共计多少针 计算百分比</li>
+     *     <li>仪器运行状态颜色，如 Idle为空闲</li>
+     * </ol>
      *
      * @param result 需要返回的仪器信息
-     * @param instrumentIdToCountMap 仪器ID对应数量
      */
-    private void processDisplayField(List<InstrumentDto> result, Map<String, Long> instrumentIdToCountMap) {
-        // 处理运行时间和状态颜色
+    private void processDisplayField(List<InstrumentDto> result) {
         for (InstrumentDto instrumentDto : result) {
-            // 处理运行时间（分钟）
-            if (instrumentIdToCountMap.containsKey(instrumentDto.getInstrumentId())) {
-                instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
-            } else {
-                log.warn("仪器运行时间获取失败：仪器功率" + instrumentIdToCountMap.keySet() +  "当前仪器ID：" + instrumentDto.getInstrumentId());
-            }
+            // 处理序列运行时间（分钟）
+            instrumentDto.setExecuteTime(DateUtil.formatBetween(DateUtil.date(), DateUtil.parse(instrumentDto.getUpdateTime(), CodeListConstant.ISO_DATETIME_FORMAT), BetweenFormater.Level.MINUTE));
             // 处理序列运行状态
             if (null != instrumentDto.getSampleTotal() && instrumentDto.getSampleTotal() != 0) {
                 instrumentDto.setSequenceInfo((instrumentDto.getCurrentSample() == null ? "0" : instrumentDto.getCurrentSample()) + " / " + instrumentDto.getSampleTotal());

@@ -32,7 +32,6 @@ public class PythonUtil {
     public static final String FILENAME_HUMITURE_PYTHON = "/static/py/humiture.py";
     public static final String PARAMNAME_XIAOMI_INFO_PROPERTIES = "application-xiaomi-info.properties";
 
-
     /**
      * 获取温湿度计信息
      *

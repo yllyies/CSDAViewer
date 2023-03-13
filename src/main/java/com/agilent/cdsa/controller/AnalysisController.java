@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -21,16 +20,7 @@ public class AnalysisController {
     @Autowired
     private DxService dxService;
 
-    @ApiOperation("定义UI图2页主要查询接口")
-    @RequestMapping(value = "list", method = RequestMethod.GET)
-    public ModelAndView list() {
-        Map<String, Object> resultMap = dxService.doQuery(new AnalysisRequestDto());
-        ModelAndView modelAndView = new ModelAndView("analysis/index");
-        modelAndView.getModel().putAll(resultMap);
-        return modelAndView;
-    }
-
-    @ApiOperation("定义UI图2：按时间粒度查询")
+    @ApiOperation("根据仪器、项目、人员多个维度查询仪器使用情况")
     @PostMapping("/query")
     public ModelAndView query(AnalysisRequestDto analysisRequestDto) {
         Map<String, Object> resultMap = dxService.doQuery(analysisRequestDto);

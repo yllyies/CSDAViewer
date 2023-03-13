@@ -46,7 +46,7 @@ public class LicenseCreatorTest {
         // 用户数量
         param.setConsumerAmount(1);
         // 描述
-        param.setDescription("测试");
+        param.setDescription("所有权归Agilent Technology");
         LicenseGenerator licenseGenerator = new LicenseGenerator();
         licenseGenerator.setLicenseProperties(param);
         // 生成license

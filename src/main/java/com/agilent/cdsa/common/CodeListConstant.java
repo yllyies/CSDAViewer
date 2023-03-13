@@ -53,4 +53,6 @@ public class CodeListConstant {
      * 空值
      */
     public static final String NONE = "None";
+
+    public static final String ISO_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 }
