@@ -13,4 +13,5 @@ public interface InstrumentStateDao extends JpaRepository<InstrumentState, Strin
 
     List<InstrumentState> findByInstrumentIdIn(List<BigDecimal> ids);
 
+    List<InstrumentState> findByInstrumentNameIn(List<String> instrumentNames);
 }

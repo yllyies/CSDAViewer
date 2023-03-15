@@ -27,4 +27,12 @@ public class InstrumentStateServiceImpl implements InstrumentStateService {
         }
         return instrumentStateDao.findByInstrumentIdIn(instrumentIds);
     }
+
+    @Override
+    public List<InstrumentState> doFindByInstrumentNameIn(List<String> instrumentNames) {
+        if (CollUtil.isEmpty(instrumentNames)) {
+            return new ArrayList<>();
+        }
+        return instrumentStateDao.findByInstrumentNameIn(instrumentNames);
+    }
 }

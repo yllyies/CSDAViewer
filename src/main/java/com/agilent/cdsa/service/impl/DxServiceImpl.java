@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.agilent.cdsa.common.CodeListConstant;
 import com.agilent.cdsa.dto.AnalysisRequestDto;
@@ -106,7 +105,7 @@ public class DxServiceImpl implements DxService {
             barLabels.addAll(instrumentNames);
             List<Object[]> result = dxDao.doQueryInstrumentNames(startTime, endTime, instrumentNames);
             // TODO 处理仪器运行时间（分钟）
-            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
+            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentNameIn(instrumentNames);
             Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
                     StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
 
@@ -139,7 +138,7 @@ public class DxServiceImpl implements DxService {
             barLabels.addAll(projectNames);
             List<Object[]> result = dxDao.doQueryProjectNames(startTime, endTime, projectNames);
             // TODO 处理仪器运行时间（分钟）
-            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
+            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentNameIn(instrumentNames);
             Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
                     StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
 
@@ -173,7 +172,7 @@ public class DxServiceImpl implements DxService {
             barLabels.addAll(creatorNames);
             List<Object[]> result = dxDao.doQueryCreatorNames(startTime, endTime, creatorNames);
             // TODO 处理仪器运行时间（分钟）
-            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentIdIn(instrumentIds);
+            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentNameIn(instrumentNames);
             Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
                     StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
 
@@ -240,9 +239,8 @@ public class DxServiceImpl implements DxService {
                 }
                 ChartDatasetDto chartDatasetDto = new ChartDatasetDto(label, "transparent", CodeListConstant.COLOR_LIST[i], new ArrayList<>());
                 for (String date : lineLabels) {
-                    var time = RandomUtil.randomLong(4320, 8640) / 360; // 模拟数据
-                    tableDatasets.add(new TableDatasetDto(label, date, time, df.format((float) time * 100 / dateStrToWorkHoursMap.get(date))));
-                    chartDatasetDto.getData().add(time);
+                    tableDatasets.add(new TableDatasetDto(label, date, 0L, df.format(0)));
+                    chartDatasetDto.getData().add(0L);
                 }
                 lineDatasets.add(chartDatasetDto);
                 continue;
@@ -250,19 +248,19 @@ public class DxServiceImpl implements DxService {
             Map<String, Long> row = graphMap.row(label);
             // 柱状图数据处理
             for (ChartDatasetDto chartDatasetDto : barDatasets) {
-                chartDatasetDto.getData().add(row.getOrDefault(chartDatasetDto.getLabel(), RandomUtil.randomLong(4320, 8640)) / 360); // 模拟数据
+                chartDatasetDto.getData().add(row.getOrDefault(chartDatasetDto.getLabel(), 0L) / 360);
             }
             // 线性图
             ChartDatasetDto chartDatasetDto = new ChartDatasetDto(label, "transparent", CodeListConstant.COLOR_LIST[i], new ArrayList<>());
             for (String lineLabel : lineLabels) {
-                var time = row.getOrDefault(lineLabel, RandomUtil.randomLong(4320, 8640)) / 360; // 模拟数据
+                var time = row.getOrDefault(lineLabel, 0L) / 360;
                 tableDatasets.add(new TableDatasetDto(label, lineLabel, time, df.format((float) time * 100 / dateStrToWorkHoursMap.get(lineLabel))));
                 chartDatasetDto.getData().add(time);
             }
             lineDatasets.add(chartDatasetDto);
             // 饼状图
             Long sum = (row.values().stream().reduce(Long::sum).isPresent() ?
-                    row.values().stream().reduce(Long::sum).get() : RandomUtil.randomLong(4320, 8640)) / 360; // 模拟数据
+                    row.values().stream().reduce(Long::sum).get() : 0L) / 360;
             doughnutDatasets.add(sum);
         }
     }
