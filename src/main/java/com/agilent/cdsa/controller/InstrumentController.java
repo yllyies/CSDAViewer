@@ -38,29 +38,6 @@ public class InstrumentController {
         List<InstrumentDto> result = new ArrayList<>(agilentInstruments);
         List<InstrumentDto> thirdPartyInstruments = instrumentService.doFindThirdPartyInstruments();
         result.addAll(thirdPartyInstruments);
-        // 模拟数据
-//        InstrumentDto instrumentDto = new InstrumentDto();
-//        instrumentDto.setInstrumentId("100");
-//        instrumentDto.setInstrumentName("Monitor-02");
-//        instrumentDto.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_RUNNING);
-//        instrumentDto.setColor(CodeListConstant.INSTRUMENT_STATE_COLOR_RUNNING);
-//        instrumentDto.setInstrumentDescription("运行中");
-//        result.add(instrumentDto);
-//        InstrumentDto instrumentDto2 = new InstrumentDto();
-//        instrumentDto2.setInstrumentId("101");
-//        instrumentDto2.setInstrumentName("Monitor-01");
-//        instrumentDto2.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
-//        instrumentDto2.setColor(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
-//        instrumentDto2.setInstrumentDescription("关机");
-        for (int i = 100; i < 200; i++) {
-            InstrumentDto instrumentDto = new InstrumentDto();
-            instrumentDto.setInstrumentId(String.valueOf(i));
-            instrumentDto.setInstrumentName("Monitor" + i);
-            instrumentDto.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_RUNNING);
-            instrumentDto.setColor(CodeListConstant.INSTRUMENT_STATE_COLOR_RUNNING);
-            instrumentDto.setInstrumentDescription("运行中");
-            result.add(instrumentDto);
-        }
 
         modelAndView.getModel().put("dataSource", result); // 仪器状态结果集
         Map<String, Long> stateToCountMap = result.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
@@ -87,7 +64,7 @@ public class InstrumentController {
         // 获取温湿度信息
         XiaomiHumitureDto xiaomiHumitureDto = PythonUtil.doGetHumitureInfo();
         if (CodeListConstant.NONE.equals(xiaomiHumitureDto.getTemperature()) && CodeListConstant.NONE.equals(xiaomiHumitureDto.getHumidity())) {
-            modelAndView.getModel().put("humiture", "温湿度：21.3 ℃， 55.7 %RH");
+            modelAndView.getModel().put("humiture", "温湿度：None ℃， None %RH");
         } else {
             modelAndView.getModel().put("humiture", xiaomiHumitureDto.getDesc());
         }
