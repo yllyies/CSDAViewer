@@ -35,13 +35,6 @@
 
         <div class="clearfix"></div>
 
-        <!-- menu profile quick info -->
-        <div class="profile clearfix">
-          <div class="profile_info">
-            <span class="container-fluid" >欢迎，</span><span sec:authentication="name" style="font-weight: bold" ></span>
-          </div>
-          <div class="clearfix"></div>
-        </div>
         <!-- /menu profile quick info -->
         <br/>
         <!-- sidebar menu -->
@@ -65,22 +58,22 @@
 
     <!-- top navigation -->
     <div class="top_nav" >
+      <div class="nav toggle">
+        <a id="menu_toggle"><i class="fa fa-bars" style="color: white"></i></a>
+      </div>
       <div class="nav_title_custom" >
         <img th:src="@{/frontend_depandence/images/logo_banner.png}" alt="..." class="img-thumbnail_custom">
+      </div>
+      <!-- menu profile quick info -->
+      <div class="profile_info">
+        <span class="container-fluid" >欢迎，</span><span sec:authentication="name" style="font-weight: bold" ></span>
       </div>
       <div class="clearfix"></div>
     </div>
     <!-- /top navigation -->
 
-
     <!-- page content -->
     <div class="right_col" role="main">
-      <!--<div class="page-title">
-        <div class="title_left">
-          <h3>统计分析</h3>
-        </div>
-      </div>-->
-
       <div class="col-md-12 col-sm-12">
         <div class="x_panel" style="border:none">
           <div class="x_title">
