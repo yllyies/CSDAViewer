@@ -1,7 +1,6 @@
 package com.agilent.cdsa.model;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -37,7 +36,6 @@ public class Rslt implements Serializable
     private String creator;
 
     @Column(name = "created_date")
-    @JsonFormat(pattern = "MM/dd/yyyy")
     private Timestamp createdDate;
 
     @Column(name = "project_id", insertable = false, updatable = false)
