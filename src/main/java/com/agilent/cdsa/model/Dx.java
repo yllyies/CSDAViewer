@@ -1,7 +1,5 @@
 package com.agilent.cdsa.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -42,7 +40,6 @@ public class Dx implements Serializable
     private BigDecimal filePath;
 
     @Column(name = "updated_date")
-    @JsonFormat(pattern = "MM/dd/yyyy")
     private Timestamp updatedDate;
 
     @ManyToOne(targetEntity = Rslt.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
