@@ -1,6 +1,5 @@
 package com.agilent.cdsa.common.util;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
@@ -25,7 +24,6 @@ import java.util.Properties;
 @Slf4j
 @Component
 public class PythonUtil {
-
     public static final String PARAMNAME_XIAOMI_HUMITURE_DIDLIST = "xiaomi.humiture.did";
     public static final String PARAMNAME_XIAOMI_HUMITURE_IP = "xiaomi.humiture.ip";
     public static final String PARAMNAME_XIAOMI_HUMITURE_TOKEN = "xiaomi.humiture.token";
@@ -109,8 +107,7 @@ public class PythonUtil {
                 JSONObject jsonObject = (JSONObject) obj;
                 if (null != jsonObject && StrUtil.isNotBlank(jsonObject.get("power", String.class))) {
                     result.add(new PowerHistory(jsonObject.get("instrumentName", String.class), jsonObject.get("ip", String.class),
-                            jsonObject.get("token", String.class), Double.parseDouble(jsonObject.get("power", String.class)),
-                            DateUtil.date().toTimestamp()));
+                            jsonObject.get("token", String.class), Double.parseDouble(jsonObject.get("power", String.class)), null));
                 }
             }
             return result;
