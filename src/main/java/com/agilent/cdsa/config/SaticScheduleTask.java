@@ -1,6 +1,8 @@
 package com.agilent.cdsa.config;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import com.agilent.cdsa.common.util.PythonUtil;
 import com.agilent.cdsa.model.PowerHistory;
 import com.agilent.cdsa.service.InstrumentService;
@@ -10,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,9 +27,10 @@ public class SaticScheduleTask {
     private void configureTasks() {
         List<PowerHistory> powerHistories = PythonUtil.doGetInstrumentPower();
         if (CollUtil.isNotEmpty(powerHistories)) {
+            Timestamp now = DateUtil.parse(DateUtil.format(DateUtil.date(), DatePattern.NORM_DATETIME_MINUTE_PATTERN)).toTimestamp();
             // 过滤功率为0的数据，此时默认关机
             List<PowerHistory> filter = powerHistories.stream().filter(pw -> null != pw.getPower() && pw.getPower() != 0d).collect(Collectors.toList());
-            instrumentService.doBatchCreate(filter);
+            instrumentService.doBatchReplace(filter, now);
         }
     }
 }

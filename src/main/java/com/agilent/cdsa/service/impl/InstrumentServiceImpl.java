@@ -20,14 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -49,19 +50,32 @@ public class InstrumentServiceImpl implements InstrumentService {
     private String instrumentInfoUrl;
 
     @Override
-    public List<PowerHistory> doFindByIpOrderByCreatedDateDesc(String ip) {
-        return powerHistoryDao.findByIp(ip);
-    }
-
-    @Override
-    public List<PowerHistory> doFindAll() {
-        return powerHistoryDao.findAll(Sort.by(Sort.Direction.ASC,"createdDate"));
-    }
-
-    @Override
-    public void doBatchCreate(List<PowerHistory> instruments) {
+    public void doBatchSave(List<PowerHistory> instruments) {
         powerHistoryDao.saveAll(instruments);
         powerHistoryDao.flush();
+    }
+
+    @Override
+    public void doBatchReplace(List<PowerHistory> powerHistories, Timestamp nowDate) {
+        // 往前推三天，查询是否存在数据；
+        List<String> ips = powerHistories.stream().map(PowerHistory::getIp).distinct().collect(Collectors.toList());
+        Timestamp beforeDate = DateUtil.offsetDay(nowDate, -3).toTimestamp();
+        List<PowerHistory> dbData = powerHistoryDao.findByIpInAndCreatedDateEq(ips, beforeDate);
+        Map<String, PowerHistory> dbDataMap = dbData.stream().collect(Collectors.toMap(PowerHistory::getIp, Function.identity(), (k1, k2) -> k2));
+        // 遍历待保存数据。存在则更新，不存在则新增；
+        List<PowerHistory> toSaveList = new ArrayList<>();
+        for (PowerHistory powerHistory : powerHistories) {
+            if (dbDataMap.containsKey(powerHistory.getIp())) {
+                PowerHistory toSave = dbDataMap.get(powerHistory.getIp());
+                toSave.setPower(powerHistory.getPower());
+                toSave.setCreatedDate(nowDate);
+                toSaveList.add(toSave);
+            } else {
+                powerHistory.setCreatedDate(nowDate);
+                toSaveList.add(powerHistory);
+            }
+        }
+        this.doBatchSave(toSaveList);
     }
 
     @Override
