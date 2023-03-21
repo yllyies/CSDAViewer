@@ -27,5 +27,5 @@ public interface PowerHistoryDao extends JpaRepository<PowerHistory, String>, Jp
      * @param createdDate 记录时间
      * @return 结果集
      */
-    List<PowerHistory> findByIpInAndCreatedDateEq(List<String> ips, Timestamp createdDate);
+    List<PowerHistory> findByIpInAndCreatedDateEquals(List<String> ips, Timestamp createdDate);
 }
