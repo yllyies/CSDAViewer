@@ -22,7 +22,6 @@ import javax.sql.DataSource;
  * Spring Security Config
  */
 @Configuration
-//@EnableGlobalMethodSecurity(prePostEnabled = true) // 启用方法安全设置
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -37,7 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
-
         http.formLogin().loginPage(ConfigConstant.REQUEST_LOGIN_PAGE_URL)
                 .loginProcessingUrl(ConfigConstant.LOGIN_FORM_SUBMIT_URL)
                 .defaultSuccessUrl(ConfigConstant.DEFAULT_LOGIN_SUCCESSFUL_REQUEST_URL, ConfigConstant.ALWAYS_USE_DEFAULT_LOGIN_SUCCESSFUL_REQUEST_URL)
@@ -58,8 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.ico",
                         "/**/*.js",
                         "/swagger-resources/**",
-                        "/static/**",
-                        "/v2/api-docs/**"
+                        "/static/**"
                 )
                 .permitAll()
                 .antMatchers("/", "/login", "/check", "/api/**") // access login or register without authorize
