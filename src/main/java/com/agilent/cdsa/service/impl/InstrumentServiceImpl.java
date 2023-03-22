@@ -60,7 +60,7 @@ public class InstrumentServiceImpl implements InstrumentService {
         // 往前推三天，查询是否存在数据；
         List<String> ips = powerHistories.stream().map(PowerHistory::getIp).distinct().collect(Collectors.toList());
         Timestamp beforeDate = DateUtil.offsetDay(nowDate, -3).toTimestamp();
-        List<PowerHistory> dbData = powerHistoryDao.findByIpInAndCreatedDateEq(ips, beforeDate);
+        List<PowerHistory> dbData = powerHistoryDao.findByIpInAndCreatedDateEquals(ips, beforeDate);
         Map<String, PowerHistory> dbDataMap = dbData.stream().collect(Collectors.toMap(PowerHistory::getIp, Function.identity(), (k1, k2) -> k2));
         // 遍历待保存数据。存在则更新，不存在则新增；
         List<PowerHistory> toSaveList = new ArrayList<>();
