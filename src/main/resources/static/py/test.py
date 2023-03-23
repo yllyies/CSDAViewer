@@ -1,11 +1,10 @@
 from miio.device import Device
-from micloud import MiCloud
 from miio.gateway import Gateway
 from miio.gateway.devices.subdevice import SubDevice, SubDeviceInfo
 
 
 def info2():
-    s = Device(ip='169.254.234.11', token='3788ccc06c7a52ca1327fb44fa6f30d6')
+    s = Device(ip='192.168.120.44', token='4f2dfab6616f553660d57c21e3278661')
     msg = s.send("get_properties", [{'did': 'MYDID', 'siid': 11, 'piid': 2}])
     print(msg)
 
@@ -20,7 +19,7 @@ def info3():
 
 if __name__ == '__main__':
     # info2()
-    info3()
+    info2()
 # from miio.chuangmi_plug import ChuangmiPlug
 # d.send("get_properties", [{'did': 'MYDID', 'siid': 11, 'piid': 2}])
 # from miio.device import Device

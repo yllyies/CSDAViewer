@@ -2,7 +2,6 @@ package com.agilent.cdsa.service;
 
 import com.agilent.cdsa.model.InstrumentState;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -17,7 +16,7 @@ public interface InstrumentStateService {
      * @param instrumentIds 仪器ID集合
      * @return 符合条件的结果即
      */
-    List<InstrumentState> doFindByInstrumentIdIn(List<BigDecimal> instrumentIds);
+//    List<InstrumentState> doFindByInstrumentIdIn(List<BigDecimal> instrumentIds);
 
     /**
      * 根据名称集合查询

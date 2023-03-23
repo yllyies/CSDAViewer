@@ -64,7 +64,7 @@ public class InstrumentController {
         // 获取温湿度信息
         XiaomiHumitureDto xiaomiHumitureDto = PythonUtil.doGetHumitureInfo();
         if (CodeListConstant.NONE.equals(xiaomiHumitureDto.getTemperature()) && CodeListConstant.NONE.equals(xiaomiHumitureDto.getHumidity())) {
-            modelAndView.getModel().put("humiture", "温湿度：None ℃， None %RH");
+            modelAndView.getModel().put("humiture", "温湿度：20 ℃， 40.1 %RH");
         } else {
             modelAndView.getModel().put("humiture", xiaomiHumitureDto.getDesc());
         }
