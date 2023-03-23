@@ -97,4 +97,15 @@ public class PowerHistory implements Serializable
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
+
+    @Override
+    public String toString() {
+        return "PowerHistory{" +
+                "id='" + id + '\'' +
+                ", instrumentName='" + instrumentName + '\'' +
+                ", ip='" + ip + '\'' +
+                ", token='" + token + '\'' +
+                ", power=" + power +
+                '}';
+    }
 }

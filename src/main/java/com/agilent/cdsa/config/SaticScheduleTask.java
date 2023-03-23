@@ -31,6 +31,8 @@ public class SaticScheduleTask {
             // 过滤功率为0的数据，此时默认关机
             List<PowerHistory> filter = powerHistories.stream().filter(pw -> null != pw.getPower() && pw.getPower() != 0d).collect(Collectors.toList());
             instrumentService.doBatchReplace(filter, now);
+        } else {
+            log.error("获取仪器信息失败 PythonUtil.doGetInstrumentPower 未获取任何数据");
         }
     }
 }

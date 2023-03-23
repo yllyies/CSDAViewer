@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class PythonUtil {
         Properties properties = null;
         try {
             properties = PropertiesLoaderUtils.loadAllProperties(PARAMNAME_XIAOMI_INFO_PROPERTIES);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.warn("获取温湿度计信息失败，请检查 application-xiaomi-info.properties 是否存在。");
             e.printStackTrace();
 //            throw new BusinessException("获取温湿度计信息失败，请检查 application-xiaomi-info.properties 是否存在。");
@@ -59,7 +60,7 @@ public class PythonUtil {
             }
             in.close();
             proc.waitFor();
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             log.warn("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
             e.printStackTrace();
 //            throw new BusinessException("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
@@ -83,23 +84,10 @@ public class PythonUtil {
      */
     public static List<PowerHistory> doGetInstrumentPower() {
         StringBuilder message = new StringBuilder();
-        try {
-            ClassPathResource classPathResource = new ClassPathResource("/static/py/instrument_status.py");
-            String instrumentInfoList = JSONUtil.parseArray(XiaomiSocketConfig.getList()).toString();
-            String[] args = new String[]{"python", classPathResource.getAbsolutePath(), JSONUtil.quote(instrumentInfoList)};
-            Process proc = Runtime.getRuntime().exec(args);// 执行py文件
-            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
-                message.append(line);
-            }
-            in.close();
-            proc.waitFor();
-        } catch (IOException | InterruptedException e) {
-            log.warn("获取仪器功率信息失败，请检查 instrument_status.py是否正确。");
-            e.printStackTrace();
-//            throw new BusinessException("获取温湿度计信息失败，请检查 humiture.py及配置的小米账号密码是否正确。");
-        }
+        ClassPathResource classPathResource = new ClassPathResource("/static/py/instrument_status.py");
+        String instrumentInfoList = JSONUtil.parseArray(XiaomiSocketConfig.getList()).toString();
+        String[] args = new String[]{"python", classPathResource.getAbsolutePath(), instrumentInfoList};
+        pythonExec(args, message);
         if (JSONUtil.isJsonArray(message.toString())) {
             JSONArray jsonArray = JSONUtil.parseArray(message.toString());
             List<PowerHistory> result = new ArrayList<>();
@@ -111,8 +99,84 @@ public class PythonUtil {
                 }
             }
             return result;
+        } else {
+            log.info("获取仪器信息失败，instrument_status.py返回信息：" + message);
         }
         return new ArrayList<>();
+    }
+
+    private static void pythonExec(String[] args, StringBuilder message) {
+        Process process = null;
+        try {
+            process = Runtime.getRuntime().exec(args);// 执行py文件
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "GBK"));
+
+            //获取进程的标准输入流
+            final InputStream is1 = process.getInputStream();
+            //获取进程的错误流
+            final InputStream is2 = process.getErrorStream();
+            //启动两个线程，一个线程负责读标准输出流，另一个负责读标准错误流
+            new Thread(() -> {
+                BufferedReader br1 = new BufferedReader(new InputStreamReader(is1));
+                try {
+                    String line1 = null;
+                    while ((line1 = br1.readLine()) != null) {
+                        message.append(line1);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                finally{
+                    try {
+                        is1.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+            new Thread(() -> {
+                BufferedReader br2 = new  BufferedReader(new  InputStreamReader(is2));
+                try {
+                    String line2 = null ;
+                    while ((line2 = br2.readLine()) !=  null ) {
+                        message.append(line2);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                finally{
+                    try {
+                        is2.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+            //可能导致进程阻塞，甚至死锁
+            int ret = process.waitFor();
+            in.close();
+            if (ret == 1) {
+                log.info("调用脚本失败");
+            } else {
+                log.info("调用脚本成功");
+            }
+        } catch (Exception ex){
+            log.warn("获取仪器功率信息失败，请检查python脚本是否正确。");
+            ex.printStackTrace();
+        } finally {
+            if (process != null) {
+                try {
+                    process.getErrorStream().close();
+                    process.getInputStream().close();
+                    process.getOutputStream().close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
     }
 
     /**
@@ -135,7 +199,7 @@ public class PythonUtil {
             }
             in.close();
             proc.waitFor();
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             log.warn("机器学习功率档位失败，请检查 instrument_power.py 是否正确。");
             e.printStackTrace();
 //            throw new BusinessException("机器学习功率档位失败，请检查 instrument_power.py 是否正确。");

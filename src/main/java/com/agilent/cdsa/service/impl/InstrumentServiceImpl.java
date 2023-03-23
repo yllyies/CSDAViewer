@@ -62,6 +62,7 @@ public class InstrumentServiceImpl implements InstrumentService {
         Timestamp beforeDate = DateUtil.offsetDay(nowDate, -3).toTimestamp();
         List<PowerHistory> dbData = powerHistoryDao.findByIpInAndCreatedDateEquals(ips, beforeDate);
         Map<String, PowerHistory> dbDataMap = dbData.stream().collect(Collectors.toMap(PowerHistory::getIp, Function.identity(), (k1, k2) -> k2));
+        log.info("查询数据库存在数据：" + dbDataMap.size() + "条");
         // 遍历待保存数据。存在则更新，不存在则新增；
         List<PowerHistory> toSaveList = new ArrayList<>();
         for (PowerHistory powerHistory : powerHistories) {
@@ -69,9 +70,11 @@ public class InstrumentServiceImpl implements InstrumentService {
                 PowerHistory toSave = dbDataMap.get(powerHistory.getIp());
                 toSave.setPower(powerHistory.getPower());
                 toSave.setCreatedDate(nowDate);
+                log.info("Update 覆盖数据：插座名称：" + toSave.getInstrumentName() + "插座IP：" + toSave.getIp() + "， 插座功率：" + toSave.getPower() + "， 当前时间：" + toSave.getCreatedDate());
                 toSaveList.add(toSave);
             } else {
                 powerHistory.setCreatedDate(nowDate);
+                log.info("Create 插入数据：插座名称：" + powerHistory.getInstrumentName() + "插座IP：" + powerHistory.getIp() + "， 插座功率：" + powerHistory.getPower() + "， 当前时间：" + powerHistory.getCreatedDate());
                 toSaveList.add(powerHistory);
             }
         }
