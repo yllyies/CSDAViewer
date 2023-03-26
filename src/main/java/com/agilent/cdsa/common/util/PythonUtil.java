@@ -73,30 +73,54 @@ public class PythonUtil {
      */
     public static List<PowerHistory> doGetInstrumentPower() {
         StringBuilder message = new StringBuilder();
-        ClassPathResource classPathResource = new ClassPathResource("/static/py/instrument_status.py");
+        ClassPathResource classPathResource = new ClassPathResource(FILENAME_INSTRUMENT_STATUS_PYTHON);
         String instrumentInfoList = JSONUtil.parseArray(XiaomiSocketConfig.getList()).toString();
-        String[] args = new String[]{"python", classPathResource.getAbsolutePath(), instrumentInfoList};
+        String[] args = new String[]{"python ", classPathResource.getAbsolutePath(), JSONUtil.quote(instrumentInfoList)};
         pythonExec(args, message);
         if (JSONUtil.isJsonArray(message.toString())) {
             JSONArray jsonArray = JSONUtil.parseArray(message.toString());
             List<PowerHistory> result = new ArrayList<>();
             for (Object obj : jsonArray) {
+                if (obj == null) {
+                    continue;
+                }
                 JSONObject jsonObject = (JSONObject) obj;
-                if (null != jsonObject && StrUtil.isNotBlank(jsonObject.get("power", String.class))) {
+                if (StrUtil.isNotBlank(jsonObject.get("power", String.class))) {
                     result.add(new PowerHistory(jsonObject.get("instrumentName", String.class), jsonObject.get("ip", String.class),
                             jsonObject.get("token", String.class), Double.parseDouble(jsonObject.get("power", String.class)), null));
                 }
             }
             return result;
         } else {
-            log.info("获取仪器信息失败，instrument_status.py返回信息：" + message);
+            log.error("获取仪器信息失败，instrument_status.py返回信息：" + message);
         }
         return new ArrayList<>();
     }
 
+    /**
+     * 根据某一台仪器的功率记录，计算档位
+     *
+     * @param powerList 某一台仪器的功率记录
+     * @return 档位
+     */
+    public static String doGetInstrumentPowerLevel(List<Double> powerList) {
+        StringBuilder message = new StringBuilder();
+        ClassPathResource classPathResource = new ClassPathResource(FILENAME_INSTRUMENT_LEVEL_PYTHON);
+        String[] args = new String[]{"python", classPathResource.getAbsolutePath(), JSONUtil.quote(JSONUtil.parseArray(powerList).toString())};
+        PythonUtil.pythonExec(args, message);
+        return message.toString();
+    }
+
+    /**
+     * 分流执行python脚本，避免阻塞
+     *
+     * @param args 执行参数
+     * @param message 返回信息
+     */
     private static void pythonExec(String[] args, StringBuilder message) {
         Process process = null;
         try {
+            StringBuilder errorMsg = new StringBuilder();
             process = Runtime.getRuntime().exec(args);// 执行py文件
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "GBK"));
 
@@ -129,6 +153,7 @@ public class PythonUtil {
                 try {
                     String line2 = null ;
                     while ((line2 = br2.readLine()) !=  null ) {
+                        errorMsg.append(line2);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -141,14 +166,13 @@ public class PythonUtil {
                     }
                 }
             }).start();
-
             //可能导致进程阻塞，甚至死锁
             int ret = process.waitFor();
             in.close();
             if (ret == 1) {
-                log.info("调用脚本失败");
+                log.warn("调用脚本失败：" + errorMsg);
             } else {
-                log.info("调用脚本成功");
+                log.info("调用脚本成功：" + message.toString());
             }
         } catch (Exception ex){
             log.warn("获取仪器功率信息失败，请检查python脚本是否正确。" + message.toString());
@@ -159,25 +183,10 @@ public class PythonUtil {
                     process.getErrorStream().close();
                     process.getInputStream().close();
                     process.getOutputStream().close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                } catch (IOException ex) {
+                    log.warn("关闭流失败：" + ex.getLocalizedMessage());
                 }
-
             }
         }
-    }
-
-    /**
-     * 根据某一台仪器的功率记录，计算档位
-     *
-     * @param powerList 某一台仪器的功率记录
-     * @return 档位
-     */
-    public static String doGetInstrumentPowerLevel(List<Double> powerList) {
-        StringBuilder message = new StringBuilder();
-        ClassPathResource classPathResource = new ClassPathResource(FILENAME_INSTRUMENT_LEVEL_PYTHON);
-        String[] args = new String[]{"python ", classPathResource.getAbsolutePath(), JSONUtil.quote( JSONUtil.parseArray(powerList).toString())};
-        PythonUtil.pythonExec(args, message);
-        return message.toString();
     }
 }
