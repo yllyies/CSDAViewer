@@ -2,6 +2,8 @@ package com.agilent.cdsa.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.BetweenFormater;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
@@ -148,10 +150,11 @@ public class InstrumentServiceImpl implements InstrumentService {
      */
     private void processDisplayField(List<InstrumentDto> result) {
         for (InstrumentDto instrumentDto : result) {
-            // 处理序列运行时间（分钟）
+            // 处理 序列运行时间（分钟），提交时间
             if (StrUtil.isNotBlank(instrumentDto.getUpdateTime())) {
-                instrumentDto.setExecuteTime(DateUtil.formatBetween(DateUtil.date(),
-                        DateUtil.parse(instrumentDto.getUpdateTime(), CodeListConstant.ISO_DATETIME_FORMAT), BetweenFormater.Level.SECOND));
+                DateTime parse = DateUtil.parse(instrumentDto.getUpdateTime(), CodeListConstant.ISO_DATETIME_FORMAT);
+                instrumentDto.setExecuteTime(DateUtil.formatBetween(DateUtil.date(), parse, BetweenFormater.Level.SECOND));
+                instrumentDto.setUpdateTime(DateUtil.format(parse, DatePattern.NORM_TIME_PATTERN));
             }
             // 处理序列运行状态
             if (null != instrumentDto.getSampleTotal() && instrumentDto.getSampleTotal() != 0) {

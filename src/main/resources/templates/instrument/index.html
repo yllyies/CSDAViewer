@@ -52,6 +52,8 @@
               </li>
               <li><a th:href="@{/analysis/query}" ><i class="fa fa-bar-chart-o" ></i>统计分析<span class="fa fa-chevron-down"></span></a>
               </li>
+              <li><a th:href="@{/instrument/echarts}"><i class="fa fa-bar-chart"></i>仪器图表</a></li>
+
             </ul>
           </div>
         </div>
@@ -122,23 +124,22 @@
               <table id="instrumentTable_tbody" class="table-custom" >
                 <tbody  style="font-size:12px">
                 <tr id="datatable-tr" th:each="item:${dataSource}">
-                  <td width="8%"><i class="fa fa-square fa-2x" th:if="${not #strings.isEmpty(item.color)}" th:style="'color:' + ${item.color}"></i></td>
-                  <td width="15%" th:text="${item.instrumentName}"></td>
-                  <td width="15%" th:text="${item.projectName}"></td>
-                  <td width="12%" th:text="${item.commitUser}"></td>
-                  <td width="12%" th:text="${item.acqUser}"></td>
-                  <td width="15%" th:text="${item.sequenceName}"></td>
-                  <td width="15%" th:text="${item.updateTime}"></td>
-                  <td width="20%" th:text="${item.sampleName}"></td>
-                  <td width="12%" th:text="${item.executeTime}"></td>
-                  <td width="12%">
+                  <!--状态--><td width="8%"><i class="fa fa-square fa-2x" th:if="${not #strings.isEmpty(item.color)}" th:style="'color:' + ${item.color}"></i></td>
+                  <!--仪器名称--><td width="15%" th:text="${item.instrumentName}"></td>
+                  <!--项目--><td width="15%" th:text="${item.projectName}"></td>
+                  <!--操作用户--><td width="12%" th:text="${item.commitUser}"></td>
+                  <!--登录用户--><td width="12%" th:text="${item.acqUser}"></td>
+                  <!--序列名称--><td width="15%" th:text="${item.sequenceName}"></td>
+                  <!--提交时间--><td width="15%" th:text="${item.updateTime}"></td>
+                  <!--当前样品--><td width="20%" th:text="${item.sampleName}"></td>
+                  <!--运行时间--><td width="12%" th:text="${item.executeTime}"></td>
+                  <!--运行状态--><td width="12%">
                     <div class="progress" th:if="${not #strings.isEmpty(item.sequenceInfo)}">
                       <div class="progress-bar bg-success" role="progressbar" th:style="'width:' + ${item.progressBarWidth}" aria-valuemin="0" aria-valuemax="100">
                         <span th:text="${item.sequenceInfo}" style="color:black"></span>
                       </div>
                     </div>
                   </td>
-
                 </tr>
                 </tbody>
               </table>
