@@ -248,19 +248,19 @@ public class DxServiceImpl implements DxService {
             Map<String, Long> row = graphMap.row(label);
             // 柱状图数据处理
             for (ChartDatasetDto chartDatasetDto : barDatasets) {
-                chartDatasetDto.getData().add(row.getOrDefault(chartDatasetDto.getLabel(), 0L) / 360);
+                chartDatasetDto.getData().add(row.getOrDefault(chartDatasetDto.getLabel(), 0L) / 3600);
             }
             // 线性图
             ChartDatasetDto chartDatasetDto = new ChartDatasetDto(label, "transparent", CodeListConstant.COLOR_LIST[i], new ArrayList<>());
             for (String lineLabel : lineLabels) {
-                var time = row.getOrDefault(lineLabel, 0L) / 360;
+                var time = row.getOrDefault(lineLabel, 0L) / 3600;
                 tableDatasets.add(new TableDatasetDto(label, lineLabel, time, df.format((float) time * 100 / dateStrToWorkHoursMap.get(lineLabel))));
                 chartDatasetDto.getData().add(time);
             }
             lineDatasets.add(chartDatasetDto);
             // 饼状图
             Long sum = (row.values().stream().reduce(Long::sum).isPresent() ?
-                    row.values().stream().reduce(Long::sum).get() : 0L) / 360;
+                    row.values().stream().reduce(Long::sum).get() : 0L) / 3600;
             doughnutDatasets.add(sum);
         }
     }

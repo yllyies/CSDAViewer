@@ -221,7 +221,24 @@ function changeForm(divName) {
         }
     }
 }
+/*
+    toggle search form
+*/
+function toggleSearchForm() {
+    var $BOX_PANEL = $('#toggle_panel'),
+        $ICON = $('#toggle_button'),
+        $BOX_CONTENT = $('#toggle_form');
+    if ($BOX_PANEL.attr('style')) {
+        $BOX_CONTENT.slideToggle(200, function(){
+            $BOX_PANEL.removeAttr('style');
+        });
+    } else {
+        $BOX_CONTENT.slideToggle(200);
+        $BOX_PANEL.css('height', 'auto');
+    }
 
+    $ICON.toggleClass('fa-chevron-up fa-chevron-down');
+}
 
 
 

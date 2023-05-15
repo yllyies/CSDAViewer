@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>数据分析</title>
+  <link rel="icon" th:href="@{/frontend_depandence/images/agilent_icon.png}">
+
+  <!-- Bootstrap -->
+  <link th:href="@{/frontend_depandence/css/bootstrap.css}" rel="stylesheet">
+  <link th:href="@{/frontend_depandence/css/bootstrap-multiselect.css}" rel="stylesheet">
+  <!-- Custom Theme Style -->
+  <link th:href="@{/frontend_depandence/css/custom.css}" rel="stylesheet">
+</head>
+
+<body class="nav-md">
+<div class="container body">
+  <div class="main_container">
+    <div class="col-md-3 left_col">
+      <div class="left_col scroll-view">
+        <div class="navbar nav_title" style="border: 0;">
+          <img th:src="@{/frontend_depandence/images/logo_menu.png}" alt="..." class="img-thumbnail_custom">
+        </div>
+
+        <div class="clearfix"></div>
+
+        <!-- /menu profile quick info -->
+        <br/>
+        <!-- sidebar menu -->
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+          <div class="menu_section">
+            <h3>菜单</h3>
+            <ul class="nav side-menu">
+              <li><a th:href="@{/instrument/list}"><i class="fa fa-desktop"></i>仪器总览</a></li>
+              <li><a><i class="fa fa-bar-chart-o"></i>统计分析<span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                  <li ><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('instrument')|">仪器运行时间</a></li>
+                  <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('project')|">项目进样统计</a></li>
+                  <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('creator')|">人员进样统计</a></li>
+                </ul>
+              </li>
+              <li><a href="#"><i class="fa fa-bar-chart" ></i>仪器图表</a>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- top navigation -->
+    <div class="top_nav" >
+      <div class="nav toggle">
+        <a id="menu_toggle"><i class="fa fa-bars" style="color: white"></i></a>
+      </div>
+      <div class="nav_title_custom" >
+        <img th:src="@{/frontend_depandence/images/logo_banner.png}" alt="..." class="img-thumbnail_custom">
+      </div>
+      <!-- menu profile quick info -->
+      <div class="profile_info">
+        <span class="container-fluid" >欢迎，</span><span sec:authentication="name" style="font-weight: bold" ></span>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <!-- /top navigation -->
+
+    <!-- page content -->
+    <div class="right_col" role="main">
+      <div class="col-md-12 col-sm-12">
+        <div class="x_panel" id="toggle_panel" style="border:none">
+          <div class="x_title">
+            <h2>统计分析：&nbsp;&nbsp;</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a href="javascript:void(0)" onclick="document:analysisForm.submit()"><i class="fa fa-search fa-lg"></i></a></li>
+              <li><a href="javascript:void(0)" onclick="toggleSearchForm()"><i class="fa fa-chevron-up" id="toggle_button"></i></a></li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+<!--          <div class="x_content">-->
+<!--            <div id="echarts_bar" style="height:370px;"></div>-->
+<!--          </div>-->
+          <div class="x_content">
+            <div class="col-sm-12">
+              <div id="echarts_bar" style="height:400px;"></div>
+              <div id="echarts_pie" style="height:600px;"></div>
+              <div id="echarts_gauge" style="height:400px;"></div>
+              <!--<div class="col-sm-6">
+                <div id="echarts_pie" style="height:600px;"></div>
+              </div>
+              <div class="col-sm-6">
+                <div id="echarts_gauge" style="height:400px;"></div>
+              </div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /page content -->
+
+    <!-- footer content -->
+    <footer>
+      <div class="clearfix"></div>
+    </footer>
+    <!-- /footer content -->
+  </div>
+</div>
+
+
+
+<!-- jQuery -->
+<script th:src="@{/frontend_depandence/js/jquery.js}"></script>
+<!-- Bootstrap -->
+<script th:src="@{/frontend_depandence/js/bootstrap.bundle.js}"></script>
+<!-- ECharts.js -->
+<script th:src="@{/frontend_depandence/js/echarts.js}"></script>
+<!-- Custom Theme Scripts -->
+<script th:src="@{/frontend_depandence/js_custom/echarts.js}"></script>
+<script th:src="@{/frontend_depandence/js_custom/custom.js}"></script>
+
+<!-- load for js scope -->
+<script th:inline="javascript">
+    <!--初始化组件-->
+    $(document).ready(function() {
+      init_echarts_bar();
+      init_echarts_pie();
+      init_echarts_gauge();
+    });
+</script>
+
+</body>
+</html>

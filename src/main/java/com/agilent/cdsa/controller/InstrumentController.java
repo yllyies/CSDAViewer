@@ -64,11 +64,18 @@ public class InstrumentController {
         // 获取温湿度信息
         XiaomiHumitureDto xiaomiHumitureDto = PythonUtil.doGetHumitureInfo();
         if (CodeListConstant.NONE.equals(xiaomiHumitureDto.getTemperature()) && CodeListConstant.NONE.equals(xiaomiHumitureDto.getHumidity())) {
-            modelAndView.getModel().put("humiture", "温湿度：20 ℃， 40.1 %RH");
+            modelAndView.getModel().put("humiture", "温湿度：None");
         } else {
             modelAndView.getModel().put("humiture", xiaomiHumitureDto.getDesc());
         }
 
+        return modelAndView;
+    }
+
+    @ApiOperation("仪器总览界面主查询")
+    @RequestMapping(value = "echarts", method = RequestMethod.GET)
+    public ModelAndView echarts() {
+        ModelAndView modelAndView = new ModelAndView("echarts");
         return modelAndView;
     }
 }

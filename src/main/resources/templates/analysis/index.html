@@ -50,6 +50,7 @@
                   <li><a href="javascript:void(0)" th:onclick = "|javascript: changeForm('creator')|">人员进样统计</a></li>
                 </ul>
               </li>
+              <li><a th:href="@{/instrument/echarts}"><i class="fa fa-bar-chart"></i>仪器图表</a></li>
             </ul>
           </div>
         </div>
@@ -75,15 +76,16 @@
     <!-- page content -->
     <div class="right_col" role="main">
       <div class="col-md-12 col-sm-12">
-        <div class="x_panel" style="border:none">
+        <div class="x_panel" id="toggle_panel" style="border:none">
           <div class="x_title">
-            <h2>查询表单：&nbsp;&nbsp;</h2>
+            <h2>统计分析：&nbsp;&nbsp;</h2>
             <ul class="nav navbar-right panel_toolbox">
-              <li><a href="javascript:void(0)" onclick="document:analysisForm.submit()"><i class="fa fa-check-square fa-lg"></i></a></li>
+              <li><a href="javascript:void(0)" onclick="document:analysisForm.submit()"><i class="fa fa-search fa-lg"></i></a></li>
+              <li><a href="javascript:void(0)" onclick="toggleSearchForm()"><i class="fa fa-chevron-up" id="toggle_button"></i></a></li>
             </ul>
             <div class="clearfix"></div>
           </div>
-          <div class="col-md-12 col-sm-8 col-xs-8 my-sm-3">
+          <div class="col-md-12 col-sm-8 col-xs-8 my-sm-3 x_content" id="toggle_form">
             <form id="analysisForm" name='analysisForm' th:action="@{/analysis/query}" method="post" >
               <!--                仪器选择-->
               <div class="form-group row" id="instrument_selector_div">
@@ -228,8 +230,10 @@
 <!--<script src="/frontend_depandence/js/parsley.js"></script>-->
 <!-- iCheck -->
 <script th:src="@{/frontend_depandence/js/icheck.js}"></script>
+<!-- ECharts.js -->
+<script th:src="@{/frontend_depandence/js/echarts.js}"></script>
+
 <!-- Custom Theme Scripts -->
-<script th:src="@{/frontend_depandence/js/Chart.js}"></script>
 <script th:src="@{/frontend_depandence/js_custom/analysis.js}"></script>
 <script th:src="@{/frontend_depandence/js_custom/custom.js}"></script>
 
