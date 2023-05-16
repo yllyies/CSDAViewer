@@ -7,7 +7,6 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.agilent.cdsa.common.CodeListConstant;
 import com.agilent.cdsa.common.util.HttpUtil;
@@ -133,7 +132,33 @@ public class InstrumentServiceImpl implements InstrumentService {
         }
         // 处理仪器实时状态前端展示字段
         this.processDisplayField(result);
+        this.sortList(result);
+
         return result;
+    }
+
+    /**
+     * 按照 错误、运行、空闲、未就绪、未连接、其它 进行仪器列表排序
+     *
+     * @param result 未排序的仪器列表
+     */
+    private void sortList(List<InstrumentDto> result) {
+        if (CollUtil.isEmpty(result)) {
+            return;
+        }
+        HashMap<String, Integer> sortMap = new HashMap<>() {{
+            put(CodeListConstant.INSTRUMENT_STATE_ERROR, 1);
+            put(CodeListConstant.INSTRUMENT_STATE_RUNNING, 2);
+            put(CodeListConstant.INSTRUMENT_STATE_IDLE, 3);
+            put(CodeListConstant.INSTRUMENT_STATE_NOT_READY, 4);
+            put(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT, 5);
+            put(CodeListConstant.INSTRUMENT_STATE_OFFLINE, 6);
+            put(CodeListConstant.INSTRUMENT_STATE_UNKNOWN, 7);
+            put(CodeListConstant.INSTRUMENT_STATE_MAINTENANCE_DUE, 8);
+            put(CodeListConstant.INSTRUMENT_STATE_SLEEP, 9);
+        }};
+        result.sort((o1, o2) -> (!sortMap.containsKey(o1.getInstrumentState()) || !sortMap.containsKey(o2.getInstrumentState())) ?
+                1 : sortMap.get(o1).compareTo(sortMap.get(o2)));
     }
 
     /**
@@ -214,28 +239,10 @@ public class InstrumentServiceImpl implements InstrumentService {
      * @return 第三方仪器状态
      */
     private String calPowerLevel(Double power, String powerLevelStr) {
-        if (!JSONUtil.isJsonArray(powerLevelStr)) {
-            return CodeListConstant.INSTRUMENT_STATE_UNKNOWN;
-        }
-        JSONArray jsonArray = JSONUtil.parseArray(powerLevelStr);
-        if (CollUtil.isEmpty(jsonArray)) {
-            return CodeListConstant.INSTRUMENT_STATE_UNKNOWN;
+        if (!JSONUtil.isJsonArray(powerLevelStr) || power == null || power == 0) {
+            return CodeListConstant.INSTRUMENT_STATE_OFFLINE;
         } else {
-            Double[] powerLevels = jsonArray.toArray(Double[]::new);
-            if (power == null) {
-                return CodeListConstant.INSTRUMENT_STATE_UNKNOWN;
-            }
-            if (power == 0) {
-                return CodeListConstant.INSTRUMENT_STATE_OFFLINE;
-            } else if (powerLevels[powerLevels.length - 1] - power < 5 && powerLevels[powerLevels.length - 1] - power > -5) {
-                return CodeListConstant.INSTRUMENT_STATE_RUNNING;
-            }
-            for (int i = 1; i < powerLevels.length - 1; i++) {
-                if (powerLevels[powerLevels.length - i] - power < 5 && powerLevels[powerLevels.length - i] - power > -5) {
-                    return CodeListConstant.INSTRUMENT_STATE_PRERUN;
-                }
-            }
-            return CodeListConstant.INSTRUMENT_STATE_UNKNOWN;
+            return CodeListConstant.INSTRUMENT_STATE_RUNNING;
         }
     }
 }

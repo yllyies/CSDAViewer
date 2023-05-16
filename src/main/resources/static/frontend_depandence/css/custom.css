@@ -5102,7 +5102,7 @@ ul.notifications {
   font-weight: bold;
 }
 /* 离线 Offline */
-.btn-offline {
+/*.btn-offline {
   border: 2px solid #23272b;
 }
 .btn-offline:hover {
@@ -5113,8 +5113,20 @@ ul.notifications {
 .btn-offline span {
   color:#23272b;
   font-weight: bold;
+}*/
+.btn-offline {
+  border: 2px solid #a9a9a9;
+}
+.btn-offline:hover {
+  color: #708090;
+  border: 2px solid #c0c0c0;
+}
+.btn-offline span {
+  color:#a9a9a9;
+  font-weight: bold;
 }
 /* 未知 Unknown */
+/*
 .btn-unknown {
   border: 2px solid #a9a9a9;
 }
@@ -5125,4 +5137,4 @@ ul.notifications {
 .btn-unknown>span {
   color:#a9a9a9;
   font-weight: bold;
-}
+}*/

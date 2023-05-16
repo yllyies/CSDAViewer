@@ -41,13 +41,13 @@ public class CodeListConstant {
     public static final String INSTRUMENT_STATE_COLOR_NOT_CONNECT = "#23272b";
     public static final String INSTRUMENT_STATE_COLOR_IDLE = "#00ff00";
     public static final String INSTRUMENT_STATE_COLOR_ERROR = "#dc3545";
-    public static final String INSTRUMENT_STATE_COLOR_PRERUN = "#32cd32";
+    public static final String INSTRUMENT_STATE_COLOR_PRERUN = "#007bff";
     public static final String INSTRUMENT_STATE_COLOR_RUNNING = "#007bff";
     public static final String INSTRUMENT_STATE_COLOR_NOT_READY = "#febb07";
-    public static final String INSTRUMENT_STATE_COLOR_MAINTENANCE_DUE = "#ffd700";
-    public static final String INSTRUMENT_STATE_COLOR_SLEEP = "#ffd700";
-    public static final String INSTRUMENT_STATE_COLOR_OFFLINE = "#343a40";
-    public static final String INSTRUMENT_STATE_COLOR_UNKNOWN = "#343a40";
+    public static final String INSTRUMENT_STATE_COLOR_MAINTENANCE_DUE = "#a9a9a9";
+    public static final String INSTRUMENT_STATE_COLOR_SLEEP = "#a9a9a9";
+    public static final String INSTRUMENT_STATE_COLOR_OFFLINE = "#a9a9a9";
+    public static final String INSTRUMENT_STATE_COLOR_UNKNOWN = "#a9a9a9";
 
     /**
      * 空值
