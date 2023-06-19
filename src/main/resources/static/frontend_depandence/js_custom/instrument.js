@@ -2,12 +2,12 @@ function toggleFullscreen() {
     if (document.fullscreen) {
         document.exitFullscreen();
         var obj = document.getElementById('datatable-div');
-        obj.style.height = "400px";
+//        obj.style.height = "400px";
     } else {
         var obj2 = document.getElementById('fullScreenPanel');
         obj2.requestFullscreen();
         var obj = document.getElementById('datatable-div');
-        obj.style.height = "calc(80vh)";fullscreen
+//        obj.style.height = "calc(80vh)";
     }
 }
 

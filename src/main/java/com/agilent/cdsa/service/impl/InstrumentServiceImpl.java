@@ -158,7 +158,7 @@ public class InstrumentServiceImpl implements InstrumentService {
             put(CodeListConstant.INSTRUMENT_STATE_SLEEP, 9);
         }};
         result.sort((o1, o2) -> (!sortMap.containsKey(o1.getInstrumentState()) || !sortMap.containsKey(o2.getInstrumentState())) ?
-                1 : sortMap.get(o1).compareTo(sortMap.get(o2)));
+                1 : sortMap.get(o1.getInstrumentState()).compareTo(sortMap.get(o2.getInstrumentState())));
     }
 
     /**

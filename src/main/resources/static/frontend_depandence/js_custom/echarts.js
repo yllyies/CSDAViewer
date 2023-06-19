@@ -1,34 +1,11 @@
 color = ['#0085D5', '#26B99A', '#34495E', '#BDC3C7', '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'];
-
+theme_color = 'dark';
 /* 柱状图 */
 function init_echarts_bar() {
     if (!$('#echarts_bar').length) {
         return;
     }
-    var theme = {
-        color: color,
-        title: {
-//            itemGap: 8,
-            textStyle: {
-                fontWeight: 'normal',
-                color: '#0085D5'
-            }
-        },
-        grid: {
-            left: '6%',
-            borderWidth: 0
-        },
-        /*timeline: {
-            lineStyle: {
-                color: '#408829'
-            },
-            controlStyle: {
-                normal: { color: '#408829' },
-                emphasis: { color: '#408829' }
-            }
-        }*/
-    };
-    var echartsBar = echarts.init(document.getElementById('echarts_bar'), 'dark');
+    var echartsBar = echarts.init(document.getElementById('echarts_bar'), theme_color);
     var option = {
          title: {
              text: '仪器排行',
@@ -66,6 +43,7 @@ function init_echarts_bar() {
          series: [{
              name: '2015',
              type: 'bar',
+             color: color,
              realtimeSort: true,
              data: [311, 380, 219, 213, 112, 199],
              itemStyle: {
@@ -104,10 +82,7 @@ function init_echarts_pie() {
     if (!$('#echarts_pie').length) {
         return;
     }
-    var theme = {
-        color: color
-    };
-    var echartsPie = echarts.init(document.getElementById('echarts_pie'), 'dark');
+    var echartsPie = echarts.init(document.getElementById('echarts_pie'), theme_color);
     var option = {
       tooltip: {
         trigger: 'item'
@@ -120,25 +95,38 @@ function init_echarts_pie() {
         top: '7%',
         left: 'center'
       },
+      toolbox: {
+           show: true,
+           feature: {
+               saveAsImage: {
+                   show: true,
+                   title: "Save Image"
+               }
+           }
+       },
       series: [
         {
 //              name: 'Access From',
           type: 'pie',
           radius: ['40%', '70%'],
-          avoidLabelOverlap: false,
+//          avoidLabelOverlap: false,
+          color: color,
           itemStyle: {
             borderRadius: 10,
             borderColor: '#fff',
             borderWidth: 2
           },
-          /*label: {
-            show: false, // 是否显示数值
-            position: 'center'
-          },*/
+          label: {
+//            show: false, // 是否显示数值
+//            position: 'inside'
+          },
+          tooltip: {
+
+          },
           emphasis: {
             label: {
               show: true,
-              fontSize: 40,
+              fontSize: 22,
               fontWeight: 'bold'
             }
           },
@@ -167,16 +155,23 @@ function init_echarts_gauge() {
     if (!$('#echarts_gauge').length) {
         return;
     }
-    var theme = {
-        color: color
-    };
-    var echartsGauge = echarts.init(document.getElementById('echarts_gauge'), 'dark');
+    var echartsGauge = echarts.init(document.getElementById('echarts_gauge'), theme_color);
     var option = {
         title: {
             text: '仪器运行统计',
         },
+        toolbox: {
+            show: true,
+            feature: {
+                saveAsImage: {
+                   show: true,
+                   title: "Save Image"
+                }
+            }
+        },
         series: [{
             type: 'gauge',
+            color: color,
             startAngle: 180,
             endAngle: 0,
             center: ['50%', '75%'],
