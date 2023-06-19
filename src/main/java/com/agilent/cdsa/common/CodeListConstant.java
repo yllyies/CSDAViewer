@@ -38,7 +38,7 @@ public class CodeListConstant {
     public static final String INSTRUMENT_STATE_OFFLINE = "Offline";
     public static final String INSTRUMENT_STATE_UNKNOWN = "Unknown";
 
-    public static final String INSTRUMENT_STATE_COLOR_NOT_CONNECT = "#23272b";
+    public static final String INSTRUMENT_STATE_COLOR_NOT_CONNECT = "#a9a9a9";
     public static final String INSTRUMENT_STATE_COLOR_IDLE = "#00ff00";
     public static final String INSTRUMENT_STATE_COLOR_ERROR = "#dc3545";
     public static final String INSTRUMENT_STATE_COLOR_PRERUN = "#007bff";
