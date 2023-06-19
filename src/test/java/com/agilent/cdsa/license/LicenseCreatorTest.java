@@ -39,7 +39,7 @@ public class LicenseCreatorTest {
         // 设置当前时间
         expiryCalendar.setTime(new Date());
         // 往后延长一年 = 授权一年时间
-        expiryCalendar.add(Calendar.MONTH, 3);
+        expiryCalendar.add(Calendar.MONTH, 6);
         param.setExpiryTime(expiryCalendar.getTime());
         // 用户类型
         param.setConsumerType("user");
