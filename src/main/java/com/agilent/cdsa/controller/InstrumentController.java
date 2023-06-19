@@ -2,9 +2,7 @@ package com.agilent.cdsa.controller;
 
 import cn.hutool.core.map.MapUtil;
 import com.agilent.cdsa.common.CodeListConstant;
-import com.agilent.cdsa.common.util.PythonUtil;
 import com.agilent.cdsa.dto.InstrumentDto;
-import com.agilent.cdsa.dto.XiaomiHumitureDto;
 import com.agilent.cdsa.service.InstrumentService;
 import com.agilent.cdsa.service.InstrumentStateService;
 import io.swagger.annotations.Api;
@@ -36,8 +34,8 @@ public class InstrumentController {
         ModelAndView modelAndView = new ModelAndView("instrument/index");
         List<InstrumentDto> agilentInstruments = instrumentService.doFindInstrumentsByRemote();
         List<InstrumentDto> result = new ArrayList<>(agilentInstruments);
-        List<InstrumentDto> thirdPartyInstruments = instrumentService.doFindThirdPartyInstruments();
-        result.addAll(thirdPartyInstruments);
+//        List<InstrumentDto> thirdPartyInstruments = instrumentService.doFindThirdPartyInstruments();
+//        result.addAll(thirdPartyInstruments);
 
         modelAndView.getModel().put("dataSource", result); // 仪器状态结果集
         Map<String, Long> stateToCountMap = result.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
@@ -62,12 +60,12 @@ public class InstrumentController {
             modelAndView.getModel().put("unknownCount", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_UNKNOWN) == null ? "0": MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_UNKNOWN));
         }
         // 获取温湿度信息
-        XiaomiHumitureDto xiaomiHumitureDto = PythonUtil.doGetHumitureInfo();
+        /*XiaomiHumitureDto xiaomiHumitureDto = PythonUtil.doGetHumitureInfo();
         if (CodeListConstant.NONE.equals(xiaomiHumitureDto.getTemperature()) && CodeListConstant.NONE.equals(xiaomiHumitureDto.getHumidity())) {
             modelAndView.getModel().put("humiture", "温湿度：None");
         } else {
             modelAndView.getModel().put("humiture", xiaomiHumitureDto.getDesc());
-        }
+        }*/
 
         return modelAndView;
     }

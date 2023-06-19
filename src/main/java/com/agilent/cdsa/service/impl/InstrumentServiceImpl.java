@@ -86,7 +86,8 @@ public class InstrumentServiceImpl implements InstrumentService {
     public List<InstrumentDto> doFindThirdPartyInstruments() {
         List<InstrumentDto> result = new ArrayList<>();
         // 获取第三方仪器信息实时功率
-        List<PowerHistory> thirdPartyPowerInfo = PythonUtil.doGetInstrumentPower();
+//        List<PowerHistory> thirdPartyPowerInfo = PythonUtil.doGetInstrumentPower();
+        List<PowerHistory> thirdPartyPowerInfo = new ArrayList<>();
         // 查询所有仪器功率历史记录
         List<String> ips = thirdPartyPowerInfo.stream().map(PowerHistory::getIp).distinct().collect(Collectors.toList());
         List<PowerHistory> powerHistoryList = powerHistoryDao.findByIpInOrderByCreatedDateDesc(ips);
