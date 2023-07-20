@@ -6,9 +6,7 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.agilent.cdsa.common.CodeListConstant;
-import com.agilent.cdsa.dto.AnalysisRequestDto;
-import com.agilent.cdsa.dto.ChartDatasetDto;
-import com.agilent.cdsa.dto.TableDatasetDto;
+import com.agilent.cdsa.dto.*;
 import com.agilent.cdsa.model.Dx;
 import com.agilent.cdsa.model.Project;
 import com.agilent.cdsa.model.Rslt;
@@ -29,7 +27,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author lifang
- * @since 2019-09-01
+ * @since 2023-07-19
  */
 @Service
 public class DxServiceImpl implements DxService {
@@ -44,6 +42,7 @@ public class DxServiceImpl implements DxService {
     @Override
     public Map<String, Object> doQuery(AnalysisRequestDto analysisRequestDto) {
         // 按照视图类型进行数据组装
+        Map<String, Object> result = new HashMap<>();
         Table<String, String, Long> graphMap = HashBasedTable.create();
         List<String> barLabels = new ArrayList<>(); // 柱状图x轴：仪器
         List<ChartDatasetDto> barDatasets = new ArrayList<>(); // 柱状图数据结果：数组，一个元素对应一个仪器，所包含的data:[]对应每个时间点仪器耗时
@@ -53,30 +52,29 @@ public class DxServiceImpl implements DxService {
         List<TableDatasetDto> tableDatasets = new ArrayList<>(); // 数据结果：表格
         TreeMap<DateTime, DateTime> startToEndMap = new TreeMap<>();
         Map<String, Integer> dateStrToWorkHoursMap = new HashMap<>();
-
+        // 查询所有仪器信息，用于页面
+        List<RsltVo> menuInfo = rsltDao.findMenuInfo();
+        List<String> instrumentNamesAll = menuInfo.stream().map(RsltVo::getInstrumentName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
+        List<String> projectNamesAll = menuInfo.stream().map(RsltVo::getProjectName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
+        List<String> creatorsAll = menuInfo.stream().map(RsltVo::getCreator).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
+        List<Integer> yearRange = menuInfo.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).distinct().sorted().collect(Collectors.toList());
+        result.put("instrumentNames", instrumentNamesAll);
+        result.put("yearRange", yearRange);
+        result.put("projectNames", projectNamesAll);
+        result.put("creators", creatorsAll);
+        result.put("barLabels", barLabels);
+        result.put("barDatasets", barDatasets);
+        result.put("lineLabels", lineLabels);
+        result.put("lineDatasets", lineDatasets);
+        result.put("doughnutLabels", barLabels);
+        result.put("doughnutDatasets", doughnutDatasets);
+        result.put("tableDatasets", tableDatasets);
+        result.put("requestParams", analysisRequestDto);
+        // 无查询条件，返回菜单选项
         if (StrUtil.isBlank(analysisRequestDto.getInstrumentNames()) &&
                 StrUtil.isBlank(analysisRequestDto.getProjectNames()) &&
                 StrUtil.isBlank(analysisRequestDto.getCreatorNames())) {
-            // 查询所有仪器信息
-            List<Rslt> rslts = rsltDao.findAll();
-            List<String> instrumentNamesAll = rslts.stream().map(Rslt::getInstrumentName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
-            List<String> projectNamesAll = rslts.stream().map(Rslt::getProject).map(Project::getName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
-            List<String> creatorsAll = rslts.stream().map(Rslt::getCreator).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
-            List<Integer> yearRange = rslts.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).distinct().sorted().collect(Collectors.toList());
-            return new HashMap<>() {{
-                put("instrumentNames", instrumentNamesAll);
-                put("yearRange", yearRange);
-                put("projectNames", projectNamesAll);
-                put("creators", creatorsAll);
-                put("barLabels", barLabels);// 时间标签
-                put("barDatasets", barDatasets);
-                put("lineLabels", lineLabels); // 线图x轴：时间
-                put("lineDatasets", lineDatasets); // label 为仪器，data为[] 每个时间点对应时间
-                put("doughnutLabels", barLabels);
-                put("doughnutDatasets", doughnutDatasets);
-                put("tableDatasets", tableDatasets);
-                put("requestParams", analysisRequestDto);
-            }};
+            return result;
         }
 
         String yAxisUnit = analysisRequestDto.getYAxisUnit(); // TODO "TIME", "STITCH"
@@ -99,11 +97,11 @@ public class DxServiceImpl implements DxService {
             dateStrToWorkHoursMap.put(dateFormate, computeWorkingDays(key, startToEndMap.get(key)) * 8);
         }
         lineLabels.addAll(startToEndMap.navigableKeySet().stream().map(time -> formateByTimeUnit(timeUnit, time)).collect(Collectors.toList()));
-        // 仪器运行时间界面查询
+        // 按仪器查询
         if (CodeListConstant.INSTRUMENT_VIEW.equals(analysisRequestDto.getViewType())) {
             List<String> instrumentNames = StrUtil.splitTrim(analysisRequestDto.getInstrumentNames(), ",");
             barLabels.addAll(instrumentNames);
-            List<Object[]> result = dxDao.doQueryInstrumentNames(startTime, endTime, instrumentNames);
+            List<Object[]> list = dxDao.doQueryInstrumentNames(startTime, endTime, instrumentNames);
             // TODO 处理仪器运行时间（分钟）
             /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentNameIn(instrumentNames);
             Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
@@ -115,7 +113,7 @@ public class DxServiceImpl implements DxService {
                 log.warn("仪器运行时间获取失败：" +  "当前仪器ID：" + instrumentDto.getInstrumentId());
             }*/
             // 收集 dateset
-            for (Object[] objects : result) {
+            for (Object[] objects : list) {
                 Dx dx = (Dx) objects[0];
                 Rslt rslt = (Rslt) objects[1];
                 Timestamp updatedDate = dx.getUpdatedDate();
@@ -134,9 +132,10 @@ public class DxServiceImpl implements DxService {
                 }
             }
         } else if (CodeListConstant.PROJECT_VIEW.equals(analysisRequestDto.getViewType())) {
+            // 按项目查询
             List<String> projectNames = StrUtil.splitTrim(analysisRequestDto.getProjectNames(), ",");
             barLabels.addAll(projectNames);
-            List<Object[]> result = dxDao.doQueryProjectNames(startTime, endTime, projectNames);
+            List<Object[]> list = dxDao.doQueryProjectNames(startTime, endTime, projectNames);
             // TODO 处理仪器运行时间（分钟）
             /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentNameIn(instrumentNames);
             Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
@@ -148,7 +147,7 @@ public class DxServiceImpl implements DxService {
                 log.warn("仪器运行时间获取失败：" +  "当前仪器ID：" + instrumentDto.getInstrumentId());
             }*/
             // 收集 dateset
-            for (Object[] objects : result) {
+            for (Object[] objects : list) {
                 Dx dx = (Dx) objects[0];
                 Project project = (Project) objects[2];
                 Timestamp updatedDate = dx.getUpdatedDate();
@@ -167,10 +166,11 @@ public class DxServiceImpl implements DxService {
                 }
             }
         } else if (CodeListConstant.CREATOR_VIEW.equals(analysisRequestDto.getViewType())) {
-            // 4. AdminView Y轴为人员：
+            // 按执行人员查询
+            // Y轴为人员：
             List<String> creatorNames = StrUtil.splitTrim(analysisRequestDto.getCreatorNames(), ",");
             barLabels.addAll(creatorNames);
-            List<Object[]> result = dxDao.doQueryCreatorNames(startTime, endTime, creatorNames);
+            List<Object[]> list = dxDao.doQueryCreatorNames(startTime, endTime, creatorNames);
             // TODO 处理仪器运行时间（分钟）
             /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentNameIn(instrumentNames);
             Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
@@ -182,7 +182,7 @@ public class DxServiceImpl implements DxService {
                 log.warn("仪器运行时间获取失败：" +  "当前仪器ID：" + instrumentDto.getInstrumentId());
             }*/
             // 收集 dateset
-            for (Object[] objects : result) {
+            for (Object[] objects : list) {
                 Dx dx = (Dx) objects[0];
                 Rslt rslt = (Rslt) objects[1];
                 Timestamp uploadedDate = dx.getUpdatedDate();
@@ -201,28 +201,193 @@ public class DxServiceImpl implements DxService {
                 }
             }
         }
-
+        // 根据查询结果，处理图表信息
         processData(graphMap, dateStrToWorkHoursMap, barLabels, barDatasets, lineLabels, lineDatasets, doughnutDatasets, tableDatasets);
-        // 查询所有仪器信息
-        List<Rslt> rslts = rsltDao.findAll();
-        List<String> instrumentNamesAll = rslts.stream().map(Rslt::getInstrumentName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
-        List<Integer> yearRange = rslts.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).distinct().sorted().collect(Collectors.toList());
-        List<String> projectNamesAll = rslts.stream().map(Rslt::getProject).map(Project::getName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
-        List<String> creatorsAll = rslts.stream().map(Rslt::getCreator).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
-        return new HashMap<>() {{
-            put("instrumentNames", instrumentNamesAll);
-            put("yearRange", yearRange);
-            put("projectNames", projectNamesAll);
-            put("creators", creatorsAll);
-            put("barLabels", barLabels);
-            put("barDatasets", barDatasets);
-            put("lineLabels", lineLabels);
-            put("lineDatasets", lineDatasets);
-            put("doughnutLabels", barLabels);
-            put("doughnutDatasets", doughnutDatasets);
-            put("tableDatasets", tableDatasets);
-            put("requestParams", analysisRequestDto);
-        }};
+        // 更新图表
+        result.put("barLabels", barLabels);
+        result.put("barDatasets", barDatasets);
+        result.put("lineLabels", lineLabels);
+        result.put("lineDatasets", lineDatasets);
+        result.put("doughnutLabels", barLabels);
+        result.put("doughnutDatasets", doughnutDatasets);
+        result.put("tableDatasets", tableDatasets);
+        return result;
+    }
+
+    @Override
+    public AnalysisResponseDto doQuery2(AnalysisRequestDto analysisRequestDto) {
+        // 按照视图类型进行数据组装
+        AnalysisResponseDto result = new AnalysisResponseDto();
+        Table<String, String, Long> graphMap = HashBasedTable.create();
+        List<String> barLabels = new ArrayList<>(); // 柱状图x轴：仪器
+        List<ChartDatasetDto> barDatasets = new ArrayList<>(); // 柱状图数据结果：数组，一个元素对应一个仪器，所包含的data:[]对应每个时间点仪器耗时
+        List<String> lineLabels = new ArrayList<>(); // 线图x轴：时间
+        List<ChartDatasetDto> lineDatasets = new ArrayList<>(); // 数据结果：数组，一个元素对应一个仪器，所包含的data:[]对应每个时间点仪器耗时
+        List<Long> doughnutDatasets = new ArrayList<>(); // 数据结果：数组，一个元素对应一个年份，所包含的map:[]对应一个年份下所有仪器耗时
+        List<TableDatasetDto> tableDatasets = new ArrayList<>(); // 数据结果：表格
+        TreeMap<DateTime, DateTime> startToEndMap = new TreeMap<>();
+        Map<String, Integer> dateStrToWorkHoursMap = new HashMap<>();
+        // 查询所有仪器信息，用于页面
+        List<RsltVo> menuInfo = rsltDao.findMenuInfo();
+        List<String> instrumentNamesAll = menuInfo.stream().map(RsltVo::getInstrumentName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
+        List<String> projectNamesAll = menuInfo.stream().map(RsltVo::getProjectName).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
+        List<String> creatorsAll = menuInfo.stream().map(RsltVo::getCreator).filter(StrUtil::isNotBlank).distinct().sorted().collect(Collectors.toList());
+        List<Integer> yearRange = menuInfo.stream().filter(rslt -> null != rslt.getCreatedDate()).map(rslt -> DateUtil.year(rslt.getCreatedDate())).distinct().sorted().collect(Collectors.toList());
+        result.setInstrumentNames(instrumentNamesAll);
+        result.setYearRange(yearRange);
+        result.setProjectNames(projectNamesAll);
+        result.setCreators(creatorsAll);
+        result.setBarLabels(barLabels);
+        result.setBarDatasets(barDatasets);
+        result.setLineLabels(lineLabels);
+        result.setLineDatasets(lineDatasets);
+        result.setDoughnutLabels(barLabels);
+        result.setDoughnutDatasets(doughnutDatasets);
+        result.setTableDatasets(tableDatasets);
+        result.setRequestParams(analysisRequestDto);
+
+        // 无查询条件，返回菜单选项
+        if (StrUtil.isBlank(analysisRequestDto.getInstrumentNames()) &&
+                StrUtil.isBlank(analysisRequestDto.getProjectNames()) &&
+                StrUtil.isBlank(analysisRequestDto.getCreatorNames())) {
+            return result;
+        }
+
+        String yAxisUnit = analysisRequestDto.getYAxisUnit(); // TODO "TIME", "STITCH"
+        // 1.处理查询参数
+        if (StrUtil.isNotBlank(analysisRequestDto.getInstrumentNames())) {
+            analysisRequestDto.setViewType(CodeListConstant.INSTRUMENT_VIEW);
+        } else if (StrUtil.isNotBlank(analysisRequestDto.getProjectNames())) {
+            analysisRequestDto.setViewType(CodeListConstant.PROJECT_VIEW);
+        } else if (StrUtil.isNotBlank(analysisRequestDto.getCreatorNames())) {
+            analysisRequestDto.setViewType(CodeListConstant.CREATOR_VIEW);
+        }
+        String timeUnit = analysisRequestDto.getTimeUnit();
+        List<String> daterange = StrUtil.splitTrim(analysisRequestDto.getDaterange(), ",");
+
+        DateTime startTime = DateUtil.beginOfYear(DateUtil.parse(daterange.get(0), "yyyy"));
+        DateTime endTime = DateUtil.endOfYear(DateUtil.parse(daterange.get(daterange.size() - 1), "yyyy"));
+        processDaterangeByTimeUnit(barDatasets, startToEndMap, timeUnit, new DateTime(startTime), endTime, daterange.size());
+        for (DateTime key : startToEndMap.navigableKeySet()) {
+            String dateFormate = formateByTimeUnit(timeUnit, key);
+            dateStrToWorkHoursMap.put(dateFormate, computeWorkingDays(key, startToEndMap.get(key)) * 8);
+        }
+        lineLabels.addAll(startToEndMap.navigableKeySet().stream().map(time -> formateByTimeUnit(timeUnit, time)).collect(Collectors.toList()));
+        // 按仪器查询
+        if (CodeListConstant.INSTRUMENT_VIEW.equals(analysisRequestDto.getViewType())) {
+            List<String> instrumentNames = StrUtil.splitTrim(analysisRequestDto.getInstrumentNames(), ",");
+            barLabels.addAll(instrumentNames);
+            List<Object[]> list = dxDao.doQueryInstrumentNames(startTime, endTime, instrumentNames);
+            // TODO 处理仪器运行时间（分钟）
+            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentNameIn(instrumentNames);
+            Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
+                    StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
+
+            if (instrumentIdToCountMap.containsKey(instrumentDto.getInstrumentId())) {
+                instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
+            } else {
+                log.warn("仪器运行时间获取失败：" +  "当前仪器ID：" + instrumentDto.getInstrumentId());
+            }*/
+            // 收集 dateset
+            for (Object[] objects : list) {
+                Dx dx = (Dx) objects[0];
+                Rslt rslt = (Rslt) objects[1];
+                Timestamp updatedDate = dx.getUpdatedDate();
+                Integer collectedTime = dx.getCollectedTime();
+                for (DateTime key : startToEndMap.navigableKeySet()) {
+                    String dateFormate = formateByTimeUnit(timeUnit, key);
+                    if (DateUtil.isIn(updatedDate, key, startToEndMap.get(key))) {
+                        if (graphMap.contains(rslt.getInstrumentName(), dateFormate)) {
+                            BigDecimal add = new BigDecimal(graphMap.get(rslt.getInstrumentName(), dateFormate)).add(new BigDecimal(collectedTime));
+                            graphMap.put(rslt.getInstrumentName(), dateFormate, add.longValue());
+                        } else {
+                            graphMap.put(rslt.getInstrumentName(), dateFormate, Long.valueOf(collectedTime));
+                        }
+                        break;
+                    }
+                }
+            }
+        } else if (CodeListConstant.PROJECT_VIEW.equals(analysisRequestDto.getViewType())) {
+            // 按项目查询
+            List<String> projectNames = StrUtil.splitTrim(analysisRequestDto.getProjectNames(), ",");
+            barLabels.addAll(projectNames);
+            List<Object[]> list = dxDao.doQueryProjectNames(startTime, endTime, projectNames);
+            // TODO 处理仪器运行时间（分钟）
+            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentNameIn(instrumentNames);
+            Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
+                    StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
+
+            if (instrumentIdToCountMap.containsKey(instrumentDto.getInstrumentId())) {
+                instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
+            } else {
+                log.warn("仪器运行时间获取失败：" +  "当前仪器ID：" + instrumentDto.getInstrumentId());
+            }*/
+            // 收集 dateset
+            for (Object[] objects : list) {
+                Dx dx = (Dx) objects[0];
+                Project project = (Project) objects[2];
+                Timestamp updatedDate = dx.getUpdatedDate();
+                Integer collectedTime = dx.getCollectedTime();
+                for (DateTime key : startToEndMap.navigableKeySet()) {
+                    String dateFormate = formateByTimeUnit(timeUnit, key);
+                    if (DateUtil.isIn(updatedDate, key, startToEndMap.get(key))) {
+                        if (graphMap.contains(project.getName(), dateFormate)) {
+                            BigDecimal add = new BigDecimal(graphMap.get(project.getName(), dateFormate)).add(new BigDecimal(collectedTime));
+                            graphMap.put(project.getName(), dateFormate, add.longValue());
+                        } else {
+                            graphMap.put(project.getName(), dateFormate, Long.valueOf(collectedTime));
+                        }
+                        break;
+                    }
+                }
+            }
+        } else if (CodeListConstant.CREATOR_VIEW.equals(analysisRequestDto.getViewType())) {
+            // 按执行人员查询
+            // Y轴为人员：
+            List<String> creatorNames = StrUtil.splitTrim(analysisRequestDto.getCreatorNames(), ",");
+            barLabels.addAll(creatorNames);
+            List<Object[]> list = dxDao.doQueryCreatorNames(startTime, endTime, creatorNames);
+            // TODO 处理仪器运行时间（分钟）
+            /*List<InstrumentState> instrumentStates = instrumentStateService.doFindByInstrumentNameIn(instrumentNames);
+            Map<String, Long> instrumentIdToCountMap = instrumentStates.stream().filter(item -> StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_RUNNING) ||
+                    StrUtil.equals(item.getInstrumentState(), CodeListConstant.INSTRUMENT_STATE_PRERUN)).collect(Collectors.groupingBy(is -> StrUtil.toString(is.getInstrumentId()), Collectors.summingLong(InstrumentState::getInstrumentRuntime)));
+
+            if (instrumentIdToCountMap.containsKey(instrumentDto.getInstrumentId())) {
+                instrumentDto.setRuntimeString(MapUtil.getLong(instrumentIdToCountMap, instrumentDto.getInstrumentId()) + "分钟");
+            } else {
+                log.warn("仪器运行时间获取失败：" +  "当前仪器ID：" + instrumentDto.getInstrumentId());
+            }*/
+            // 收集 dateset
+            for (Object[] objects : list) {
+                Dx dx = (Dx) objects[0];
+                Rslt rslt = (Rslt) objects[1];
+                Timestamp uploadedDate = dx.getUpdatedDate();
+                Integer collectedTime = dx.getCollectedTime();
+                for (DateTime key : startToEndMap.navigableKeySet()) {
+                    String dateFormate = formateByTimeUnit(timeUnit, key);
+                    if (DateUtil.isIn(uploadedDate, key, startToEndMap.get(key))) {
+                        if (graphMap.contains(rslt.getCreator(), dateFormate)) {
+                            BigDecimal add = new BigDecimal(graphMap.get(rslt.getCreator(), dateFormate)).add(new BigDecimal(collectedTime));
+                            graphMap.put(rslt.getCreator(), dateFormate, add.longValue());
+                        } else {
+                            graphMap.put(rslt.getCreator(), dateFormate, Long.valueOf(collectedTime));
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        // 根据查询结果，处理图表信息
+        processData(graphMap, dateStrToWorkHoursMap, barLabels, barDatasets, lineLabels, lineDatasets, doughnutDatasets, tableDatasets);
+        // 更新图表信息
+        result.setBarLabels(barLabels);
+        result.setBarDatasets(barDatasets);
+        result.setLineLabels(lineLabels);
+        result.setLineDatasets(lineDatasets);
+        result.setDoughnutLabels(barLabels);
+        result.setDoughnutDatasets(doughnutDatasets);
+        result.setTableDatasets(tableDatasets);
+        return result;
     }
 
     private void processData(Table<String, String, Long> graphMap, Map<String, Integer> dateStrToWorkHoursMap,

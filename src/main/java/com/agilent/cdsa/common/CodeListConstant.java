@@ -2,7 +2,7 @@ package com.agilent.cdsa.common;
 
 /**
  * @author lifang
- * @since 2019-09-05
+ * @since 22023-07-19
  */
 public class CodeListConstant {
 
@@ -47,7 +47,7 @@ public class CodeListConstant {
     public static final String INSTRUMENT_STATE_COLOR_MAINTENANCE_DUE = "#a9a9a9";
     public static final String INSTRUMENT_STATE_COLOR_SLEEP = "#a9a9a9";
     public static final String INSTRUMENT_STATE_COLOR_OFFLINE = "#a9a9a9";
-    public static final String INSTRUMENT_STATE_COLOR_UNKNOWN = "#a9a9a9";
+    public static final String INSTRUMENT_STATE_COLOR_UNKNOWN = "transparent";
 
     /**
      * 空值

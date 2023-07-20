@@ -16,11 +16,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,11 +38,15 @@ public class ACLController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ACLController.class);
 
+    @ApiIgnore
+    @ApiOperation("登录")
     @RequestMapping(value = {"/", "/login"}, method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("login");
     }
 
+    @ApiIgnore
+    @ApiOperation("重定向")
     @RequestMapping(value="/toRedirect",method = { RequestMethod.POST, RequestMethod.GET })
     public  ModelAndView toRedirect(HttpServletRequest request, RedirectAttributes attr){
         ModelAndView  model = new ModelAndView("redirect:/login");
@@ -57,12 +63,14 @@ public class ACLController {
         return model;
     }
 
-    @ApiOperation("index")
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @ApiIgnore
+    @ApiOperation("默认页面入口")
+    @GetMapping(value = "/index")
     public ModelAndView list() {
         return new ModelAndView("instrument/index");
     }
 
+    @ApiOperation("校验用户名密码是否正确")
     @RequestMapping(value = "/check", method = RequestMethod.POST)
     public String check(@RequestParam("username") String username,
                         @RequestParam("password") String password,
@@ -80,7 +88,8 @@ public class ACLController {
     /**
      * logout
      */
-    @RequestMapping("/logout")
+    @ApiOperation("登出")
+    @GetMapping("/logout")
     public ModelAndView logoutView(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {

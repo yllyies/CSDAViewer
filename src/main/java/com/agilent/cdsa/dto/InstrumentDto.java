@@ -36,7 +36,7 @@ public class InstrumentDto implements Serializable {
     private String sampleName;
     @ApiModelProperty("当前样品第几针")
     private Integer currentSample;
-    @ApiModelProperty("当前样品")
+    @ApiModelProperty("序列一共多少针")
     private Integer sampleTotal;
     @ApiModelProperty("仪器描述")
     private String instrumentDescription;

@@ -1,17 +1,23 @@
 package com.agilent.cdsa.controller;
 
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import com.agilent.cdsa.common.CodeListConstant;
+import com.agilent.cdsa.dto.ChartResponseDto;
 import com.agilent.cdsa.dto.InstrumentDto;
+import com.agilent.cdsa.dto.InstrumentsResponseDto;
 import com.agilent.cdsa.service.InstrumentService;
 import com.agilent.cdsa.service.InstrumentStateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +35,13 @@ public class InstrumentController {
     private InstrumentStateService instrumentStateService;
 
     @ApiOperation("仪器总览界面主查询")
+    @ApiIgnore
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public ModelAndView list() {
         ModelAndView modelAndView = new ModelAndView("instrument/index");
         List<InstrumentDto> agilentInstruments = instrumentService.doFindInstrumentsByRemote();
         List<InstrumentDto> result = new ArrayList<>(agilentInstruments);
+        // 小米智能插座获取数据
 //        List<InstrumentDto> thirdPartyInstruments = instrumentService.doFindThirdPartyInstruments();
 //        result.addAll(thirdPartyInstruments);
 
@@ -70,10 +78,32 @@ public class InstrumentController {
         return modelAndView;
     }
 
-    @ApiOperation("仪器总览界面主查询")
-    @RequestMapping(value = "echarts", method = RequestMethod.GET)
-    public ModelAndView echarts() {
-        ModelAndView modelAndView = new ModelAndView("echarts");
-        return modelAndView;
+    @ApiOperation("v2:仪器总览界面主查询接口")
+    @GetMapping(value = "/api/list")
+    @ResponseBody
+    public InstrumentsResponseDto apiList() {
+        InstrumentsResponseDto result = new InstrumentsResponseDto();
+        List<InstrumentDto> agilentInstruments = instrumentService.doFindInstrumentsByRemote();
+        result.setDataSource(agilentInstruments);
+        Map<String, Long> stateToCountMap = agilentInstruments.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
+        result.setSystemTotal(StrUtil.toString(agilentInstruments.size()));
+        result.setRunningCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING) == null ? "0":
+                MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING));
+        result.setNotReadyCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY) == null ? "0":
+                MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY));
+        result.setIdleCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE) == null ? "0":
+                MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE));
+        result.setErrorCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR) == null ? "0":
+                MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR));
+        result.setOfflineCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE) == null ? "0":
+                MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE));
+        return result;
+    }
+
+    @ApiOperation("所有仪器信息的仪表盘接口")
+    @GetMapping(value = "echarts")
+    public ChartResponseDto echarts() {
+
+        return new ChartResponseDto();
     }
 }

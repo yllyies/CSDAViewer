@@ -36,11 +36,24 @@ import java.util.stream.Collectors;
  * 仪器服务方法实现
  *
  * @author lifang
- * @since 2019-09-01
+ * @since 2023-07-19
  */
 @Service
 @Slf4j
 public class InstrumentServiceImpl implements InstrumentService {
+
+    // 固定排序顺序
+    public static final HashMap<String, Integer> SORT_MAP = new HashMap<>() {{
+        put(CodeListConstant.INSTRUMENT_STATE_ERROR, 1);
+        put(CodeListConstant.INSTRUMENT_STATE_RUNNING, 2);
+        put(CodeListConstant.INSTRUMENT_STATE_IDLE, 3);
+        put(CodeListConstant.INSTRUMENT_STATE_NOT_READY, 4);
+        put(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT, 5);
+        put(CodeListConstant.INSTRUMENT_STATE_OFFLINE, 6);
+        put(CodeListConstant.INSTRUMENT_STATE_UNKNOWN, 7);
+        put(CodeListConstant.INSTRUMENT_STATE_MAINTENANCE_DUE, 8);
+        put(CodeListConstant.INSTRUMENT_STATE_SLEEP, 9);
+    }};
     @Autowired
     private ProjectDao projectDao;
     @Autowired
@@ -118,7 +131,6 @@ public class InstrumentServiceImpl implements InstrumentService {
         JSONObject jsonObj = JSONObject.fromObject(new HashMap<>());
         HttpEntity<String> request = new HttpEntity<>(jsonObj.toString(), headers);
         String responseStr = HttpUtil.httpRequest(instrumentInfoUrl, HttpMethod.GET, request);
-
         if (StrUtil.isBlank(responseStr)) {
             log.warn("get data from cdsa extra program api without response -------" + responseStr);
             return new ArrayList<>();
@@ -133,8 +145,8 @@ public class InstrumentServiceImpl implements InstrumentService {
         }
         // 处理仪器实时状态前端展示字段
         this.processDisplayField(result);
+        // 排序仪器状态
         this.sortList(result);
-
         return result;
     }
 
@@ -147,19 +159,8 @@ public class InstrumentServiceImpl implements InstrumentService {
         if (CollUtil.isEmpty(result)) {
             return;
         }
-        HashMap<String, Integer> sortMap = new HashMap<>() {{
-            put(CodeListConstant.INSTRUMENT_STATE_ERROR, 1);
-            put(CodeListConstant.INSTRUMENT_STATE_RUNNING, 2);
-            put(CodeListConstant.INSTRUMENT_STATE_IDLE, 3);
-            put(CodeListConstant.INSTRUMENT_STATE_NOT_READY, 4);
-            put(CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT, 5);
-            put(CodeListConstant.INSTRUMENT_STATE_OFFLINE, 6);
-            put(CodeListConstant.INSTRUMENT_STATE_UNKNOWN, 7);
-            put(CodeListConstant.INSTRUMENT_STATE_MAINTENANCE_DUE, 8);
-            put(CodeListConstant.INSTRUMENT_STATE_SLEEP, 9);
-        }};
-        result.sort((o1, o2) -> (!sortMap.containsKey(o1.getInstrumentState()) || !sortMap.containsKey(o2.getInstrumentState())) ?
-                1 : sortMap.get(o1.getInstrumentState()).compareTo(sortMap.get(o2.getInstrumentState())));
+        result.sort((o1, o2) -> (!SORT_MAP.containsKey(o1.getInstrumentState()) || !SORT_MAP.containsKey(o2.getInstrumentState())) ?
+                1 : SORT_MAP.get(o1.getInstrumentState()).compareTo(SORT_MAP.get(o2.getInstrumentState())));
     }
 
     /**
