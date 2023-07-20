@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * @author lifang
- * @since 2019-09-01
+ * @since 2023-07-19
  */
 @Service
 @Slf4j
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             UserRolesDto userRolesDto = new UserRolesDto();
             userRolesDto.setAclUserName(user.getName());
             userRolesDto.setAclUser(user);
-            List<String> userRoles = new ArrayList<String>();
+            List<String> userRoles = new ArrayList<>();
             userRoles.add("ROLE_ADMIN");
             if (userRolesDto == null) {
                 throw new UsernameNotFoundException(String.format("用户'%s'不存在", username));

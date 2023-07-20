@@ -150,7 +150,7 @@ function init_echarts_pie() {
     echartsPie.setOption(option);
 }
 
-/*环状图*/
+/*仪表盘*/
 function init_echarts_gauge() {
     if (!$('#echarts_gauge').length) {
         return;

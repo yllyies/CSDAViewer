@@ -3,7 +3,7 @@ package com.agilent.cdsa.config;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- * 继承密码
+ * SpringSecurity 密码配置类
  */
 public class CustomPasswordEncoder extends BCryptPasswordEncoder {
 

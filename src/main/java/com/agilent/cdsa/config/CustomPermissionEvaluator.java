@@ -1,13 +1,15 @@
 package com.agilent.cdsa.config;
 
-import java.io.Serializable;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serializable;
+
 /**
+ * SpringSecurity 权限配置校验
+ *
  * @author Lifang
  *
  * @date 2022-11-28
