@@ -68,6 +68,7 @@ public class ACLController {
         return new ModelAndView("instrument/index");
     }
 
+    @ApiIgnore
     @ApiOperation("校验用户名密码是否正确")
     @RequestMapping(value = "/check", method = RequestMethod.POST)
     public String check(@RequestParam("username") String username,
@@ -83,6 +84,7 @@ public class ACLController {
         }
     }
 
+    @ApiIgnore
     @ApiOperation("登出")
     @GetMapping("/logout")
     public ModelAndView logoutView(HttpServletRequest request, HttpServletResponse response) {
