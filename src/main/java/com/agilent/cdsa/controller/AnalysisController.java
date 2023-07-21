@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class AnalysisController {
     @Autowired
     private DxService dxService;
 
+    @ApiIgnore
     @ApiOperation("根据仪器、项目、人员多个维度查询仪器使用情况")
     @RequestMapping(value = "/query", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView query(AnalysisRequestDto analysisRequestDto) {

@@ -7,7 +7,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/cdsa?serverTimezone=GMT%2b8&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
-    password: 123456
+    password: '123456'
     druid:
       test-on-borrow: false
       test-while-idle: true
@@ -35,17 +35,17 @@ logging:
   path: ./logs
   config: classpath:./logback.xml
 
-swagger:
-  base-package: 'com.agilent.cdsa.controller'
-  base-path: '/**'
-  title: '注解方式的Swagger'
-  description: '这是注解方式的Swagger'
-  version: '1.0'
-  license-url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
-  license: 'The Apache License'
-  contact:
-    name: 'AGILENT'
-    url: 'https:www.agilent.com'
+#swagger:
+#  base-package: 'com.agilent.cdsa.controller'
+#  base-path: '/**'
+#  title: '注解方式的Swagger'
+#  description: '这是注解方式的Swagger'
+#  version: 'OpenAPI: 1.0.0'
+#  license-url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+#  license: 'The Apache License'
+#  contact:
+#    name: 'AGILENT'
+#    url: 'https:www.agilent.com'
 
 #License相关配置
 license:
