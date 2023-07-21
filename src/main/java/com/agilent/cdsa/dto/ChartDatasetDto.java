@@ -18,8 +18,7 @@ public class ChartDatasetDto implements Serializable {
     private String backgroundColor;
     @ApiModelProperty(value = "datasets-item borderColor")
     private String borderColor;
-
-    @ApiModelProperty(value = "datasets-item label")
+    @ApiModelProperty(value = "datasets-item 仅线图纵轴label使用")
     private List<Long> data;
 
     public ChartDatasetDto() {

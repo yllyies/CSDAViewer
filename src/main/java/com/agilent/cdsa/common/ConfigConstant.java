@@ -6,9 +6,17 @@ package com.agilent.cdsa.common;
  */
 public class ConfigConstant {
 
+    /**
+     * 登录时访问的check页
+     */
     public static final String LOGIN_FORM_SUBMIT_URL = "/check";
+    /**
+     * 默认访问仪器状态页
+     */
     public static final String DEFAULT_LOGIN_SUCCESSFUL_REQUEST_URL = "/instrument/list";
-    public static final boolean ALWAYS_USE_DEFAULT_LOGIN_SUCCESSFUL_REQUEST_URL = Boolean.FALSE;
+    /**
+     * 访问登录页
+     */
     public static final String REQUEST_LOGIN_PAGE_URL = "/login";
 
 }

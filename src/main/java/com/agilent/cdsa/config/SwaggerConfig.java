@@ -21,12 +21,12 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.agilent.cdsa.controller"))
                 .paths(Predicates.not(PathSelectors.regex("/error.*")))//错误路径不监控
-                .paths(PathSelectors.any())
+//                .paths(PathSelectors.any())
                 .build()
                 .apiInfo(// 创建API的基本信息，这些信息会在Swagger UI中进行显示
                         new ApiInfoBuilder().title("Instrument Agile Panel")
                                 .description("用于仪器实时状态，运行数据统计和分析")
-                                .version("1.0")
+                                .version("openapi: 1.0.0")
                                 .contact(new Contact("Agilent", "https://www.agilent.com.cn/", "michael.li2@agilent.com"))
                                 .license("Apache License, Version 2.0")
                                 .licenseUrl("https://apache.org/licenses/LICENSE-2.0")
