@@ -1,5 +1,6 @@
 package com.agilent.cdsa.controller;
 
+import com.agilent.cdsa.common.dto.CommonResult;
 import com.agilent.cdsa.dto.AnalysisRequestDto;
 import com.agilent.cdsa.dto.AnalysisResponseDto;
 import com.agilent.cdsa.service.DxService;
@@ -35,8 +36,8 @@ public class AnalysisController {
     @ApiOperation("v2:根据仪器、项目、人员多个维度查询仪器使用情况 不返回页面信息")
     @PostMapping(value = "/api/query")
     @ResponseBody
-    public AnalysisResponseDto apiQuery(AnalysisRequestDto analysisRequestDto) {
+    public CommonResult<AnalysisResponseDto> apiQuery(AnalysisRequestDto analysisRequestDto) {
         AnalysisResponseDto analysisResponseDto = dxService.doQuery2(analysisRequestDto);
-        return analysisResponseDto;
+        return CommonResult.success(analysisResponseDto);
     }
 }

@@ -3,6 +3,7 @@ package com.agilent.cdsa.controller;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.agilent.cdsa.common.CodeListConstant;
+import com.agilent.cdsa.common.dto.CommonResult;
 import com.agilent.cdsa.dto.ChartResponseDto;
 import com.agilent.cdsa.dto.InstrumentDto;
 import com.agilent.cdsa.dto.InstrumentsResponseDto;
@@ -81,7 +82,7 @@ public class InstrumentController {
     @ApiOperation("v2:仪器总览界面主查询接口")
     @GetMapping(value = "/api/list")
     @ResponseBody
-    public InstrumentsResponseDto apiList() {
+    public CommonResult<InstrumentsResponseDto> apiList() {
         InstrumentsResponseDto result = new InstrumentsResponseDto();
         List<InstrumentDto> agilentInstruments = instrumentService.doFindInstrumentsByRemote();
         result.setDataSource(agilentInstruments);
@@ -97,13 +98,13 @@ public class InstrumentController {
                 MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR));
         result.setOfflineCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE) == null ? "0":
                 MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE));
-        return result;
+        return CommonResult.success(result);
     }
 
-    @ApiOperation("所有仪器信息的仪表盘接口")
-    @GetMapping(value = "echarts")
-    public ChartResponseDto echarts() {
-
-        return new ChartResponseDto();
+    @ApiOperation("v2: TODO, 所有仪器信息的仪表盘接口")
+    @GetMapping(value = "/api/charts")
+    @ResponseBody
+    public CommonResult<ChartResponseDto> apiCharts() {
+        return CommonResult.success(new ChartResponseDto());
     }
 }

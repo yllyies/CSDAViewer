@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.List;
 
-@ApiModel(value = "仪器统计查询返回值 DTO")
+@ApiModel(value = "统计分析查询返回值 DTO")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
