@@ -35,17 +35,17 @@ logging:
   path: ./logs
   config: classpath:./logback.xml
 
-swagger:
-  base-package: 'com.agilent.cdsa.controller'
-  base-path: '/**'
-  title: '注解方式的Swagger'
-  description: '这是注解方式的Swagger'
-  version: '1.0'
-  license-url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
-  license: 'The Apache License'
-  contact:
-    name: 'AGILENT'
-    url: 'https:www.agilent.com'
+#swagger:
+#  base-package: 'com.agilent.cdsa.controller'
+#  base-path: '/**'
+#  title: '注解方式的Swagger'
+#  description: '这是注解方式的Swagger'
+#  version: '1.0'
+#  license-url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+#  license: 'The Apache License'
+#  contact:
+#    name: 'AGILENT'
+#    url: 'https:www.agilent.com'
 
 #License相关配置
 license:
