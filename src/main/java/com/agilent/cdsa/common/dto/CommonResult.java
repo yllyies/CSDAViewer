@@ -1,12 +1,19 @@
 package com.agilent.cdsa.common.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 通用返回对象
  * Created by lifang on 2019/4/19.
  */
+@ApiModel("返回消息公共类")
 public class CommonResult<T> {
+    @ApiModelProperty("请求返回编码")
     private long code;
+    @ApiModelProperty("请求返回消息")
     private String message;
+    @ApiModelProperty("请求返回数据结果")
     private T data;
 
     protected CommonResult() {

@@ -2,6 +2,7 @@ package com.agilent.cdsa.controller;
 
 
 import com.agilent.cdsa.common.UserInfoContext;
+import com.agilent.cdsa.common.dto.CommonResult;
 import com.agilent.cdsa.model.User;
 import com.agilent.cdsa.service.UserService;
 import de.schlichtherle.license.LicenseContentException;
@@ -16,10 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import springfox.documentation.annotations.ApiIgnore;
@@ -85,9 +83,6 @@ public class ACLController {
         }
     }
 
-    /**
-     * logout
-     */
     @ApiOperation("登出")
     @GetMapping("/logout")
     public ModelAndView logoutView(HttpServletRequest request, HttpServletResponse response) {
@@ -96,6 +91,30 @@ public class ACLController {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return new ModelAndView("redirect:/");
+    }
+
+    @ApiOperation("登录API")
+    @RequestMapping(value = "/api/login", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<?> apiLogin(@RequestParam("username") String username, @RequestParam("password") String password) {
+        User user = userService.doFindByName(username);
+        if (user != null && user.getPassword().equals(password)) {
+            UserInfoContext.setUser(user);
+            return CommonResult.success("success", "用户已登录");
+        } else {
+            return CommonResult.failed("用户名或密码不正确");
+        }
+    }
+
+    @ApiOperation("登出")
+    @GetMapping("/api/logout")
+    @ResponseBody
+    public CommonResult<?> apiLogout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return CommonResult.success("success", "用户已登出");
     }
 }
 
