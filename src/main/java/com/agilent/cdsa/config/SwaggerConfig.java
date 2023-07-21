@@ -26,7 +26,7 @@ public class SwaggerConfig {
                 .apiInfo(// 创建API的基本信息，这些信息会在Swagger UI中进行显示
                         new ApiInfoBuilder().title("Instrument Agile Panel")
                                 .description("用于仪器实时状态，运行数据统计和分析")
-                                .version("openapi: 1.0.0")
+                                .version("OpenAPI: 1.0.0")
                                 .contact(new Contact("Agilent", "https://www.agilent.com.cn/", "michael.li2@agilent.com"))
                                 .license("Apache License, Version 2.0")
                                 .licenseUrl("https://apache.org/licenses/LICENSE-2.0")
