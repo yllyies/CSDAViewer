@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.agilent</groupId>
-	<artifactId>cdsa</artifactId>
+	<artifactId>iad</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>cdsa</name>
+	<name>iad</name>
 	<packaging>war</packaging>
-	<description>CDSA Data Viewer</description>
+	<description>Instrument Agile Dashboard</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -182,13 +182,13 @@
 	</dependencies>
 
 	<build>
-		<finalName>cdsa</finalName>
+		<finalName>iad</finalName>
 		<resources>
 			<!--打包src/main/resources文件夹下的文件-->
 			<resource>
 				<directory>src/main/resources</directory>
 				<excludes>
-					<exclude>**/license/cdsa_privateKeys.keystore</exclude>
+					<exclude>**/license/iad_privateKeys.keystore</exclude>
 				</excludes>
 			</resource>
 		</resources>
