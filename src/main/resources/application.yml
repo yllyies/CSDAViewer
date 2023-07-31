@@ -36,7 +36,7 @@ logging:
   config: classpath:./logback.xml
 
 #swagger:
-#  base-package: 'com.agilent.cdsa.controller'
+#  base-package: 'com.agilent.iad.controller'
 #  base-path: '/**'
 #  title: '注解方式的Swagger'
 #  description: '这是注解方式的Swagger'
@@ -49,11 +49,11 @@ logging:
 
 #License相关配置
 license:
-  subject: cdsa #主体 - 注意主体要与生成证书的主体一致一致，不然验证通过不了
-  publicAlias: cdsa_publicCert #公钥别称
+  subject: iad #主体 - 注意主体要与生成证书的主体一致一致，不然验证通过不了
+  publicAlias: iad_publicCert #公钥别称
   storePass: agilent@123 #访问公钥的密码
-  licensePath: license/cdsa_license.lic #license文件名，前缀为 classPath:resource目录
-  publicKeysStorePath: license/cdsa_publicCerts.keystore #公钥位置
+  licensePath: license/iad_license.lic #license文件名，前缀为 classPath:resource目录
+  publicKeysStorePath: license/iad_publicCerts.keystore #公钥位置
 
 # REST Template
 restTemplate:
