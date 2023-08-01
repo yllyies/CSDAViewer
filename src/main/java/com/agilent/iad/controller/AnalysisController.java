@@ -41,7 +41,7 @@ public class AnalysisController {
     @ApiOperation("v2: 所有仪器信息的仪表盘接口")
     @GetMapping(value = "/api/charts")
     @ResponseBody
-    public CommonResult<ChartResponseDto> apiCharts(@ApiParam("查询时间，2023-07-31,2023-08-01") @RequestParam(value = "dateRange", required = false) String dateRange) {
+    public CommonResult<ChartResponseDto> apiCharts(@ApiParam("查询时间区间，可以为空，示例：2023-07-31,2023-08-01") @RequestParam(value = "dateRange", required = false) String dateRange) {
         ChartResponseDto chartResponseDto = dxService.doFindInstrumentCharts(dateRange);
         return CommonResult.success(chartResponseDto);
     }

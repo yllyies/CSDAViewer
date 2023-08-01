@@ -1,5 +1,6 @@
 package com.agilent.iad.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
@@ -248,13 +249,15 @@ public class DxServiceImpl implements DxService {
 
         // 水波图-剩余可用仪器台数
         List<InstrumentDto> instrumentDtos = instrumentService.doFindInstrumentsByRemote();
-        ChartItemDto chartItemDto = new ChartItemDto();
-        long count = instrumentDtos.stream().filter(item -> CodeListConstant.INSTRUMENT_STATE_RUNNING.equals(item.getInstrumentState()) ||
-                CodeListConstant.INSTRUMENT_STATE_PRERUN.equals(item.getInstrumentState())).count();
-        DecimalFormat df = new DecimalFormat("0.00");//设置保留位数
-        chartItemDto.setLabel("仪器使用率");
-        chartItemDto.setValue(Long.valueOf(df.format(count / instrumentDtos.size())));
-        result.setLiquidChartWorking(chartItemDto);
+        if (CollUtil.isNotEmpty(instrumentDtos)) {
+            ChartItemDto chartItemDto = new ChartItemDto();
+            long count = instrumentDtos.stream().filter(item -> CodeListConstant.INSTRUMENT_STATE_RUNNING.equals(item.getInstrumentState()) ||
+                    CodeListConstant.INSTRUMENT_STATE_PRERUN.equals(item.getInstrumentState())).count();
+            DecimalFormat df = new DecimalFormat("0.0");//设置保留位数
+            chartItemDto.setLabel("仪器使用率");
+            chartItemDto.setValue(Long.parseLong(df.format(count / instrumentDtos.size())));
+            result.setLiquidChartWorking(chartItemDto);
+        }
 
         // TODO 线图-最近7天异常信息预览：仪器连接信息，序列错误...
         List<ChartItemDto> lineDataset = new ArrayList<>();
