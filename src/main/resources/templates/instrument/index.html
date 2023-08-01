@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>仪器总览</title>
+  <link rel="icon" th:href="@{/frontend_depandence/images/agilent_icon.png}">
+
+  <!-- Bootstrap -->
+  <link th:href="@{/frontend_depandence/css/bootstrap.css}" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link th:href="@{/frontend_depandence/css/font-awesome.css}" rel="stylesheet">
+  <!-- NProgress -->
+  <link th:href="@{/frontend_depandence/css/nprogress.css}" rel="stylesheet">
+  <!-- Custom Theme Style -->
+  <link th:href="@{/frontend_depandence/css/custom.css}" rel="stylesheet">
+  <!-- bootstrap-daterangepicker -->
+  <link th:href="@{/frontend_depandence/css/daterangepicker.css}" rel="stylesheet">
+
+  <link th:href="@{/frontend_depandence/css/jquery.dataTables.min.css}" rel="stylesheet">
+  <link th:href="@{/frontend_depandence/css/dataTables.bootstrap.css}" rel="stylesheet">
+  <link th:href="@{/frontend_depandence/css/buttons.bootstrap.css}" rel="stylesheet">
+</head>
+
+<body class="nav-md">
+<div class="container body">
+  <div class="main_container">
+    <div class="col-md-3 left_col">
+      <div class="left_col scroll-view">
+        <div class="navbar nav_title" style="border: 0;">
+          <img th:src="@{/frontend_depandence/images/logo_menu.png}" alt="..." class="img-thumbnail_custom">
+        </div>
+
+        <div class="clearfix"></div>
+
+        <!-- /menu profile quick info -->
+        <br/>
+        <!-- sidebar menu -->
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+          <div class="menu_section">
+            <h3>菜单</h3>
+            <ul class="nav side-menu">
+              <li><a href="#"><i class="fa fa-desktop" ></i>仪器总览</a>
+                <ul class="nav child_menu">
+                  <li th:each="item:${locations}"><a th:if="${not #strings.isEmpty(item)}" th:text="${item}"></a></li>
+                </ul>
+              </li>
+              <li><a th:href="@{/analysis/query}" ><i class="fa fa-bar-chart-o" ></i>统计分析<span class="fa fa-chevron-down"></span></a>
+              </li>
+              <li><a th:href="@{/instrument/echarts}"><i class="fa fa-bar-chart"></i>仪器图表</a></li>
+
+            </ul>
+          </div>
+        </div>
+        <!-- /sidebar menu -->
+      </div>
+    </div>
+
+    <!-- top navigation -->
+    <div class="top_nav" >
+      <div class="nav toggle">
+        <a id="menu_toggle"><i class="fa fa-bars" style="color: white"></i></a>
+      </div>
+      <div class="nav_title_custom" >
+        <img th:src="@{/frontend_depandence/images/logo_banner.png}" alt="..." class="img-thumbnail_custom">
+      </div>
+      <!-- menu profile quick info -->
+      <div class="profile_info">
+        <span class="container-fluid" >欢迎，</span><span sec:authentication="name" style="font-weight: bold" ></span>
+      </div>
+      <div class="clearfix"></div>
+
+    </div>
+    <!-- /top navigation -->
+
+    <!-- page content -->
+    <div class="right_col" role="main">
+      <div class="col-md-12 col-sm-12" id="fullScreenPanel">
+        <div class="x_panel" style="border:none">
+          <div class="x_title">
+            <h6 style="margin: 5px 0px 6px;float: left;display: block;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"><span style="margin-right: 50px;" id="clock"></span><!--<span th:text="${humiture}"></span>--></h6>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a href="javascript:void(0)" onclick="toggleFullscreen()"><i class="fa fa-arrows-alt fa-lg"></i></a></li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+
+          <div class="col-md-12 col-sm-8 col-xs-8">
+            <div class="x_content">
+              <button type="button" class="btn btn-total">System Total <span th:text="${systemTotal}"></span></button>
+              <button type="button" class="btn btn-round btn-running">Running <span th:text="${runningCount}"></span></button>
+              <button type="button" class="btn btn-round btn-notready">NotReady <span th:text="${notReadyCount}"></span></button>
+              <button type="button" class="btn btn-round btn-idel">Idel <span th:text="${idleCount}"></span></button>
+              <button type="button" class="btn btn-round btn-error">Error <span th:text="${errorCount}"></span></button>
+              <button type="button" class="btn btn-round btn-offline">Offline <span th:text="${offlineCount}"></span></button>
+<!--              <button type="button" class="btn btn-round btn-unknown">Unknown <span th:text="${unknownCount}"></span></button>-->
+            </div>
+          </div>
+          <div class="x_content">
+            <div class="table-responsive">
+              <table id="instrumentTable_thead" class="table-custom table-striped jambo_table">
+                <thead style="font-size:12px;" >
+                <tr>
+                  <th width="8%">状态</th>
+                  <th width="15%">仪器名称</th>
+                  <th width="15%">项目</th>
+                  <th width="12%">操作用户</th>
+                  <th width="12%">登录用户</th>
+                  <th width="15%">序列名称</th>
+                  <th width="15%">提交时间</th>
+                  <th width="20%">当前样品</th>
+<!--                  <th width="12%">运行时间</th>-->
+                  <th width="12%">运行状态</th>
+                </tr>
+                </thead>
+              </table>
+            </div>
+            <div class="table-responsive" id="datatable-div" th:fragment="datatable-div" >
+              <table id="instrumentTable_tbody" class="table-custom" >
+                <tbody  style="font-size:12px">
+                <tr id="datatable-tr" th:each="item:${dataSource}">
+                  <!--状态--><td width="8%"><i class="fa fa-square fa-2x" th:if="${not #strings.isEmpty(item.color)}" th:style="'color:' + ${item.color}"></i></td>
+                  <!--仪器名称--><td width="15%" th:text="${item.instrumentName}"></td>
+                  <!--项目--><td width="15%" th:text="${item.projectName}"></td>
+                  <!--操作用户--><td width="12%" th:text="${item.commitUser}"></td>
+                  <!--登录用户--><td width="12%" th:text="${item.acqUser}"></td>
+                  <!--序列名称--><td width="15%" th:text="${item.sequenceName}"></td>
+                  <!--提交时间--><td width="15%" th:text="${item.updateTime}"></td>
+                  <!--当前样品--><td width="20%" th:text="${item.sampleName}"></td>
+<!--                  &lt;!&ndash;运行时间&ndash;&gt;<td width="12%" th:text="${item.executeTime}"></td>-->
+                  <!--运行状态--><td width="12%">
+                    <div class="progress" th:if="${not #strings.isEmpty(item.sequenceInfo)}">
+                      <div class="progress-bar bg-success" role="progressbar" th:style="'width:' + ${item.progressBarWidth}" aria-valuemin="0" aria-valuemax="100">
+                        <span th:text="${item.sequenceInfo}" style="color:black"></span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /page content -->
+
+    <!-- footer content -->
+    <footer>
+      <div class="clearfix"></div>
+    </footer>
+    <!-- /footer content -->
+  </div>
+</div>
+
+<!-- jQuery -->
+
+<script th:src="@{/frontend_depandence/js/jquery.js}"></script>
+<!-- Bootstrap -->
+<script th:src="@{/frontend_depandence/js/bootstrap.bundle.js}"></script>
+<!-- Datatables -->
+<script th:src="@{/frontend_depandence/js/jquery.dataTables.js}"></script>
+<script th:src="@{/frontend_depandence/js/dataTables.bootstrap.js}"></script>
+<script th:src="@{/frontend_depandence/js/dataTables.buttons.js}"></script>
+<!-- iCheck -->
+<script th:src="@{/frontend_depandence/js/icheck.js}"></script>
+<!-- Custom Theme Scripts -->
+<script th:src="@{/frontend_depandence/js_custom/instrument.js}"></script>
+<script th:src="@{/frontend_depandence/js_custom/custom.js}"></script>
+
+<!-- load for js scope -->
+<script>
+    <!--处理请求数据-->
+
+    <!--初始化组件-->
+    $(document).ready(function() {
+      init_sidebar();
+      time();
+      setInterval("time()", 1000);
+    });
+    window.onload = function(params) {
+        setTimeout(function() {
+            autoScroll('datatable-div', 'datatable-tr')  //参数1是 需要上下移动内容的父元素   参数2 是 该父元素下的每个子元素; 参考上面的html即可
+        }, 1000);
+    };
+
+</script>
+
+</body>
+</html>
