@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -36,7 +33,7 @@ public class AnalysisController {
     @ApiOperation("v2:根据仪器、项目、人员多个维度查询仪器使用情况 不返回页面信息")
     @PostMapping(value = "/api/query")
     @ResponseBody
-    public CommonResult<AnalysisResponseDto> apiQuery(AnalysisRequestDto analysisRequestDto) {
+    public CommonResult<AnalysisResponseDto> apiQuery(@RequestBody AnalysisRequestDto analysisRequestDto) {
         AnalysisResponseDto analysisResponseDto = dxService.doQuery2(analysisRequestDto);
         return CommonResult.success(analysisResponseDto);
     }
