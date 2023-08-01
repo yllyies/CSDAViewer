@@ -15,14 +15,9 @@ import java.util.List;
 
 @Repository
 public interface DxDao extends JpaRepository<Dx, BigDecimal>, JpaSpecificationExecutor<Dx> {
+
     List<Dx> findAll(@Nullable Specification<Dx> var1);
 
-    /**
-     * @param startDate
-     * @param endDate
-     * @param instrumentNames
-     * @return
-     */
     @Query(value = "select dx,rslt,p from Dx dx " +
             "left join Rslt rslt on dx.parentNodeId = rslt.nodeId " +
             "left join Project p on rslt.projectId = p.id " +
@@ -30,6 +25,12 @@ public interface DxDao extends JpaRepository<Dx, BigDecimal>, JpaSpecificationEx
             "and rslt.instrumentName in (:instrumentNames) ")
     List<Object[]> doQueryInstrumentNames(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
                                           @Param("instrumentNames") List<String> instrumentNames);
+
+    @Query(value = "select dx,rslt,p from Dx dx " +
+            "left join Rslt rslt on dx.parentNodeId = rslt.nodeId " +
+            "left join Project p on rslt.projectId = p.id " +
+            "where dx.updatedDate between :startDate and :endDate ")
+    List<Object[]> doQueryByDaterange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
     @Query(value = "select dx,rslt,p from Dx dx " +
             "left join Rslt rslt on dx.parentNodeId = rslt.nodeId " +
