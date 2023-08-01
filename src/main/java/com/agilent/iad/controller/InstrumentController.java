@@ -4,7 +4,6 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.agilent.iad.common.CodeListConstant;
 import com.agilent.iad.common.dto.CommonResult;
-import com.agilent.iad.dto.ChartResponseDto;
 import com.agilent.iad.dto.InstrumentDto;
 import com.agilent.iad.dto.InstrumentsResponseDto;
 import com.agilent.iad.service.InstrumentService;
@@ -99,12 +98,5 @@ public class InstrumentController {
         result.setOfflineCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE) == null ? "0":
                 MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE));
         return CommonResult.success(result);
-    }
-
-    @ApiOperation("v2: TODO, 所有仪器信息的仪表盘接口")
-    @GetMapping(value = "/api/charts")
-    @ResponseBody
-    public CommonResult<ChartResponseDto> apiCharts() {
-        return CommonResult.success(new ChartResponseDto());
     }
 }
