@@ -15,6 +15,8 @@ public class CodeListConstant {
     public static final String TIME_UNIT_YEAR = "YEAR";
     public static final String TIME_UNIT_QUARTER = "QUARTER";
     public static final String TIME_UNIT_MONTH = "MONTH";
+    public static final String TIME_UNIT_WEEK = "WEEK";
+    public static final String TIME_UNIT_DAY = "DAY";
     /**
      * 统计视图类型
      **/
