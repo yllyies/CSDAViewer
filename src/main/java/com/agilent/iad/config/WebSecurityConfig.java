@@ -54,8 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.jpg",
                         "/**/*.ico",
                         "/**/*.js",
-                        "/swagger-resources/**",
-                        "/swagger-ui.html",
+                        "/swagger-resources/**", "/swagger-ui.html", "/v2/**", "/api/**", // Swagger 放行
                         "/static/**"
                 )
                 .permitAll()
