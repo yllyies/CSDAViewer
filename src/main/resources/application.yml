@@ -23,9 +23,6 @@ spring:
       ddl-auto: validate
     open-in-view: false
 
-  thymeleaf:
-    cache: false
-
 server:
   port: 18080
 

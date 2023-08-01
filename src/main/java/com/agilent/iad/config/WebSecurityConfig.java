@@ -1,6 +1,5 @@
 package com.agilent.iad.config;
 
-import com.agilent.iad.common.ConfigConstant;
 import com.agilent.iad.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,11 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
-        http.formLogin().loginPage(ConfigConstant.REQUEST_LOGIN_PAGE_URL)
-                .loginProcessingUrl(ConfigConstant.LOGIN_FORM_SUBMIT_URL)
-                .defaultSuccessUrl(ConfigConstant.DEFAULT_LOGIN_SUCCESSFUL_REQUEST_URL)
-                .failureHandler(failureHandler())
-                .permitAll()
+        http.formLogin().permitAll()
                 .and()
                 .authorizeRequests()
                 .antMatchers( // access static resource without authorize
