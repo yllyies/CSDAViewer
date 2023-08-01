@@ -2,7 +2,6 @@ package com.agilent.iad.service;
 
 import com.agilent.iad.dto.AnalysisRequestDto;
 import com.agilent.iad.dto.AnalysisResponseDto;
-import com.agilent.iad.dto.ChartResponseDto;
 
 import java.util.Map;
 
@@ -25,12 +24,4 @@ public interface DxService {
      * @return
      */
     Map<String, Object> doQuery(AnalysisRequestDto analysisRequestDto);
-
-    /**
-     * 根据时间区间，统计仪器相关图表数据
-     *
-     * @param dateRange 时间区间
-     * @return 仪表盘返回DTO
-     */
-    ChartResponseDto doFindInstrumentCharts(String dateRange);
 }
