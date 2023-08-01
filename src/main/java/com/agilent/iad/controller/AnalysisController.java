@@ -8,11 +8,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Api(tags = "统计分析")
 @Controller
@@ -22,7 +21,7 @@ public class AnalysisController {
     @Autowired
     private DxService dxService;
 
-    @ApiIgnore
+    /*@ApiIgnore
     @ApiOperation("根据仪器、项目、人员多个维度查询仪器使用情况")
     @RequestMapping(value = "/query", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView query(AnalysisRequestDto analysisRequestDto) {
@@ -30,7 +29,7 @@ public class AnalysisController {
         ModelAndView modelAndView = new ModelAndView("analysis/index");
         modelAndView.getModel().putAll(resultMap);
         return modelAndView;
-    }
+    }*/
 
     @ApiOperation("v2:根据仪器、项目、人员多个维度查询仪器使用情况 不返回页面信息")
     @PostMapping(value = "/api/query")

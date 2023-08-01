@@ -6,26 +6,19 @@ import com.agilent.iad.common.UserInfoContext;
 import com.agilent.iad.common.dto.CommonResult;
 import com.agilent.iad.model.User;
 import com.agilent.iad.service.UserService;
-import de.schlichtherle.license.LicenseContentException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 
 @Api(tags = "菜单跳转控制器")
@@ -37,7 +30,7 @@ public class ACLController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ACLController.class);
 
-    @ApiIgnore
+    /*@ApiIgnore
     @ApiOperation("登录")
     @RequestMapping(value = {"/", "/login"}, method = { RequestMethod.POST, RequestMethod.GET })
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
@@ -94,7 +87,7 @@ public class ACLController {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return new ModelAndView("redirect:/");
-    }
+    }*/
 
     @ApiOperation("登录API")
     @RequestMapping(value = "/api/login", method = RequestMethod.POST)
