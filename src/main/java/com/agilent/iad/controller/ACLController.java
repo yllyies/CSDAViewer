@@ -1,6 +1,7 @@
 package com.agilent.iad.controller;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.agilent.iad.common.UserInfoContext;
 import com.agilent.iad.common.dto.CommonResult;
 import com.agilent.iad.model.User;
@@ -98,9 +99,12 @@ public class ACLController {
     @ApiOperation("登录API")
     @RequestMapping(value = "/api/login", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult<?> apiLogin(@RequestParam("username") String username, @RequestParam("password") String password) {
-        User user = userService.doFindByName(username);
-        if (user != null && user.getPassword().equals(password)) {
+    public CommonResult<?> apiLogin(@RequestBody User user) {
+        if (null == user || StrUtil.isBlank(user.getName()) || StrUtil.isBlank(user.getPassword())) {
+            return CommonResult.failed("用户名或密码不正确");
+        }
+        User dbUser = userService.doFindByName(user.getName());
+        if (dbUser != null && user.getPassword().equals(dbUser.getPassword())) {
             UserInfoContext.setUser(user);
             return CommonResult.success("success", "用户已登录");
         } else {
