@@ -51,6 +51,8 @@ public class InstrumentDto implements Serializable {
     private String runtimeString;
     @ApiModelProperty("进度条百分比长度")
     private String progressBarWidth;
-    @ApiModelProperty("序列已运行时间，根据当前时间与提交时间的差值计算")
+    @ApiModelProperty("序列已运行时间 HH:mm:ss")
     private String executeTime;
+    @ApiModelProperty("序列预计完成时间 HH:mm:ss")
+    private String estimatedTime;
 }
