@@ -9,6 +9,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.agilent.iad.common.CodeListConstant;
+import com.agilent.iad.common.util.DateUtilForCn;
 import com.agilent.iad.common.util.HttpUtil;
 import com.agilent.iad.common.util.PythonUtil;
 import com.agilent.iad.dto.InstrumentDto;
@@ -181,7 +182,9 @@ public class InstrumentServiceImpl implements InstrumentService {
             if (StrUtil.isNotBlank(instrumentDto.getUpdateTime())) {
                 DateTime parse = DateUtil.parse(instrumentDto.getUpdateTime(), CodeListConstant.ISO_DATETIME_FORMAT);
                 instrumentDto.setExecuteTime(DateUtil.formatBetween(DateUtil.date(), parse, BetweenFormater.Level.SECOND));
-                instrumentDto.setUpdateTime(DateUtil.format(parse, DatePattern.NORM_TIME_PATTERN));
+//                instrumentDto.setUpdateTime(DateUtil.format(parse, DatePattern.NORM_TIME_PATTERN));
+                // 数据存储时间为UTC-0 时区时间，需要转为东八区时间
+                instrumentDto.setUpdateTime(DateUtilForCn.parseTimeZoneUsToCn(instrumentDto.getUpdateTime(), DatePattern.NORM_TIME_PATTERN));
             }
             // 处理序列运行状态
             if (null != instrumentDto.getSampleTotal() && instrumentDto.getSampleTotal() != 0) {

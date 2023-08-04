@@ -19,4 +19,12 @@ public class ChartItemDto implements Serializable {
     private String type;
     @ApiModelProperty("图表最小单位-值")
     private Long value;
+
+    public ChartItemDto() {
+    }
+
+    public ChartItemDto(String label, Long value) {
+        this.label = label;
+        this.value = value;
+    }
 }
