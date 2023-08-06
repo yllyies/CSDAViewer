@@ -17,17 +17,21 @@ import java.util.TimeZone;
 public class DateUtilForCn {
 
     /**
-     * hutool转换
+     * 将特殊格式的日期字符串，从UTC0转换为UTC+8，并格式化
+     *
+     * @param dateStr
+     * @param fromDatePattern
+     * @param toDatePattern
+     * @return
      */
-    public static String parseTimeZoneUsToCn(String dateStr, String datePattern) {
-        // 美国时区
+    public static String parseTimeZoneUsToCn(String dateStr, String fromDatePattern, String toDatePattern) {
+        // 时区设置
         TimeZone usTimeZone = TimeZone.getTimeZone("Greenwich");
         TimeZone cnTimeZone = TimeZone.getTimeZone("Asia/Shanghai");
-        SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(fromDatePattern);
         sdf.setTimeZone(usTimeZone);
         DateTime usTime = DateUtil.parse(dateStr, sdf);
         sdf.setTimeZone(cnTimeZone);
-        return DateUtil.format(usTime, sdf);
-
+        return DateUtil.format(usTime, toDatePattern);
     }
 }

@@ -184,7 +184,7 @@ public class InstrumentServiceImpl implements InstrumentService {
                 instrumentDto.setExecuteTime(DateUtil.formatBetween(DateUtil.date(), parse, BetweenFormater.Level.SECOND));
 //                instrumentDto.setUpdateTime(DateUtil.format(parse, DatePattern.NORM_TIME_PATTERN));
                 // 数据存储时间为UTC-0 时区时间，需要转为东八区时间
-                instrumentDto.setUpdateTime(DateUtilForCn.parseTimeZoneUsToCn(instrumentDto.getUpdateTime(), DatePattern.NORM_TIME_PATTERN));
+                instrumentDto.setUpdateTime(DateUtilForCn.parseTimeZoneUsToCn(instrumentDto.getUpdateTime(), CodeListConstant.ISO_DATETIME_FORMAT, DatePattern.NORM_TIME_PATTERN));
             }
             // 处理序列运行状态
             if (null != instrumentDto.getSampleTotal() && instrumentDto.getSampleTotal() != 0) {
