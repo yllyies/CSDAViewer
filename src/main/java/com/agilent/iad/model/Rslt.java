@@ -41,11 +41,17 @@ public class Rslt implements Serializable
     @Column
     private String cmFullPath;
 
+    /**
+     * 如果序列启动时报错，可能该参数为空
+     */
     @Column
     private String instrumentName;
 
     @Column
     private String sequenceName;
+
+    @Column
+    private Boolean isSqxRslt;
 
     @ManyToOne(targetEntity = Project.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
@@ -174,5 +180,13 @@ public class Rslt implements Serializable
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Boolean getSqxRslt() {
+        return isSqxRslt;
+    }
+
+    public void setSqxRslt(Boolean sqxRslt) {
+        isSqxRslt = sqxRslt;
     }
 }

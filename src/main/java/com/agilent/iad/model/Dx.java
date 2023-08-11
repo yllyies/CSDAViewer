@@ -24,6 +24,9 @@ public class Dx implements Serializable
     @Column
     private Integer methodSetTime;
 
+    /**
+     * 如果序列启动时报错，可能该参数为空
+     */
     @Column
     private Integer collectedTime;
 

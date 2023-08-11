@@ -1,10 +1,7 @@
 package com.agilent.iad.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.*;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.agilent.iad.common.CodeListConstant;
@@ -19,6 +16,7 @@ import com.agilent.iad.service.InstrumentService;
 import com.agilent.iad.service.InstrumentStateService;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +24,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +32,7 @@ import java.util.stream.Collectors;
  * @since 2023-07-19
  */
 @Service
+@Slf4j
 public class DxServiceImpl implements DxService {
 
     @Autowired
@@ -227,36 +227,18 @@ public class DxServiceImpl implements DxService {
         }
         // 1.柱状图-仪器运行时间前10，label是仪器名称，值是运行时间（分钟），每天
         // 1.1.截至时间为当前时间，起始时间为当天0时0分0秒
-        DateTime endTime = DateUtil.parseDate(dateRange);
+        DateTime endTime = DateUtil.parseDateTime(dateRange);
         DateTime startTime = DateUtil.beginOfDay(endTime);
         // 1.2.查询结果区间
         List<Object[]> dataList = dxDao.doQueryByDaterange(startTime, endTime);
         // 1.3.查询结果区间
         List<ChartItemDto> barDatasetDay = this.processBarChart(dataList);
-        /**
-         * TODO 模拟数据：柱状图-当天仪器运行时间（分钟）
-         */
-        for (int i = 1; i < 11; i++) {
-            ChartItemDto demo = new ChartItemDto();
-            demo.setLabel("LC" + i);
-            demo.setValue(RandomUtil.randomLong(120, 360));
-            barDatasetDay.add(demo);
-        }
         result.setBarChartDay(barDatasetDay);
 
         // 柱状图-仪器运行时间前10，label是仪器名称，值是运行时间（分钟），每周
-        startTime = DateUtil.offsetDay(endTime, 7);
+        startTime = DateUtil.offsetDay(endTime, -7);
         dataList = dxDao.doQueryByDaterange(startTime, endTime);
         List<ChartItemDto> barDatasetWeek = this.processBarChart(dataList);
-        /**
-         * TODO 模拟数据：柱状图-最近7天仪器运行时间（分钟）
-         */
-        for (int i = 1; i < 11; i++) {
-            ChartItemDto demo = new ChartItemDto();
-            demo.setLabel("LC" + i);
-            demo.setValue(RandomUtil.randomLong(120, 360));
-            barDatasetWeek.add(demo);
-        }
         result.setBarChartWeek(barDatasetWeek);
 
         // 饼图-仪器运行时间前10，label是仪器名称，值是运行时间（分钟），每天
@@ -264,6 +246,10 @@ public class DxServiceImpl implements DxService {
 
         // 饼图-仪器运行时间前10，label是仪器名称，值是运行时间（分钟），每周
         result.setDoughnutChartWeek(barDatasetWeek);
+
+        dataList = rsltDao.doQueryByDaterange(startTime, endTime);
+        List<ChartItemDto> lineDatasetForSequenceCount = processLineChartForSequenceCount(dataList);
+        result.setLineChartRunSequenceCount(lineDatasetForSequenceCount);
 
         // 水波图-剩余可用仪器台数
         List<InstrumentDto> instrumentDtos = instrumentService.doFindInstrumentsByRemote();
@@ -275,33 +261,30 @@ public class DxServiceImpl implements DxService {
             chartItemDto.setValue(count * 100 / instrumentDtos.size());
             result.setLiquidChartWorking(chartItemDto);
         } else {
-            /**
-             * TODO 模拟数据：水波图-当前仪器使用率
-             */
-            result.setLiquidChartWorking(new ChartItemDto("仪器使用率", RandomUtil.randomLong(25, 90)));
+            result.setLiquidChartWorking(new ChartItemDto("仪器使用率", 0l));
         }
 
         // TODO 模拟数据：线图-最近7天异常信息预览：仪器连接信息，序列错误...
-        List<ChartItemDto> lineDataset = new ArrayList<>();
+        List<ChartItemDto> lineDatasetForErrorMessage = new ArrayList<>();
         for (int i = 7; i > 0; i--) {
             DateTime dateTime = DateUtil.offsetDay(endTime, i);
             ChartItemDto item1 = new ChartItemDto();
             item1.setLabel(DateUtil.format(dateTime, "MM-dd"));
             item1.setType("仪器连接错误");
             item1.setValue(RandomUtil.randomLong(1, 5));
-            lineDataset.add(item1);
+            lineDatasetForErrorMessage.add(item1);
             ChartItemDto item2 = new ChartItemDto();
             item2.setLabel(DateUtil.format(dateTime, "MM-dd"));
             item2.setType("序列错误");
             item2.setValue(RandomUtil.randomLong(3, 8));
-            lineDataset.add(item2);
+            lineDatasetForErrorMessage.add(item2);
             ChartItemDto item3 = new ChartItemDto();
             item3.setLabel(DateUtil.format(dateTime, "MM-dd"));
             item3.setType("创建项目");
             item3.setValue(RandomUtil.randomLong(10, 25));
-            lineDataset.add(item3);
+            lineDatasetForErrorMessage.add(item3);
         }
-        result.setLineChartErrorMessage(lineDataset);
+        result.setLineChartErrorMessage(lineDatasetForErrorMessage);
         return result;
     }
 
@@ -644,6 +627,11 @@ public class DxServiceImpl implements DxService {
             Dx dx = (Dx) objects[0];
             Rslt rslt = (Rslt) objects[1];
             Integer collectedTime = dx.getCollectedTime();
+            // 序列执行错误可能导致采集时间或仪器名称为空
+            if (collectedTime == null || StrUtil.isBlank(rslt.getInstrumentName())) {
+                continue;
+            }
+
             if (instrumentNameToTimeMap.containsKey(rslt.getInstrumentName())) {
                 BigDecimal add = new BigDecimal(instrumentNameToTimeMap.get(rslt.getInstrumentName())).add(new BigDecimal(collectedTime));
                 instrumentNameToTimeMap.put(rslt.getInstrumentName(), add.longValue());
@@ -656,9 +644,42 @@ public class DxServiceImpl implements DxService {
         for (Map.Entry<String, Long> entry : instrumentNameToTimeMap.entrySet()) {
             ChartItemDto chartItemDto = new ChartItemDto();
             chartItemDto.setLabel(entry.getKey());
-            chartItemDto.setValue(entry.getValue());
+            if (entry.getValue() != null) {
+                // 换算成分钟
+                chartItemDto.setValue(entry.getValue() / 60);
+            }
+
             barDatasetDay.add(chartItemDto);
         }
         return barDatasetDay.stream().sorted(Comparator.comparing(ChartItemDto::getValue)).limit(10).collect(Collectors.toList());
+    }
+
+    /**
+     * 处理最近7天的序列运行数量，并按天分组统计每天执行序列的数量。返回线性图所需数据结构。
+     *
+     * @param dataList 数据库查询的返回对象列表
+     * @return 组装后的图表对象集合
+     */
+    private List<ChartItemDto> processLineChartForSequenceCount(List<Object[]> dataList) {
+        // 按照仪器名称，统计某时间段内收集仪器运行时间
+        Map<String, AtomicInteger> dateToCountMap = new HashMap<>();
+        for (Object[] objects : dataList) {
+            Rslt rslt = (Rslt) objects[0];
+            String format = DateUtil.format(rslt.getCreatedDate(), "MM-dd");
+            if (dateToCountMap.containsKey(format)) {
+                dateToCountMap.get(format).incrementAndGet();
+            } else {
+                dateToCountMap.put(format, new AtomicInteger(0));
+            }
+        }
+        List<ChartItemDto> lineDataset = new ArrayList<>();
+        for (Map.Entry<String, AtomicInteger> entry : dateToCountMap.entrySet()) {
+            ChartItemDto chartItemDto = new ChartItemDto();
+            chartItemDto.setLabel(entry.getKey());
+            chartItemDto.setType("运行序列数量");
+            chartItemDto.setValue(entry.getValue().longValue());
+            lineDataset.add(chartItemDto);
+        }
+        return lineDataset;
     }
 }
