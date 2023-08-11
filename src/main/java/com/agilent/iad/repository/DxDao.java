@@ -29,7 +29,7 @@ public interface DxDao extends JpaRepository<Dx, BigDecimal>, JpaSpecificationEx
     @Query(value = "select dx,rslt,p from Dx dx " +
             "left join Rslt rslt on dx.parentNodeId = rslt.nodeId " +
             "left join Project p on rslt.projectId = p.id " +
-            "where dx.updatedDate between :startDate and :endDate ")
+            "where (dx.updatedDate between :startDate and :endDate) ")
     List<Object[]> doQueryByDaterange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
     @Query(value = "select dx,rslt,p from Dx dx " +
