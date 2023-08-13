@@ -93,7 +93,7 @@ public class ACLController {
     @RequestMapping(value = "/api/login", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult<?> apiLogin(@RequestBody User user) {
-        if (null == user || StrUtil.isBlank(user.getName()) || StrUtil.isBlank(user.getPassword())) {
+        if (null == user || StrUtil.isBlank(user.getName()) || user.getPassword() != null) {
             return CommonResult.failed("用户名或密码不正确");
         }
         User dbUser = userService.doFindByName(user.getName());
