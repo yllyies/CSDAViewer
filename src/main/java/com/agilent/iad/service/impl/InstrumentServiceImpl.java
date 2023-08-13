@@ -5,6 +5,7 @@ import cn.hutool.core.date.BetweenFormater;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -12,7 +13,10 @@ import com.agilent.iad.common.CodeListConstant;
 import com.agilent.iad.common.util.DateUtilForCn;
 import com.agilent.iad.common.util.HttpUtil;
 import com.agilent.iad.common.util.PythonUtil;
+import com.agilent.iad.common.util.SnmpUtil;
+import com.agilent.iad.dto.ChartItemDto;
 import com.agilent.iad.dto.InstrumentDto;
+import com.agilent.iad.dto.InstrumentsResponseDto;
 import com.agilent.iad.model.PowerHistory;
 import com.agilent.iad.repository.PowerHistoryDao;
 import com.agilent.iad.repository.ProjectDao;
@@ -55,6 +59,7 @@ public class InstrumentServiceImpl implements InstrumentService {
         put(CodeListConstant.INSTRUMENT_STATE_MAINTENANCE_DUE, 8);
         put(CodeListConstant.INSTRUMENT_STATE_SLEEP, 9);
     }};
+
     @Autowired
     private ProjectDao projectDao;
     @Autowired
@@ -63,6 +68,8 @@ public class InstrumentServiceImpl implements InstrumentService {
     private InstrumentStateService instrumentStateService;
     @Value("${iadExtractor.interface-url}")
     private String instrumentInfoUrl;
+    @Value("${snmpInfo.hostIp}")
+    private String hostIp;
 
     @Override
     public void doBatchSave(List<PowerHistory> instruments) {
@@ -151,6 +158,55 @@ public class InstrumentServiceImpl implements InstrumentService {
         return result;
     }
 
+    @Override
+    public void assemblyStatisticsInfo(InstrumentsResponseDto result) {
+        List<InstrumentDto> instrumentDtoList = result.getDataSource();
+        if (CollUtil.isEmpty(instrumentDtoList)) {
+            return;
+        }
+
+        Map<String, Long> stateToCountMap = instrumentDtoList.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
+        // 总计
+        ChartItemDto instrumentTotal = new ChartItemDto("合计", (long) instrumentDtoList.size());
+        result.setInstrumentTotal(instrumentTotal);
+        // 使用中
+        Long runCount = 0L;
+        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING) != null) {
+            runCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING);
+        }
+        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_PRERUN) != null) {
+            runCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_PRERUN);
+        }
+        ChartItemDto instrumentRunning = new ChartItemDto("使用中", runCount);
+        result.setInstrumentRunning(instrumentRunning);
+        // 空闲
+        ChartItemDto instrumentIdel = new ChartItemDto("空闲", MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE) == null ? 0L:
+                MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE));
+        result.setInstrumentIdel(instrumentIdel);
+        // 未使用：未就绪、错误、离线、未连接
+        Long unusedCount = 0L;
+        // 未就绪
+        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY) != null) {
+            unusedCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY);
+        }
+        // 错误
+        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR) != null) {
+            unusedCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR);
+        }
+        // 离线
+        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE) != null) {
+            unusedCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE);
+        }
+        // 未连接
+        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT) != null) {
+            unusedCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
+        }
+        ChartItemDto instrumentUnused = new ChartItemDto("未使用", unusedCount);
+        result.setInstrumentUnused(instrumentUnused);
+        // 统计CDS服务器系统信息
+        SnmpUtil.assemblySystemInfo(result, hostIp);
+    }
+
     /**
      * 按照 错误、运行、空闲、未就绪、未连接、其它 进行仪器列表排序
      *
@@ -161,7 +217,7 @@ public class InstrumentServiceImpl implements InstrumentService {
             return;
         }
         result.sort((o1, o2) -> (!SORT_MAP.containsKey(o1.getInstrumentState()) || !SORT_MAP.containsKey(o2.getInstrumentState())) ?
-                1 : SORT_MAP.get(o1.getInstrumentState()).compareTo(SORT_MAP.get(o2.getInstrumentState())));
+                1 : SORT_MAP.get(o2.getInstrumentState()).compareTo(SORT_MAP.get(o1.getInstrumentState())));
     }
 
     /**
