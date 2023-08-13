@@ -1,8 +1,5 @@
 package com.agilent.iad.controller;
 
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
-import com.agilent.iad.common.CodeListConstant;
 import com.agilent.iad.common.dto.CommonResult;
 import com.agilent.iad.dto.InstrumentDto;
 import com.agilent.iad.dto.InstrumentsResponseDto;
@@ -17,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Api(tags = "仪器总览")
 @Controller
@@ -79,34 +74,9 @@ public class InstrumentController {
     @ResponseBody
     public CommonResult<InstrumentsResponseDto> apiList() {
         InstrumentsResponseDto result = new InstrumentsResponseDto();
-        List<InstrumentDto> agilentInstruments = instrumentService.doFindInstrumentsByRemote();
-        result.setDataSource(agilentInstruments);
-        Map<String, Long> stateToCountMap = agilentInstruments.stream().collect(Collectors.groupingBy(InstrumentDto::getInstrumentState, Collectors.counting()));
-        result.setSystemTotal(StrUtil.toString(agilentInstruments.size()));
-        // 预运行、运行
-        Long runCount = 0L;
-        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING) != null) {
-            runCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_RUNNING);
-        }
-        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_PRERUN) != null) {
-            runCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_PRERUN);
-        }
-        result.setRunningCount(String.valueOf(runCount));
-        result.setNotReadyCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY) == null ? "0":
-                MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_READY));
-        result.setIdleCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE) == null ? "0":
-                MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_IDLE));
-        result.setErrorCount(MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR) == null ? "0":
-                MapUtil.getStr(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_ERROR));
-        // 未连接、离线
-        Long offlineCount = 0L;
-        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE) != null) {
-            offlineCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_OFFLINE);
-        }
-        if (MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT) != null) {
-            offlineCount += MapUtil.getLong(stateToCountMap, CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT);
-        }
-        result.setOfflineCount(String.valueOf(offlineCount));
+        List<InstrumentDto> instrumentDtoList = instrumentService.doFindInstrumentsByRemote();
+        result.setDataSource(instrumentDtoList);
+        instrumentService.assemblyStatisticsInfo(result);
         return CommonResult.success(result);
     }
 }

@@ -1,6 +1,7 @@
 package com.agilent.iad.service;
 
 import com.agilent.iad.dto.InstrumentDto;
+import com.agilent.iad.dto.InstrumentsResponseDto;
 import com.agilent.iad.model.PowerHistory;
 
 import java.sql.Timestamp;
@@ -46,4 +47,11 @@ public interface InstrumentService {
      * @return Agilent 仪器信息集合
      */
     List<InstrumentDto> doFindInstrumentsByRemote();
+
+    /**
+     * 处理统计数据：仪器总计、空闲、使用中、未使用；
+     *
+     * @param result 返回前端的数据DTO
+     */
+    void assemblyStatisticsInfo(InstrumentsResponseDto result);
 }
