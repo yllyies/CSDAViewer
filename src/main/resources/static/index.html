@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><link rel="stylesheet" href="/iad/umi.css"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IAD</title><link rel="icon" href="/favicon.png" type="image/x-icon"><script src="https://gw.alipayobjects.com/os/antv/assets/data-set/0.8.7/data-set.min.js"></script><script>!(function(win, doc){
+      const MaxScreen = 1920
+        function setFontSize() {
+            var pr = window.devicePixelRatio
+            var winWidth =  window.innerWidth;
+            var size = 100;
+            if(winWidth > MaxScreen){
+              size = (winWidth / MaxScreen) * 100
+            }else if(winWidth <= MaxScreen && winWidth >= 1000) {
+              size = (winWidth / MaxScreen) * 100
+            }else if(winWidth < 1000) {
+              size = 50
+            }
+            doc.documentElement.style.fontSize = size + 'px' ;
+            doc.documentElement.setAttribute('fontSize', size / 100)
+        }
+
+        var evt = 'onorientationchange' in win ? 'orientationchange' : 'resize';
+
+        var timer = null;
+
+        win.addEventListener(evt, function () {
+            clearTimeout(timer);
+
+            timer = setTimeout(setFontSize, 300);
+        }, false);
+
+        win.addEventListener("pageshow", function(e) {
+            if (e.persisted) {
+                clearTimeout(timer);
+                //此处给定时器来实现页面加载完毕之后在进行字体设置
+                timer = setTimeout(setFontSize, 300);
+            }
+        }, false);
+
+        // 初始化
+        setFontSize();
+    }(window, document));</script><script>window.routerBase = "/";</script></head><body>
+    <link rel="stylesheet/less" type="text/css" href="/color.less" />
+    <script>
+      window.less = {
+        async: false,
+        env: 'production'
+      };
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
+        <div id="root"></div><script src="/iad/umi.js"></script></body></html>
