@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         // 证书验证
         if (!licenseVerify.verify()) {
             log.warn("您的证书无效，请核查服务器是否取得授权或重新申请证书！");
-            throw new BusinessException("您的证书无效，请核查服务器是否取得授权或重新申请证书！");
+            throw new BusinessException(503, "您的证书无效，请核查服务器是否取得授权或重新申请证书！");
         }
         User user = userService.doFindByName(username);
         if (user != null) {
