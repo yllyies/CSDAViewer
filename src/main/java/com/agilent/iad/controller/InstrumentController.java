@@ -75,6 +75,9 @@ public class InstrumentController {
     public CommonResult<InstrumentsResponseDto> apiList() {
         InstrumentsResponseDto result = new InstrumentsResponseDto();
         List<InstrumentDto> instrumentDtoList = instrumentService.doFindInstrumentsByRemote();
+        // 小米智能插座获取数据
+        List<InstrumentDto> thirdPartyInstruments = instrumentService.doFindThirdPartyInstruments();
+        instrumentDtoList.addAll(thirdPartyInstruments);
         result.setDataSource(instrumentDtoList);
         instrumentService.assemblyStatisticsInfo(result);
         return CommonResult.success(result);

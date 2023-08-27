@@ -18,9 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -28,10 +26,10 @@ public class PythonUtil {
     public static final String PARAMNAME_XIAOMI_HUMITURE_DIDLIST = "xiaomi.humiture.did";
     public static final String PARAMNAME_XIAOMI_HUMITURE_IP = "xiaomi.humiture.ip";
     public static final String PARAMNAME_XIAOMI_HUMITURE_TOKEN = "xiaomi.humiture.token";
-    public static final String FILENAME_HUMITURE_PYTHON = "/static/py/humiture.py";
+    public static final String FILENAME_HUMITURE_PYTHON = "/py/humiture.py";
     public static final String PARAMNAME_XIAOMI_INFO_PROPERTIES = "application-xiaomi-info.properties";
-    public static final String FILENAME_INSTRUMENT_STATUS_PYTHON = "/static/py/instrument_status.py";
-    public static final String FILENAME_INSTRUMENT_LEVEL_PYTHON = "/static/py/instrument_level.py";
+    public static final String FILENAME_INSTRUMENT_STATUS_PYTHON = "/py/instrument_status.py";
+    public static final String FILENAME_INSTRUMENT_LEVEL_PYTHON = "/py/instrument_level.py";
 
     /**
      * 获取温湿度计信息
@@ -69,9 +67,10 @@ public class PythonUtil {
     /**
      * 根据注册ip和token，批量获取仪器运行功率
      *
+     * @param excludeNoPower 是否排除无功率的数据
      * @return 仪器功率记录集合
      */
-    public static List<PowerHistory> doGetInstrumentPower() {
+    public static List<PowerHistory> doGetInstrumentPower(Boolean excludeNoPower) {
         StringBuilder message = new StringBuilder();
         ClassPathResource classPathResource = new ClassPathResource(FILENAME_INSTRUMENT_STATUS_PYTHON);
         String instrumentInfoList = JSONUtil.parseArray(XiaomiSocketConfig.getList()).toString();
@@ -85,10 +84,14 @@ public class PythonUtil {
                     continue;
                 }
                 JSONObject jsonObject = (JSONObject) obj;
-                if (StrUtil.isNotBlank(jsonObject.get("power", String.class))) {
-                    result.add(new PowerHistory(jsonObject.get("instrumentName", String.class), jsonObject.get("ip", String.class),
-                            jsonObject.get("token", String.class), Double.parseDouble(jsonObject.get("power", String.class)), null));
+                if (excludeNoPower && StrUtil.isBlank(jsonObject.get("power", String.class))) {
+                    continue;
                 }
+                result.add(new PowerHistory(jsonObject.get("instrumentName", String.class),
+                        jsonObject.get("ip", String.class),
+                        jsonObject.get("token", String.class),
+                        StrUtil.isNotBlank(jsonObject.get("power", String.class)) ? Double.parseDouble(jsonObject.get("power", String.class)) : null,
+                        null));
             }
             return result;
         } else {
@@ -109,6 +112,23 @@ public class PythonUtil {
         String[] args = new String[]{"python", classPathResource.getAbsolutePath(), JSONUtil.quote(JSONUtil.parseArray(powerList).toString())};
         PythonUtil.pythonExec(args, message);
         return message.toString();
+    }
+
+    /**
+     * 根据某一台仪器的功率记录，计算档位
+     *
+     * @param instrumentNameToPowerHistoriesMap key 为仪器名称， value为功率的列表
+     * @return 档位
+     */
+    public static Map<String, JSONArray> doGetInstrumentPowerLevel(Map<String, List<Double>> instrumentNameToPowerHistoriesMap) {
+        StringBuilder message = new StringBuilder();
+        ClassPathResource classPathResource = new ClassPathResource(FILENAME_INSTRUMENT_LEVEL_PYTHON);
+        String[] args = new String[]{"python", classPathResource.getAbsolutePath(), JSONUtil.quote(JSONUtil.parseFromMap(instrumentNameToPowerHistoriesMap).toString())};
+        PythonUtil.pythonExec(args, message);
+        if (StrUtil.isNotBlank(message) && JSONUtil.isJsonObj(message.toString())) {
+            return JSONUtil.toBean(message.toString(), Map.class);
+        }
+        return new HashMap<>();
     }
 
     /**
