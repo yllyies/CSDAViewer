@@ -8,14 +8,16 @@ import com.agilent.iad.model.PowerHistory;
 import com.agilent.iad.service.InstrumentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Configuration
-//@EnableScheduling
+@Configuration
+@EnableScheduling
 @Slf4j
 public class SaticScheduleTask {
     @Autowired
@@ -23,7 +25,7 @@ public class SaticScheduleTask {
 
     @Scheduled(cron="${time.cron}")
     private void configureTasks() {
-        List<PowerHistory> powerHistories = PythonUtil.doGetInstrumentPower();
+        List<PowerHistory> powerHistories = PythonUtil.doGetInstrumentPower(true);
         if (CollUtil.isNotEmpty(powerHistories)) {
             Timestamp now = DateUtil.parse(DateUtil.format(DateUtil.date(), DatePattern.NORM_DATETIME_MINUTE_PATTERN)).toTimestamp();
             // 过滤功率为0的数据，此时默认关机

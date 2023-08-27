@@ -28,4 +28,21 @@ public interface PowerHistoryDao extends JpaRepository<PowerHistory, String>, Jp
      * @return 结果集
      */
     List<PowerHistory> findByIpInAndCreatedDateEquals(List<String> ips, Timestamp createdDate);
+
+    /**
+     * 根据智能插座名称集合查询，并按照创建时间降序
+     *
+     * @param instrumentNames 智能插座名称集合
+     * @return 结果集
+     */
+    List<PowerHistory> findByInstrumentNameInOrderByCreatedDateDesc(List<String> instrumentNames);
+
+    /**
+     * 根据智能插座名称集合和记录时间查询，并按照创建时间降序
+     *
+     * @param instrumentNames 智能插座名称集合
+     *  @param createdDate 记录时间
+     * @return 结果集
+     */
+    List<PowerHistory> findByInstrumentNameInAndCreatedDateEquals(List<String> instrumentNames, Timestamp createdDate);
 }

@@ -8,6 +8,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.agilent.iad.common.CodeListConstant;
 import com.agilent.iad.common.util.DateUtilForCn;
@@ -79,10 +80,13 @@ public class InstrumentServiceImpl implements InstrumentService {
 
     @Override
     public void doBatchReplace(List<PowerHistory> powerHistories, Timestamp nowDate) {
+        if (CollUtil.isEmpty(powerHistories)) {
+            return;
+        }
         // 往前推三天，查询是否存在数据；
-        List<String> ips = powerHistories.stream().map(PowerHistory::getIp).distinct().collect(Collectors.toList());
+        List<String> instrumentName = powerHistories.stream().map(PowerHistory::getInstrumentName).distinct().collect(Collectors.toList());
         Timestamp beforeDate = DateUtil.offsetDay(nowDate, -3).toTimestamp();
-        List<PowerHistory> dbData = powerHistoryDao.findByIpInAndCreatedDateEquals(ips, beforeDate);
+        List<PowerHistory> dbData = powerHistoryDao.findByInstrumentNameInAndCreatedDateEquals(instrumentName, beforeDate);
         Map<String, PowerHistory> dbDataMap = dbData.stream().collect(Collectors.toMap(PowerHistory::getIp, Function.identity(), (k1, k2) -> k2));
         log.info("查询数据库存在数据：" + dbDataMap.size() + "条");
         // 遍历待保存数据。存在则更新，不存在则新增；
@@ -107,26 +111,20 @@ public class InstrumentServiceImpl implements InstrumentService {
     public List<InstrumentDto> doFindThirdPartyInstruments() {
         List<InstrumentDto> result = new ArrayList<>();
         // 获取第三方仪器信息实时功率
-//        List<PowerHistory> thirdPartyPowerInfo = PythonUtil.doGetInstrumentPower();
-        List<PowerHistory> thirdPartyPowerInfo = new ArrayList<>();
+        List<PowerHistory> thirdPartyPowerInfo = PythonUtil.doGetInstrumentPower(false);
         // 查询所有仪器功率历史记录
-        List<String> ips = thirdPartyPowerInfo.stream().map(PowerHistory::getIp).distinct().collect(Collectors.toList());
-        List<PowerHistory> powerHistoryList = powerHistoryDao.findByIpInOrderByCreatedDateDesc(ips);
-        Map<String, List<Double>> ipToPowerHistoriesMap = powerHistoryList.stream().collect(
-                Collectors.groupingBy(PowerHistory::getIp, Collectors.mapping(PowerHistory::getPower, Collectors.toList())));
-
+        List<String> instrumentNames = thirdPartyPowerInfo.stream().map(PowerHistory::getInstrumentName).distinct().collect(Collectors.toList());
+        List<PowerHistory> powerHistoryList = powerHistoryDao.findByInstrumentNameInOrderByCreatedDateDesc(instrumentNames);
+        Map<String, List<Double>> instrumentNameToPowerHistoriesMap = powerHistoryList.stream().collect(
+                Collectors.groupingBy(PowerHistory::getInstrumentName, Collectors.mapping(PowerHistory::getPower, Collectors.toList())));
+        // 机器学习 历史功率，计算功率
+        Map<String, JSONArray> instrumentNameToPowerListMap = PythonUtil.doGetInstrumentPowerLevel(instrumentNameToPowerHistoriesMap);
         for (PowerHistory powerHistory : thirdPartyPowerInfo) {
             InstrumentDto instrumentDto = new InstrumentDto();
             instrumentDto.setInstrumentName(powerHistory.getInstrumentName());
-            if (ipToPowerHistoriesMap.containsKey(powerHistory.getIp())) {
-                String powerLevel = calPowerLevel(powerHistory.getPower(),
-                        PythonUtil.doGetInstrumentPowerLevel(ipToPowerHistoriesMap.get(powerHistory.getIp())));
-                instrumentDto.setInstrumentState(powerLevel);
-                result.add(instrumentDto);
-            } else {
-                instrumentDto.setInstrumentState(CodeListConstant.INSTRUMENT_STATE_UNKNOWN);
-                result.add(instrumentDto);
-            }
+            String powerLevel = calPowerLevel(powerHistory.getPower(), instrumentNameToPowerListMap.get(powerHistory.getInstrumentName()));
+            instrumentDto.setInstrumentState(powerLevel);
+            result.add(instrumentDto);
         }
         return result;
     }
@@ -296,14 +294,27 @@ public class InstrumentServiceImpl implements InstrumentService {
      * 根据实时功率和机器学习仪器计算的档位，划分出仪器当前状态
      *
      * @param power 仪器实时功率
-     * @param powerLevelStr 机器学习的功率档位
+     * @param powerLevelArray 机器学习的功率档位
      * @return 第三方仪器状态
      */
-    private String calPowerLevel(Double power, String powerLevelStr) {
-        if (!JSONUtil.isJsonArray(powerLevelStr) || power == null || power == 0) {
-            return CodeListConstant.INSTRUMENT_STATE_OFFLINE;
+    private String calPowerLevel(Double power, JSONArray powerLevelArray) {
+        // 目前按照两个质心进行划分
+        if (power == null || power == 0) {
+            return CodeListConstant.INSTRUMENT_STATE_NOT_CONNECT;
         } else {
-            return CodeListConstant.INSTRUMENT_STATE_RUNNING;
+            if (!JSONUtil.isNull(powerLevelArray)) {
+                return CodeListConstant.INSTRUMENT_STATE_RUNNING;
+            }
+            if (powerLevelArray.size() >= 1){
+                double idle = Double.parseDouble(powerLevelArray.get(0).toString());
+                if (power <= idle) {
+                    return CodeListConstant.INSTRUMENT_STATE_RUNNING;
+                } else {
+                    return CodeListConstant.INSTRUMENT_STATE_RUNNING;
+                }
+            } else {
+                return CodeListConstant.INSTRUMENT_STATE_RUNNING;
+            }
         }
     }
 }
